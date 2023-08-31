@@ -1,4 +1,6 @@
-# 🫧git convention
+# Dopamine Backend
+
+## 🫧git convention
 
 ### Commit Style
 
