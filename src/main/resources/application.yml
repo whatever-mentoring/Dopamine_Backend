@@ -1,2 +1,19 @@
 server:
   port: 9000
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://223.130.139.200:3307/dopamine?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8
+    username: root
+    password: admin1234
+
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
