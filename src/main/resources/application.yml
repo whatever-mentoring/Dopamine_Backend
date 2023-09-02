@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://223.130.139.200:3307/dopamine?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8
-    username: root
-    password: admin1234
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     database: mysql
