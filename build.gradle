@@ -28,12 +28,38 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	// jpa
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	// mysql driver
 	implementation 'mysql:mysql-connector-java:8.0.32'
+
+	// data jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Json Parser
+	implementation 'com.google.code.gson:gson'
+
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	// spring-security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// secret key
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+	// mapper
+	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+	annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+	annotationProcessor(
+			'org.projectlombok:lombok',
+			'org.projectlombok:lombok-mapstruct-binding:0.1.0',
+			'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	)
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
