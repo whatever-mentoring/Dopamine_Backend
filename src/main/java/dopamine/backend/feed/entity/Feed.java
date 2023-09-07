@@ -15,6 +15,7 @@ public class Feed extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "feed_id")
     private Long feedId;
 
     private String content;

@@ -14,8 +14,8 @@ public class FeedLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "feed_like_id")
-    private Long feedLikeId;
+    @Column(name = "feedlike_id")
+    private Long feedlikeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

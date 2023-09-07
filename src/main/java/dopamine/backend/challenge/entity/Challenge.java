@@ -19,6 +19,7 @@ public class Challenge extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "challenge_id")
     private Long challengeId;
 
     private String title;
