@@ -17,3 +17,10 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+
+logging:
+  level:
+    jwt.kakao: DEBUG
+
+jwt:
+  secret: dslkfjlksdafmlksjdalkjfklsdf655645
