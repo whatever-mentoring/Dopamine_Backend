@@ -17,6 +17,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        globally_quoted_identifiers: true
 
 logging:
   level:

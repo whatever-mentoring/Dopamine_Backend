@@ -1,5 +1,6 @@
 package dopamine.backend.challenge.entity;
 
+import dopamine.backend.challenge.request.ChallengeEditDTO;
 import dopamine.backend.common.entity.BaseEntity;
 import dopamine.backend.feed.entity.Feed;
 import lombok.AccessLevel;
@@ -20,13 +21,10 @@ public class Challenge extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long challengeId;
 
-    @Column
     private String title;
 
-    @Column
     private String subtitle;
 
-    @Column
     private String image;
 
     @OneToMany(mappedBy = "challenge")
@@ -35,10 +33,15 @@ public class Challenge extends BaseEntity {
     // todo 챌린지사용자 엔티티 연관관계 추가해야 하는가?
 
     @Builder
-    public Challenge(Long challengeId, String title, String subtitle, String image) {
-        this.challengeId = challengeId;
+    public Challenge(String title, String subtitle, String image) {
         this.title = title;
         this.subtitle = subtitle;
         this.image = image;
+    }
+
+    public void changeChallenge(ChallengeEditDTO challengeEditDTO){
+        this.title = challengeEditDTO.getTitle();
+        this.subtitle = challengeEditDTO.getSubtitle();
+        this. image = challengeEditDTO.getImage();
     }
 }
