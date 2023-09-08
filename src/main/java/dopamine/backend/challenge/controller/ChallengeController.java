@@ -39,12 +39,12 @@ public class ChallengeController {
      * @return
      */
     @GetMapping("/challenges/{challengeId}")
-    public ChallengeResponseDTO getChallenge(@PathVariable Long challengeId){
+    public ChallengeResponseDTO getChallenge(@PathVariable("challengeId") Long challengeId){
         return challengeService.getChallenge(challengeId);
     }
 
     @PutMapping("/challenges/{challengeId}")
-    public void editChallenge(@PathVariable Long challengeId, @RequestBody ChallengeEditDTO challengeEditDTO){
+    public void editChallenge(@PathVariable("challengeId") Long challengeId, @RequestBody ChallengeEditDTO challengeEditDTO){
         challengeService.editChallenge(challengeId, challengeEditDTO);
     }
 }

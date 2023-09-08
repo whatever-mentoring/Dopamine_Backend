@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "Member not found"),
+    LEVEL_NOT_FOUND(404, "Level not found"),
     AUTHORIZATION_HEADER_NOT_FOUND(400, "Authorization Header Bad Request"),
     TOKEN_NOT_VALID(400, "Token Not Valid");
 

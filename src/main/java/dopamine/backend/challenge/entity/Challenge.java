@@ -43,6 +43,6 @@ public class Challenge extends BaseEntity {
     public void changeChallenge(ChallengeEditDTO challengeEditDTO){
         this.title = challengeEditDTO.getTitle();
         this.subtitle = challengeEditDTO.getSubtitle();
-        this. image = challengeEditDTO.getImage();
+        this.image = challengeEditDTO.getImage();
     }
 }
