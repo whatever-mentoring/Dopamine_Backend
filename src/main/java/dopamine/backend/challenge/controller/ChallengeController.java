@@ -43,7 +43,7 @@ public class ChallengeController {
         return challengeService.getChallenge(challengeId);
     }
 
-    @PutMapping("/challenges/{challengeId}")
+    @PatchMapping("/challenges/{challengeId}")
     public void editChallenge(@PathVariable("challengeId") Long challengeId, @RequestBody ChallengeEditDTO challengeEditDTO){
         challengeService.editChallenge(challengeId, challengeEditDTO);
     }

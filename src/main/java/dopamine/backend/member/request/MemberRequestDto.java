@@ -8,10 +8,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class MemberRequestDto {
-    private Long memberId;
     private Long kakaoId;
     private String nickname;
     private String refreshToken;

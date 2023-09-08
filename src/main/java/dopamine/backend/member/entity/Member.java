@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.util.Optional;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
@@ -36,25 +37,22 @@ public class Member extends BaseEntity {
      * @param memberRequestDto
      */
     @Builder
-    public Member(MemberRequestDto memberRequestDto) {
-        this.memberId = memberRequestDto.getMemberId();
+    public Member(MemberRequestDto memberRequestDto, Level level) {
         this.kakaoId = memberRequestDto.getKakaoId();
         this.nickname = memberRequestDto.getNickname();
         this.refreshToken = memberRequestDto.getRefreshToken();
-        setLevel(memberRequestDto.getLevel());
+        setLevel(level);
     }
 
     /**
      * 수정(UPDATE)
      * @param memberEditDto
      */
-    public Member changeMember(MemberEditDto memberEditDto) {
-        this.memberId = memberEditDto.getMemberId();
+    public void changeMember(MemberEditDto memberEditDto, Level level) {
         this.kakaoId = memberEditDto.getKakaoId();
         this.nickname = memberEditDto.getNickname();
         this.refreshToken = memberEditDto.getRefreshToken();
-        setLevel(memberEditDto.getLevel());
-        return this;
+        setLevel(level);
     }
 
     // == 연관관계 편의 메소드 == //

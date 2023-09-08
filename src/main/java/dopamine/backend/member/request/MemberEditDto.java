@@ -8,10 +8,8 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class MemberEditDto {
-    private Long memberId;
     private Long kakaoId;
     private String nickname;
     private String refreshToken;

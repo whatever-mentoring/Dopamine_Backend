@@ -47,7 +47,6 @@ public class MemberController {
     @PutMapping("/{member-id}")
     public MemberResponseDto editMember(@Positive @PathVariable("member-id") Long memberId,
                                       @Valid @RequestBody MemberEditDto memberEditDto) {
-        // todo : memberNum 중복되지 않도록 만들어야 함
         return memberService.editMember(memberId, memberEditDto);
     }
 }

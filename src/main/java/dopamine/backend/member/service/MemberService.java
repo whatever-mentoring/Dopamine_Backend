@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
@@ -31,8 +32,11 @@ public class MemberService {
      */
     public MemberResponseDto createMember(MemberRequestDto memberRequestDto) {
         // create
-        memberRequestDto.setLevel(levelService.verifiedLevel(memberRequestDto.getLevelId()));
-        Member member = new Member(memberRequestDto);
+        Level level = levelService.verifiedLevel(memberRequestDto.getLevelId());
+        Member member = Member.builder()
+                .memberRequestDto(memberRequestDto)
+                .level(level)
+                .build();
         memberRepository.save(member);
 
         // Member -> MemberResponseDto
@@ -68,9 +72,9 @@ public class MemberService {
      */
     public MemberResponseDto editMember(Long memberId, MemberEditDto memberEditDto) {
         // edit
-        memberEditDto.setLevel(levelService.verifiedLevel(memberEditDto.getLevelId()));
-        Member member = verifiedMember(memberId).changeMember(memberEditDto);
-        memberRepository.save(member);
+        Level level = levelService.verifiedLevel(memberEditDto.getLevelId());
+        Member member = verifiedMember(memberId);
+        member.changeMember(memberEditDto, level);
 
         // member -> responseDto
         MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
