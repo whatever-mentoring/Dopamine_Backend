@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -44,10 +45,10 @@ public class Level extends BaseEntity {
     }
 
     public void changeLevel(LevelEditDto levelEditDto) {
-        this.levelNum = levelEditDto.getLevelNum();
-        this.name = levelEditDto.getName();
-        this.image = levelEditDto.getImage();
-        this.challengeCnt = levelEditDto.getChallengeCnt();
+        this.levelNum = (levelEditDto.getLevelNum() != 0) ? levelEditDto.getLevelNum() : this.levelNum;
+        this.name = Optional.ofNullable(levelEditDto.getName()).orElse(this.name);
+        this.image = Optional.ofNullable(levelEditDto.getImage()).orElse(this.image);
+        this.challengeCnt = (levelEditDto.getChallengeCnt() != 0) ? levelEditDto.getChallengeCnt() : this.challengeCnt;
     }
 
 }

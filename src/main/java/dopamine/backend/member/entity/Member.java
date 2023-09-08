@@ -49,17 +49,20 @@ public class Member extends BaseEntity {
      * @param memberEditDto
      */
     public void changeMember(MemberEditDto memberEditDto, Level level) {
-        this.kakaoId = memberEditDto.getKakaoId();
-        this.nickname = memberEditDto.getNickname();
-        this.refreshToken = memberEditDto.getRefreshToken();
+        this.kakaoId = Optional.ofNullable(memberEditDto.getKakaoId()).orElse(this.kakaoId);
+        this.nickname = Optional.ofNullable(memberEditDto.getNickname()).orElse(this.nickname);
+        this.refreshToken = Optional.ofNullable(memberEditDto.getRefreshToken()).orElse(this.refreshToken);
         setLevel(level);
     }
 
     // == 연관관계 편의 메소드 == //
     private void setLevel(Level level) {
-        this.level = level;
-        level.getMembers().add(this);
+        if (this.level != null) {
+            if (this.level.getMembers().contains(this)) {
+                this.level.getMembers().remove(this);
+            }
+        }
+        this.level = Optional.ofNullable(level).orElse(this.level);
+        this.level.getMembers().add(this);
     }
-
-
 }
