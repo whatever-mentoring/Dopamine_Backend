@@ -1,5 +1,6 @@
 package dopamine.backend.level.entity;
 
+import dopamine.backend.common.entity.BaseEntity;
 import dopamine.backend.level.request.LevelEditDto;
 import dopamine.backend.level.request.LevelRequestDto;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Level {
+public class Level extends BaseEntity {
 
     @Id
     @GeneratedValue
