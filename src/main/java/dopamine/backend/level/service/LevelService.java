@@ -33,7 +33,7 @@ public class LevelService {
         Level level = Level.builder().levelRequestDto(levelRequestDto).build();
         levelRepository.save(level);
 
-        // Level -> LevelResponseDto
+        // Level -> MemberResponseDto
         LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
         return levelResponseDto;
     }
