@@ -1,6 +1,7 @@
 package dopamine.backend.challenge.entity;
 
 import dopamine.backend.challenge.request.ChallengeEditDTO;
+import dopamine.backend.challengemember.entity.ChallengeMember;
 import dopamine.backend.common.entity.BaseEntity;
 import dopamine.backend.feed.entity.Feed;
 import lombok.AccessLevel;
@@ -31,7 +32,8 @@ public class Challenge extends BaseEntity {
     @OneToMany(mappedBy = "challenge")
     private List<Feed> feeds = new ArrayList<>();
 
-    // todo 챌린지사용자 엔티티 연관관계 추가해야 하는가?
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<ChallengeMember> challengeMembers = new ArrayList<>();
 
     @Builder
     public Challenge(String title, String subtitle, String image) {

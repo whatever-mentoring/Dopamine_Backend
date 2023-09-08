@@ -33,7 +33,7 @@ public class LevelService {
         Level level = Level.builder().levelRequestDto(levelRequestDto).build();
         levelRepository.save(level);
 
-        // Level -> MemberResponseDto
+        // ChallengeMember -> MemberResponseDto
         LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
         return levelResponseDto;
     }
@@ -75,7 +75,7 @@ public class LevelService {
     }
 
     /**
-     * 검증 -> levelId 입력하면 관련 Level Entity가 있는지 확인
+     * 검증 -> levelId 입력하면 관련 ChallengeMember Entity가 있는지 확인
      * @param levelId
      * @return level
      */

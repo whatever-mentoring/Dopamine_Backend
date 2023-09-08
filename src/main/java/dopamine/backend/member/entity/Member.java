@@ -1,6 +1,7 @@
 package dopamine.backend.member.entity;
 
 import dopamine.backend.challenge.entity.Challenge;
+import dopamine.backend.challengemember.entity.ChallengeMember;
 import dopamine.backend.common.entity.BaseEntity;
 import dopamine.backend.level.entity.Level;
 import dopamine.backend.level.request.LevelEditDto;
@@ -10,6 +11,8 @@ import dopamine.backend.member.request.MemberRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -31,6 +34,9 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
     private Level level;
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<ChallengeMember> challengeMembers = new ArrayList<>();
 
     /**
      * 생성자
