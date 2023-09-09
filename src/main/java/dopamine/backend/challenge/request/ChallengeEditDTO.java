@@ -13,5 +13,5 @@ public class ChallengeEditDTO {
     private String subtitle;
     private String image;
     private String challengeGuide;
-    private String challengeLevel;
+    private Integer challengeLevel;
 }

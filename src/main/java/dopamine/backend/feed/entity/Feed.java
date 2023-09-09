@@ -2,9 +2,12 @@ package dopamine.backend.feed.entity;
 
 import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.common.entity.BaseEntity;
+import dopamine.backend.feed.request.FeedEditDTO;
 import dopamine.backend.feedImage.entity.FeedImage;
 import dopamine.backend.member.entity.Member;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -12,6 +15,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
 public class Feed extends BaseEntity {
 
     @Id
@@ -53,12 +57,19 @@ public class Feed extends BaseEntity {
         this.feedImage = newfeedImage;
     }
 
+    @Builder
     public Feed(String content, Boolean openYn, Member member, Challenge challenge) {
         this.content = content;
         this.openYn = openYn;
         this.member = member;
         setChallenge(challenge);
         setFeedImage();
+    }
+
+    public void changeFeed(FeedEditDTO feedEditDTO){
+        this.content = feedEditDTO.getContent();
+        this.openYn = feedEditDTO.getOpenYn();
+        this.feedImage.changeFeedImage(feedEditDTO.getFeedImageRequestDTO());
     }
 
     // todo Member entity 편의 메소드 추가

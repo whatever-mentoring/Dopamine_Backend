@@ -30,13 +30,13 @@ public class Challenge extends BaseEntity {
 
     private String challengeGuide;
 
-    private String challengeLevel;
+    private Integer challengeLevel;
 
     @OneToMany(mappedBy = "challenge")
     private List<Feed> feeds = new ArrayList<>();
 
     @Builder
-    public Challenge(String title, String subtitle, String image, String challengeGuide, String challengeLevel) {
+    public Challenge(String title, String subtitle, String image, String challengeGuide, Integer challengeLevel) {
         this.title = title;
         this.subtitle = subtitle;
         this.image = image;

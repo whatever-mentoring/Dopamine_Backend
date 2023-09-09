@@ -17,12 +17,19 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
     public void createChallenge(ChallengeRequestDTO challengeRequestDTO) {
-        Challenge challenge = Challenge.builder().title(challengeRequestDTO.getTitle()).subtitle(challengeRequestDTO.getSubtitle()).image(challengeRequestDTO.getImage()).build();
+        Challenge challenge = Challenge.builder().title(challengeRequestDTO.getTitle()).subtitle(challengeRequestDTO.getSubtitle())
+                .challengeGuide(challengeRequestDTO.getChallengeGuide()).challengeLevel(challengeRequestDTO.getChallengeLevel()).image(challengeRequestDTO.getImage()).build();
 
         challengeRepository.save(challenge);
     }
 
     public void deleteChallenge(Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
+
+        challenge.changeDelYn(true);
+    }
+
+    public void deleteChallengeHard(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
 
         challengeRepository.delete(challenge);
@@ -32,7 +39,8 @@ public class ChallengeService {
     public ChallengeResponseDTO getChallenge(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
 
-        ChallengeResponseDTO challengeResponseDTO = ChallengeResponseDTO.builder().title(challenge.getTitle()).subtitle(challenge.getSubtitle()).image(challenge.getImage()).build();
+        ChallengeResponseDTO challengeResponseDTO = ChallengeResponseDTO.builder().title(challenge.getTitle()).subtitle(challenge.getSubtitle())
+                .challengeGuide(challenge.getChallengeGuide()).challengeLevel(challenge.getChallengeLevel()).image(challenge.getImage()).build();
 
         return challengeResponseDTO;
     }
