@@ -28,21 +28,27 @@ public class Challenge extends BaseEntity {
 
     private String image;
 
+    private String challengeGuide;
+
+    private Integer challengeLevel;
+
     @OneToMany(mappedBy = "challenge")
     private List<Feed> feeds = new ArrayList<>();
 
-    // todo 챌린지사용자 엔티티 연관관계 추가해야 하는가?
-
     @Builder
-    public Challenge(String title, String subtitle, String image) {
+    public Challenge(String title, String subtitle, String image, String challengeGuide, Integer challengeLevel) {
         this.title = title;
         this.subtitle = subtitle;
         this.image = image;
+        this.challengeGuide = challengeGuide;
+        this.challengeLevel = challengeLevel;
     }
 
     public void changeChallenge(ChallengeEditDTO challengeEditDTO){
         this.title = challengeEditDTO.getTitle();
         this.subtitle = challengeEditDTO.getSubtitle();
-        this. image = challengeEditDTO.getImage();
+        this.image = challengeEditDTO.getImage();
+        this.challengeGuide = challengeEditDTO.getChallengeGuide();
+        this.challengeLevel = challengeEditDTO.getChallengeLevel();
     }
 }
