@@ -6,6 +6,7 @@ import dopamine.backend.feedImage.entity.FeedImage;
 import dopamine.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -21,6 +22,9 @@ public class Feed extends BaseEntity {
     private String content;
 
     private Boolean openYn;
+
+    @ColumnDefault("true")
+    private Boolean fulfillYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
