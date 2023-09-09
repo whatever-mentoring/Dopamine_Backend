@@ -17,6 +17,8 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
     public void createChallenge(ChallengeRequestDTO challengeRequestDTO) {
+
+        // Todo : Exception Code 메서드로 정의하면 코드가 더 깔끔해질 것 같아요(아래 코드에서 중복되는 부분이 많네요 제 코드에서 verifiedLevel 메서드 참고해주세요)
         Challenge challenge = Challenge.builder().title(challengeRequestDTO.getTitle()).subtitle(challengeRequestDTO.getSubtitle())
                 .challengeGuide(challengeRequestDTO.getChallengeGuide()).challengeLevel(challengeRequestDTO.getChallengeLevel()).image(challengeRequestDTO.getImage()).build();
 

@@ -1,11 +1,14 @@
 package dopamine.backend.member.controller;
 
-import dopamine.backend.member.dto.MemberRequestDto;
-import dopamine.backend.member.dto.MemberResponseDto;
+import dopamine.backend.member.request.MemberEditDto;
+import dopamine.backend.member.request.MemberRequestDto;
+import dopamine.backend.member.response.MemberResponseDto;
+import dopamine.backend.member.service.MemberService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
 import dopamine.backend.member.service.MemberService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,44 +19,34 @@ import javax.validation.constraints.Positive;
 
 
 @RestController
-@RequestMapping("/api/member")
-@Validated
-@AllArgsConstructor
+@RequestMapping("/api/members")
+@RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final MemberMapper memberMapper;
 
-    // CREATE
+    // CREATE : 생성
     @PostMapping
-    public ResponseEntity postMember(@Valid @RequestBody MemberRequestDto.Post post) {
-        Member member = memberService.createMember(memberMapper.memberPostDtoToMember(post));
-        MemberResponseDto.Response response = memberMapper.memberToMemberResponseDto(member);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public MemberResponseDto createMember(@Valid @RequestBody MemberRequestDto memberRequestDto) {
+        // todo : memberNum 중복되지 않도록 만들어야 함
+        return memberService.createMember(memberRequestDto);
     }
 
-    // READ
-    @GetMapping("/{member-pk}")
-    public ResponseEntity getMember(@Positive @PathVariable("member-pk") long memberPk) {
-        Member member = memberService.findMember(memberPk);
-        MemberResponseDto.Response response = memberMapper.memberToMemberResponseDto(member);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    // DELETE : 삭제
+    @DeleteMapping("/{member-id}")
+    public void deleteMember(@Positive @PathVariable("member-id") Long memberId) {
+        memberService.deleteMember(memberId);
     }
 
-    // UPDATE
-    @PatchMapping
-    public ResponseEntity patchMember(@Valid @RequestBody MemberRequestDto.Patch patch) {
-        Member member = memberService.patchMember(memberMapper.memberPatchDtoToMember(patch));
-        MemberResponseDto.Response response = memberMapper.memberToMemberResponseDto(member);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    // GET : 조회
+    @GetMapping("/{member-id}")
+    public MemberResponseDto getMember(@Positive @PathVariable("member-id") Long memberId) {
+        return memberService.getMember(memberId);
     }
 
-    // DELETE
-    @DeleteMapping("/{member-pk}")
-    public ResponseEntity deleteMember(@Positive @PathVariable("member-pk") long memberPk) {
-        memberService.deleteMember(memberPk);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    // UPDATE : 수정
+    @PutMapping("/{member-id}")
+    public MemberResponseDto editMember(@Positive @PathVariable("member-id") Long memberId,
+                                      @Valid @RequestBody MemberEditDto memberEditDto) {
+        return memberService.editMember(memberId, memberEditDto);
     }
 }

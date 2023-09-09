@@ -31,11 +31,11 @@ public class AuthenticationConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt 사용하는 경우 사용
                 .and()
-                .authorizeRequests(authorize -> authorize.antMatchers("/api/oauth/kakao/**").permitAll())
-                //.authorizeRequests(authorize -> authorize.anyRequest().permitAll())
-                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
-                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtFilter.class)
+                //.authorizeRequests(authorize -> authorize.antMatchers("/api/oauth/kakao/**").permitAll())
+                .authorizeRequests(authorize -> authorize.anyRequest().permitAll())
+                //.authorizeRequests(authorize -> authorize.anyRequest().authenticated())
+//                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtFilter.class)
                 .build()
                 ;
     }
