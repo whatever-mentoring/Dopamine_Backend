@@ -25,6 +25,15 @@ public class ChallengeController {
     }
 
     /**
+     * 챌린지 삭제 (DB에서도)
+     * @param challengeId
+     */
+    @DeleteMapping("/challenges/{challengeId}/hard")
+    public void deleteChallengeHard(@PathVariable Long challengeId){
+        challengeService.deleteChallengeHard(challengeId);
+    }
+
+    /**
      * 챌린지 삭제
      * @param challengeId
      */
@@ -43,8 +52,13 @@ public class ChallengeController {
         return challengeService.getChallenge(challengeId);
     }
 
-    @PatchMapping("/challenges/{challengeId}")
-    public void editChallenge(@PathVariable("challengeId") Long challengeId, @RequestBody ChallengeEditDTO challengeEditDTO){
+    /**
+     * 챌린지 수정
+     * @param challengeId
+     * @param challengeEditDTO
+     */
+    @PutMapping("/challenges/{challengeId}")
+    public void editChallenge(@PathVariable Long challengeId, @RequestBody ChallengeEditDTO challengeEditDTO){
         challengeService.editChallenge(challengeId, challengeEditDTO);
     }
 }

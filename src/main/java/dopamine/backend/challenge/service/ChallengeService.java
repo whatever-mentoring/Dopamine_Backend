@@ -17,13 +17,21 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
     public void createChallenge(ChallengeRequestDTO challengeRequestDTO) {
+
         // Todo : Exception Code 메서드로 정의하면 코드가 더 깔끔해질 것 같아요(아래 코드에서 중복되는 부분이 많네요 제 코드에서 verifiedLevel 메서드 참고해주세요)
-        Challenge challenge = Challenge.builder().title(challengeRequestDTO.getTitle()).subtitle(challengeRequestDTO.getSubtitle()).image(challengeRequestDTO.getImage()).build();
+        Challenge challenge = Challenge.builder().title(challengeRequestDTO.getTitle()).subtitle(challengeRequestDTO.getSubtitle())
+                .challengeGuide(challengeRequestDTO.getChallengeGuide()).challengeLevel(challengeRequestDTO.getChallengeLevel()).image(challengeRequestDTO.getImage()).build();
 
         challengeRepository.save(challenge);
     }
 
     public void deleteChallenge(Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
+
+        challenge.changeDelYn(true);
+    }
+
+    public void deleteChallengeHard(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
 
         challengeRepository.delete(challenge);
@@ -33,7 +41,8 @@ public class ChallengeService {
     public ChallengeResponseDTO getChallenge(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
 
-        ChallengeResponseDTO challengeResponseDTO = ChallengeResponseDTO.builder().title(challenge.getTitle()).subtitle(challenge.getSubtitle()).image(challenge.getImage()).build();
+        ChallengeResponseDTO challengeResponseDTO = ChallengeResponseDTO.builder().title(challenge.getTitle()).subtitle(challenge.getSubtitle())
+                .challengeGuide(challenge.getChallengeGuide()).challengeLevel(challenge.getChallengeLevel()).image(challenge.getImage()).build();
 
         return challengeResponseDTO;
     }

@@ -2,6 +2,7 @@ package dopamine.backend.common.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,10 +26,12 @@ public abstract class BaseEntity {
     @Column(name = "modified_date", updatable = false)
     private LocalDateTime modifiedDate;
 
+    @ColumnDefault("false")
     @Column(name = "del_yn")
-    private String delYn = "기본";
 
-    public void changeDelYn(String delYn) {
+    private Boolean delYn;
+
+    public void changeDelYn(Boolean delYn) {
         this.delYn = delYn;
     }
 }

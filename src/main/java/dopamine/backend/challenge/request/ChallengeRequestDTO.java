@@ -12,4 +12,6 @@ public class ChallengeRequestDTO {
     private String title;
     private String subtitle;
     private String image;
+    private String challengeGuide;
+    private Integer challengeLevel;
 }
