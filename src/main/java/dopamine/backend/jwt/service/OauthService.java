@@ -86,20 +86,8 @@ public class OauthService {
             JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
 
             //dto에 저장하기
+            kakaoUserInfo.setKakaoId(element.getAsJsonObject().get("kakao_account").getAsString());
             kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
-//            kakaoUserInfo.setNickname(profile.getAsJsonObject().get("nickname").getAsString());
-            kakaoUserInfo.setProfileImgUrl(profile.getAsJsonObject().get("profile_image_url").getAsString());
-//            kakaoUserInfo.setThumnailImgUrl(profile.getAsJsonObject().get("thumbnail_image_url").getAsString());
-            kakaoUserInfo.setHasBirthDay(kakaoAccount.getAsJsonObject().get("has_birthday").getAsBoolean());
-            kakaoUserInfo.setHasGender(kakaoAccount.getAsJsonObject().get("has_gender").getAsBoolean());
-
-            if (!kakaoUserInfo.isHasBirthDay()) {
-                kakaoUserInfo.setBirthday(kakaoAccount.getAsJsonObject().get("birthday").getAsString());
-            }
-
-            if (!kakaoUserInfo.isHasGender()) {
-                kakaoUserInfo.setGender(kakaoAccount.getAsJsonObject().get("gender").getAsString());
-            }
 
             log.info(kakaoUserInfo.toString());
         } catch (IOException e) {

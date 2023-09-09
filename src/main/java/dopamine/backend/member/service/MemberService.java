@@ -10,12 +10,11 @@ import dopamine.backend.member.repository.MemberRepository;
 import dopamine.backend.member.request.MemberEditDto;
 import dopamine.backend.member.request.MemberRequestDto;
 import dopamine.backend.member.response.MemberResponseDto;
-import dopamine.backend.member.entity.Member;
-import dopamine.backend.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -30,7 +29,7 @@ public class MemberService {
      * CREATE : 생성
      * @param memberRequestDto
      */
-    public MemberResponseDto createMember(MemberRequestDto memberRequestDto) {
+    public Member createMember(MemberRequestDto memberRequestDto) {
         // create
         Level level = levelService.verifiedLevel(memberRequestDto.getLevelId());
         Member member = Member.builder()
@@ -39,9 +38,7 @@ public class MemberService {
                 .build();
         memberRepository.save(member);
 
-        // Member -> MemberResponseDto
-        MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
-        return memberResponseDto;
+        return member;
     }
 
     /**
@@ -86,9 +83,26 @@ public class MemberService {
      * @param memberId
      * @return member
      */
+
     public Member verifiedMember(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
+    //== jwt 인증 부분==//
+
+    /**
+     * kakaoId를 가진 Member가 없으면 새로운 Member생성, 아니면 기존 Member반환
+     * @param kakaoId
+     * @return
+     */
+    public Member findMemberByKakaoId(Long kakaoId) {
+        Member member = memberRepository.findMemberByKakaoId(kakaoId).orElseGet(() -> {
+            MemberRequestDto memberRequestDto = new MemberRequestDto();
+            memberRequestDto.setKakaoId(kakaoId);
+            return createMember(memberRequestDto);
+            }
+        );
+        return member;
+    }
 }

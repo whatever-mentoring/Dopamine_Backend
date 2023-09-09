@@ -28,7 +28,7 @@ public class MemberController {
     @PostMapping
     public MemberResponseDto createMember(@Valid @RequestBody MemberRequestDto memberRequestDto) {
         // todo : memberNum 중복되지 않도록 만들어야 함
-        return memberService.createMember(memberRequestDto);
+        memberService.createMember(memberRequestDto);
     }
 
     // DELETE : 삭제
