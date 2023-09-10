@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -13,6 +14,11 @@ import java.net.URL;
 @Service
 @Slf4j
 public class OauthService {
+    @Value("${jwt.kakao.client_id}")
+    private String client_id;
+
+    @Value("${jwt.kakao.redirect_url}")
+    private String redirect_url;
 
     public String getKakaoAccessToken(String code) {
 
@@ -26,21 +32,18 @@ public class OauthService {
             // POST 요청을 위해 기본값이 false인 setDoOutput을 true로 설정
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-
             // POST 요처에 필요로 요구하는 파라미터를 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=3b154b60421d117460fd5e1f5333e00a");
-            sb.append("&redirect_uri=http://127.0.0.1:8080/api/oauth/kakao");
+            sb.append("&client_id=" + client_id);
+            sb.append("&redirect_uri=" + redirect_url);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
-
             // 결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             log.info("responseCode : " + responseCode);
-
             // 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             String result = getRequestResult(conn);
 
@@ -79,17 +82,11 @@ public class OauthService {
             String result = getRequestResult(conn);
 
             //Gson 라이브러리로 JSON파싱
-
             JsonElement element = new Gson().fromJson(result, JsonElement.class);
 
-            JsonElement kakaoAccount = element.getAsJsonObject().get("kakao_account");
-            JsonElement profile = kakaoAccount.getAsJsonObject().get("profile");
-
             //dto에 저장하기
-            kakaoUserInfo.setKakaoId(element.getAsJsonObject().get("kakao_account").getAsString());
-            kakaoUserInfo.setId(element.getAsJsonObject().get("id").getAsLong());
+            kakaoUserInfo.setKakaoId(element.getAsJsonObject().get("id").getAsString());
 
-            log.info(kakaoUserInfo.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

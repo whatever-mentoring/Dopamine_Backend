@@ -9,5 +9,4 @@ import lombok.*;
 @Builder
 public class KakaoUserInfo {
     private String kakaoId;
-    private Long id;
 }

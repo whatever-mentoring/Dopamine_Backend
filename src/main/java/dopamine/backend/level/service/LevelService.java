@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -28,14 +29,11 @@ public class LevelService {
      * CREATE : 생성
      * @param levelRequestDto
      */
-    public LevelResponseDto createLevel(LevelRequestDto levelRequestDto) {
+    public Level createLevel(LevelRequestDto levelRequestDto) {
         // create
         Level level = Level.builder().levelRequestDto(levelRequestDto).build();
         levelRepository.save(level);
-
-        // ChallengeMember -> MemberResponseDto
-        LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
-        return levelResponseDto;
+        return level;
     }
 
     /**
@@ -81,6 +79,11 @@ public class LevelService {
      */
     public Level verifiedLevel(Long levelId) {
         Optional<Level> level = levelRepository.findById(levelId);
+        return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
+    }
+
+    public Level findMemberByLevelNum(int levelNum) {
+        Optional<Level> level = levelRepository.findLevelByLevelNum(levelNum);
         return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
     }
 

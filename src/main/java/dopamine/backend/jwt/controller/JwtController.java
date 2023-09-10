@@ -1,13 +1,16 @@
 package dopamine.backend.jwt.controller;
 
+import com.google.gson.JsonObject;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
+import dopamine.backend.jwt.response.JwtResponse;
 import dopamine.backend.jwt.service.JwtService;
 import dopamine.backend.jwt.service.OauthService;
-import dopamine.backend.member.dto.MemberResponseDto;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
+import dopamine.backend.member.response.MemberResponseDto;
 import dopamine.backend.member.service.MemberService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @Validated
 @AllArgsConstructor
-public class OauthController {
+@Slf4j
+public class JwtController {
 
     private final OauthService oauthService;
     private final MemberService memberService;
@@ -33,17 +37,23 @@ public class OauthController {
         KakaoUserInfo kakaoUserInfo = oauthService.getKakaoUserInfo(kakaoAccessToken);
 
         // 해당 kakao ID를 가진 Member 반환
-        Member member = memberService.verifiedMember(kakaoUserInfo.getId());
+        Member member = memberService.findMemberByKakaoId(kakaoUserInfo.getKakaoId());
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Authorization", jwtService.getAccessToken(member));
-        return new ResponseEntity<>(jwtService.getAccessToken(member), responseHeaders, HttpStatus.CREATED);
+        // accessToken과 refreshToken발급
+        String accessToken = jwtService.getAccessToken(member);
+        String refreshToken = member.getRefreshToken();
+
+        // 응답
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken).build();
+        return new ResponseEntity<>(jwtResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getMember")
+    @GetMapping("/member")
     public ResponseEntity returnMemberDetail(@RequestHeader("Authorization") String accessToken) {
         Member member = jwtService.getMemberFromAccessToken(accessToken);
-        MemberResponseDto.Response response = memberMapper.memberToMemberResponseDto(member);
+        MemberResponseDto response = memberMapper.memberToMemberResponseDto(member);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

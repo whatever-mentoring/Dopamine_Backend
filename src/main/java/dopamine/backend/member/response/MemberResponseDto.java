@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class MemberResponseDto {
     private Long memberId;
-    private Long kakaoId;
+    private String kakaoId;
     private String nickname;
     private String refreshToken;
     private LocalDateTime createdDate;
