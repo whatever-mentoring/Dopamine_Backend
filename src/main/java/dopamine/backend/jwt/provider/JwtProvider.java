@@ -14,7 +14,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    private static final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
+    private static final Long accessTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 30분
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
 
 

@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         // 로그인일 경우 건너뛰기
         if (
-                path.startsWith("/api/oauth/kakao")
+                path.startsWith("/api/auth/login")
         ) {
             filterChain.doFilter(request, response);
             return;
@@ -68,7 +68,7 @@ public class JwtFilter extends OncePerRequestFilter {
         ) {
             // 재발행 요청 api인데, access token을 전달했을 경우
             // 아니면 access token을 넣어줘야하는데, 다른 토큰을 넣었을 경우
-            throw new JwtException("");
+            throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_FOUND);
         }
 
         // 권한 부여

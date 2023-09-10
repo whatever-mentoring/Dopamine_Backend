@@ -1,5 +1,7 @@
 package dopamine.backend.level.controller;
 
+import dopamine.backend.level.entity.Level;
+import dopamine.backend.level.mapper.LevelMapper;
 import dopamine.backend.level.request.LevelEditDto;
 import dopamine.backend.level.request.LevelRequestDto;
 import dopamine.backend.level.response.LevelResponseDto;
@@ -16,12 +18,16 @@ import javax.validation.constraints.Positive;
 public class LevelController {
 
     private final LevelService levelService;
+    private final LevelMapper levelMapper;
 
     // CREATE : 생성
     @PostMapping
     public LevelResponseDto createLevel(@Valid @RequestBody LevelRequestDto levelRequestDto) {
         // todo : levelNum 중복되지 않도록 만들어야 함
-        return levelService.createLevel(levelRequestDto);
+        Level level = levelService.createLevel(levelRequestDto);
+        LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
+
+        return levelResponseDto;
     }
 
     // DELETE : 삭제

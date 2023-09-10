@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
     @Column(name="member_id")
     private Long memberId;
 
-    private Long kakaoId;
+    private String kakaoId;
 
     private String nickname;
 
@@ -54,11 +54,15 @@ public class Member extends BaseEntity {
      * 수정(UPDATE)
      * @param memberEditDto
      */
-    public void changeMember(MemberEditDto memberEditDto, Level level) {
+    public void changeMember(MemberEditDto memberEditDto) {
         this.kakaoId = Optional.ofNullable(memberEditDto.getKakaoId()).orElse(this.kakaoId);
         this.nickname = Optional.ofNullable(memberEditDto.getNickname()).orElse(this.nickname);
         this.refreshToken = Optional.ofNullable(memberEditDto.getRefreshToken()).orElse(this.refreshToken);
-        setLevel(level);
+        setLevel(memberEditDto.getLevel());
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     // == 연관관계 편의 메소드 == //
