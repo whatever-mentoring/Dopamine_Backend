@@ -3,7 +3,6 @@ package dopamine.backend.jwt.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dopamine.backend.jwt.filter.JwtExceptionFilter;
 import dopamine.backend.jwt.filter.JwtFilter;
-import dopamine.backend.jwt.service.OauthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

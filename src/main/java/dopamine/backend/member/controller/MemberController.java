@@ -1,5 +1,8 @@
 package dopamine.backend.member.controller;
 
+import dopamine.backend.jwt.dto.KakaoUserInfo;
+import dopamine.backend.jwt.response.JwtResponse;
+import dopamine.backend.jwt.service.JwtService;
 import dopamine.backend.member.request.MemberEditDto;
 import dopamine.backend.member.request.MemberRequestDto;
 import dopamine.backend.member.response.MemberResponseDto;
@@ -24,6 +27,7 @@ import javax.validation.constraints.Positive;
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
+    private final JwtService jwtService;
 
     // CREATE : 생성
     @PostMapping
@@ -56,5 +60,12 @@ public class MemberController {
         // member -> responseDto
         MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
         return memberResponseDto;
+    }
+
+    @GetMapping("/mypage")
+    public ResponseEntity returnMemberDetail(@RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken);
+        MemberResponseDto response = memberMapper.memberToMemberResponseDto(member);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
