@@ -3,6 +3,8 @@ package dopamine.backend.jwt.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import dopamine.backend.exception.BusinessLogicException;
+import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
 import dopamine.backend.jwt.provider.JwtProvider;
 import dopamine.backend.member.entity.Member;
@@ -74,16 +76,18 @@ public class JwtService {
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
-            // 결과 코드가 200이라면 성공
-            int responseCode = conn.getResponseCode();
-            log.info("responseCode : " + responseCode);
+
+            // 결과 코드가 200이라면 성공, 아니면 에러 발생
+            if(conn.getResponseCode() != 200) {
+                throw new BusinessLogicException(ExceptionCode.KAKAO_CODE_NOT_VALID);
+            }
+
             // 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             String result = getRequestResult(conn);
 
             // Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonElement element = new Gson().fromJson(result, JsonElement.class);
             accessToken = element.getAsJsonObject().get("access_token").getAsString();
-            log.info("access_token : " + accessToken);
 
             bw.close();
         } catch (IOException e) {
