@@ -11,7 +11,7 @@ public enum ExceptionCode {
     AUTHORIZATION_HEADER_NOT_FOUND(400, "Authorization Header Bad Request"),
     TOKEN_NOT_VALID(400, "Token Not Valid"),
     KAKAO_CODE_NOT_VALID(400, "코드가 카카오 서버에서 유효하지 않습니다."),
-    MISSING_REQUEST_PARAM(400, "필수 파라미터를 작성해주세요.");
+    MISSING_REQUEST_PARAM(400, "필수 파라미터를 작성해야 합니다.");
 
     @Getter
     private int status;
