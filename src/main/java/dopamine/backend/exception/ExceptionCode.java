@@ -7,7 +7,7 @@ import java.util.Arrays;
 public enum ExceptionCode {
 
     // 400 Bad Request
-    NICKNAME_DUPLICATE(400, "닉네임이 중복되었습니다."),
+    NICKNAME_DUPLICATE(400, "이미 있는 이름이에요."),
     TOKEN_NOT_VALID(400, "AccessToken이 유효하지 않습니다."),
     KAKAO_CODE_NOT_VALID(400, "코드가 카카오 서버에서 유효하지 않습니다."),
     MISSING_REQUEST_PARAM(400, "필수 파라미터를 작성해야 합니다."),

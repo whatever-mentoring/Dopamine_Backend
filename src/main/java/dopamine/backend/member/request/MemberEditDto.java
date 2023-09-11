@@ -15,7 +15,8 @@ import javax.validation.constraints.Size;
 public class MemberEditDto {
     private String kakaoId;
 
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$", message = "닉네임은 특수문자를 제외한 2~10자리여야 합니다.")
+    @Size(min=2, max=10, message = "2~10자 이내로 입력해주세요.")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9-_]*$", message = "특수문자는 사용할 수 없어요.")
     private String nickname;
     private String refreshToken;
     private Level level;
