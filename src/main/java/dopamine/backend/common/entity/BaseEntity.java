@@ -29,7 +29,7 @@ public abstract class BaseEntity {
     @ColumnDefault("false")
     @Column(name = "del_yn")
 
-    private Boolean delYn;
+    private Boolean delYn = true;
 
     public void changeDelYn(Boolean delYn) {
         this.delYn = delYn;

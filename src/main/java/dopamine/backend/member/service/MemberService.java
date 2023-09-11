@@ -34,6 +34,9 @@ public class MemberService {
      * @param memberRequestDto
      */
     public Member createMember(MemberRequestDto memberRequestDto) {
+        // 닉네임 중복 검사
+        checkNicknameDuplication(memberRequestDto.getNickname());
+
         // create
         Level level = levelService.verifiedLevel(memberRequestDto.getLevelId());
 
@@ -73,18 +76,21 @@ public class MemberService {
     /**
      * UPDATE : 수정
      *
-     * @param memberId memberEditDto
-     * @return memberResponseDto
+     * @param member
+     * @param memberEditDto
+     * @return
      */
-    public Member editMember(Long memberId, MemberEditDto memberEditDto) {
-        // edit
+    public Member editMember(Member member, MemberEditDto memberEditDto) {
 
+        checkNicknameDuplication(memberEditDto.getNickname());
+
+        // level
         if (memberEditDto.getLevelId() != null) {
             Level level = levelService.verifiedLevel(memberEditDto.getLevelId());
             memberEditDto.setLevel(level);
         }
 
-        Member member = verifiedMember(memberId);
+
         member.changeMember(memberEditDto);
 
         return member;
@@ -115,5 +121,20 @@ public class MemberService {
                 .kakaoId(kakaoId)
                 .levelId(levelService.findMemberByLevelNum(1).getLevelId())
                 .build()));
+    }
+
+    //== 닉네임 중복 검사 ==//
+    public void checkNicknameDuplication(String nickname) {
+        // nickname이 null이면 중복 검사 하지 않음
+        if (nickname != null) {
+
+            // 중복이면 exception 발생
+            memberRepository.findMemberByNickname(nickname).ifPresent(a -> {
+                throw new BusinessLogicException(ExceptionCode.NICKNAME_DUPLICATE);
+            });
+        }
+
+
+
     }
 }

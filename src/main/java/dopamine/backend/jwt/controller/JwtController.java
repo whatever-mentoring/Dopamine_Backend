@@ -37,18 +37,19 @@ public class JwtController {
         // 유저 정보 얻기
         String kakaoAccessToken = jwtService.getKakaoAccessToken(code);
         KakaoUserInfo kakaoUserInfo = jwtService.getKakaoUserInfo(kakaoAccessToken);
-
         // 해당 kakao ID를 가진 Member 반환
-        Member member = memberService.findMemberByKakaoId(kakaoUserInfo.getKakaoId());
-
+        log.info(kakaoUserInfo.getKakaoId());
+        Member member = memberService.findMemberByKakaoId(kakaoUserInfo.getKakaoId()); // todo : 에러
+        log.info("hello world3");
         // accessToken과 refreshToken발급
         String accessToken = jwtService.getAccessToken(member);
         String refreshToken = member.getRefreshToken();
-
+        log.info("hello world4");
         // 응답
         JwtResponse jwtResponse = JwtResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken).build();
+        log.info("hello world5");
         return new ResponseEntity<>(jwtResponse, HttpStatus.CREATED);
     }
 }

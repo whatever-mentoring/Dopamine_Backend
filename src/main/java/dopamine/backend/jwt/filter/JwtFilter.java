@@ -34,6 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (
                 path.startsWith("/api/auth/login")
         ) {
+            log.info("건너뛰기");
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,7 +43,8 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("authorization : {}", authorization);
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_FOUND);
+            log.info("실행되는지 확인");
+            throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_VALID);
         }
 
         // Token 꺼내기
@@ -68,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
         ) {
             // 재발행 요청 api인데, access token을 전달했을 경우
             // 아니면 access token을 넣어줘야하는데, 다른 토큰을 넣었을 경우
-            throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_FOUND);
+            throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_VALID);
         }
 
         // 권한 부여

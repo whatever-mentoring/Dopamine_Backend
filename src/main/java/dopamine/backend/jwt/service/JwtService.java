@@ -44,7 +44,7 @@ public class JwtService {
         String refreshToken = "Bearer " + JwtProvider.createRefreshToken(member.getMemberId(), secretKey);
 
         // member 엔티티에 refreshToken 저장
-        memberService.editMember(member.getMemberId(), MemberEditDto.builder().refreshToken(refreshToken).build());
+        memberService.editMember(member, MemberEditDto.builder().refreshToken(refreshToken).build());
 
         return "Bearer " + JwtProvider.createAccessToken(member.getMemberId(), secretKey);
     }

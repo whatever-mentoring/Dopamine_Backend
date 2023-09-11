@@ -51,15 +51,15 @@ public class MemberController {
     }
 
     // UPDATE : 수정
-    @PutMapping("/{member-id}")
-    public MemberResponseDto editMember(@Positive @PathVariable("member-id") Long memberId,
+    @PutMapping
+    public ResponseEntity editMember(@RequestHeader("Authorization") String accessToken,
                                       @Valid @RequestBody MemberEditDto memberEditDto) {
-        // edit
-        Member member = memberService.editMember(memberId, memberEditDto);
 
-        // member -> responseDto
-        MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
-        return memberResponseDto;
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        memberService.editMember(member, memberEditDto); // 수정
+        MemberResponseDto response = memberMapper.memberToMemberResponseDto(member); // response
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/mypage")
