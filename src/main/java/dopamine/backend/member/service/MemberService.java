@@ -90,7 +90,6 @@ public class MemberService {
             memberEditDto.setLevel(level);
         }
 
-
         member.changeMember(memberEditDto);
 
         return member;
@@ -132,7 +131,7 @@ public class MemberService {
      */
     public void checkNicknameDuplication(Member member, String nickname) {
 
-        if (member!= null && member.getNickname().equals(nickname)) {
+        if (member!= null && member.getNickname()==nickname) {
             return;
         } else if (nickname != null) {
             memberRepository.findMemberByNickname(nickname).ifPresent(a -> {

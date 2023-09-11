@@ -34,7 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
         if (
                 path.startsWith("/api/auth/login")
         ) {
-            log.info("건너뛰기");
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,7 +42,6 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("authorization : {}", authorization);
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            log.info("실행되는지 확인");
             throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_VALID);
         }
 
