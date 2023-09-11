@@ -1,5 +1,7 @@
 package dopamine.backend.jwt.controller;
 
+import dopamine.backend.exception.BusinessLogicException;
+import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
 import dopamine.backend.jwt.response.JwtResponse;
 import dopamine.backend.jwt.service.JwtService;
@@ -10,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +28,11 @@ public class JwtController {
     private final MemberMapper memberMapper;
 
     @GetMapping("/login")
-    public ResponseEntity kakaoCallback(@RequestParam String code) {
+    public ResponseEntity kakaoCallback(@RequestParam(value = "code", required = false) String code) {
+
+        if(StringUtils.isEmpty(code)) {
+            throw new BusinessLogicException(ExceptionCode.MISSING_REQUEST_PARAM);
+        }
 
         // 유저 정보 얻기
         String kakaoAccessToken = jwtService.getKakaoAccessToken(code);

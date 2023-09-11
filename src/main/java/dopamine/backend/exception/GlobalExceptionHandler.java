@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * ExceptionHandler - handleBusinessLogicException
+     */
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ErrorResponse> handleBusinessLogicException(BusinessLogicException ex, HttpServletRequest request){
         log.error("BusinessLogicException", ex);
@@ -26,10 +29,4 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getExceptionCode().getStatus()));
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ErrorResponse> handleException(Exception ex){
-//        log.error("handleException",ex);
-//        ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
-//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 }

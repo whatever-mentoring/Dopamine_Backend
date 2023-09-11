@@ -36,7 +36,7 @@ public class FeedService {
         FeedImageResponseDTO feedImageResponseDTO = FeedImageResponseDTO.builder().image1Url(feedImage.getImage1Url()).image2Url(feedImage.getImage2Url())
                 .image3Url(feedImage.getImage3Url()).build();
 
-        return FeedResponseDTO.builder().openYn(feed.getOpenYn()).content(feed.getContent()).memberId(feed.getMember().getId())
+        return FeedResponseDTO.builder().openYn(feed.getOpenYn()).content(feed.getContent()).memberId(feed.getMember().getMemberId())
                 .challengeResponseDTO(challengeResponseDTO).feedImageResponseDTO(feedImageResponseDTO).build();
     }
 
