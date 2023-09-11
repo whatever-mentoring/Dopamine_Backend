@@ -39,9 +39,10 @@ public class MemberController {
     }
 
     // DELETE : 삭제
-    @DeleteMapping("/{member-id}")
-    public void deleteMember(@Positive @PathVariable("member-id") Long memberId) {
-        memberService.deleteMember(memberId);
+    @DeleteMapping
+    public void deleteMember(@RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken);
+        memberService.deleteMember(member);
     }
 
     // GET : 조회

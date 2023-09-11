@@ -55,8 +55,7 @@ public class MemberService {
      *
      * @param memberId
      */
-    public void deleteMember(Long memberId) {
-        Member member = verifiedMember(memberId);
+    public void deleteMember(Member member) {
         memberRepository.delete(member);
     }
 
