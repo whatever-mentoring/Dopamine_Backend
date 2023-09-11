@@ -3,8 +3,10 @@ package dopamine.backend.feed.response;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.feedImage.response.FeedImageResponseDTO;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 public class FeedResponseDTO {
     private String content;
 
