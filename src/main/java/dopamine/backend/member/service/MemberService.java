@@ -35,7 +35,7 @@ public class MemberService {
      */
     public Member createMember(MemberRequestDto memberRequestDto) {
         // 닉네임 중복 검사
-        checkNicknameDuplication(memberRequestDto.getNickname());
+        checkNicknameDuplication(null, memberRequestDto.getNickname());
 
         // create
         Level level = levelService.verifiedLevel(memberRequestDto.getLevelId());
@@ -82,7 +82,7 @@ public class MemberService {
      */
     public Member editMember(Member member, MemberEditDto memberEditDto) {
 
-        checkNicknameDuplication(memberEditDto.getNickname());
+        checkNicknameDuplication(member, memberEditDto.getNickname());
 
         // level
         if (memberEditDto.getLevelId() != null) {
@@ -123,18 +123,21 @@ public class MemberService {
                 .build()));
     }
 
-    //== 닉네임 중복 검사 ==//
-    public void checkNicknameDuplication(String nickname) {
-        // nickname이 null이면 중복 검사 하지 않음
-        if (nickname != null) {
+    /**
+     * 닉네임 중복 검사<p>
+     * 1. 기존 사용자 정보이면, 중복 검사 진행 X<p>
+     * 2. nickname 값이 입력되어 있으면, 중복 검사 진행
+     * @param member
+     * @param nickname
+     */
+    public void checkNicknameDuplication(Member member, String nickname) {
 
-            // 중복이면 exception 발생
+        if (member!= null && member.getNickname().equals(nickname)) {
+            return;
+        } else if (nickname != null) {
             memberRepository.findMemberByNickname(nickname).ifPresent(a -> {
                 throw new BusinessLogicException(ExceptionCode.NICKNAME_DUPLICATE);
             });
         }
-
-
-
     }
 }
