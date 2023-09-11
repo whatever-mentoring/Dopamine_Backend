@@ -17,6 +17,4 @@ public class MemberResponseDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private String delYn;
-    private String refreshToken;
-    private String accessToken;
 }

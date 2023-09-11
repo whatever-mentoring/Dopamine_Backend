@@ -130,10 +130,15 @@ public class MemberService {
      * @param nickname
      */
     public void checkNicknameDuplication(Member member, String nickname) {
+        log.info("여기 닉네임" + nickname);
+        if (member!= null && member.getNickname()!= null) {
+            if(member.getNickname().equals(nickname)){
+                return;
+            }
+        }
 
-        if (member!= null && member.getNickname()==nickname) {
-            return;
-        } else if (nickname != null) {
+        if (nickname != null) {
+            log.info("여기2");
             memberRepository.findMemberByNickname(nickname).ifPresent(a -> {
                 throw new BusinessLogicException(ExceptionCode.NICKNAME_DUPLICATE);
             });

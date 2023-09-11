@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-10T17:04:10+0900",
+    date = "2023-09-11T22:11:41+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Oracle Corporation)"
 )
 @Component
@@ -25,7 +25,9 @@ public class ChallengeMemberMapperImpl implements ChallengeMemberMapper {
         challengeMemberResponseDto.challengeMemberId( challengeMember.getChallengeMemberId() );
         challengeMemberResponseDto.createdDate( challengeMember.getCreatedDate() );
         challengeMemberResponseDto.modifiedDate( challengeMember.getModifiedDate() );
-        challengeMemberResponseDto.delYn( challengeMember.getDelYn() );
+        if ( challengeMember.getDelYn() != null ) {
+            challengeMemberResponseDto.delYn( String.valueOf( challengeMember.getDelYn() ) );
+        }
 
         return challengeMemberResponseDto.build();
     }

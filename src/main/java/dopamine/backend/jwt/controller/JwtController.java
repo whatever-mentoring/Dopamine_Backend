@@ -6,6 +6,7 @@ import dopamine.backend.exception.BusinessLogicException;
 import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
 import dopamine.backend.jwt.response.JwtResponse;
+import dopamine.backend.jwt.response.TokenResponse;
 import dopamine.backend.jwt.service.JwtService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
@@ -50,9 +51,13 @@ public class JwtController {
         String refreshToken = member.getRefreshToken();
 
         // 응답
-        MemberResponseDto response = memberMapper.memberToMemberResponseDto(member);
-        response.setAccessToken(accessToken);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        MemberResponseDto memberResponse = memberMapper.memberToMemberResponseDto(member);
+        TokenResponse tokenResponse = TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken).build();
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .token(tokenResponse)
+                .member(memberResponse).build();
+        return new ResponseEntity<>(jwtResponse, HttpStatus.CREATED);
     }
 }
