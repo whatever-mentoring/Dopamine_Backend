@@ -26,7 +26,7 @@ logging:
     jwt.kakao: DEBUG
 
 jwt:
-  secret: dslkfjlksdafmlksjdalkjfklsdf655645
+  secret: ${DOPAMINE_JWT_SECRET}
   kakao:
-    client_id: b4a4174bcbedb68d9c7adb60c5ee2477
-    redirect_url: http://127.0.0.1:9000/api/auth/login
+    client_id: ${DOPAMINE_KAKAO_CLIENT_ID}
+    redirect_url: ${DOPAMINE_KAKAO_REDIRECT_URL}
