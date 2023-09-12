@@ -14,6 +14,6 @@ public class LevelResponseDto {
     private int levelId;
     private int levelNum;
     private String name;
-    private String image;
-    private int challengeCnt;
+    private String badge;
+    private int exp;
 }

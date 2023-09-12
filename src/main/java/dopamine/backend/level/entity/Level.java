@@ -25,13 +25,14 @@ public class Level extends BaseEntity {
     @Column(name = "level_id")
     private Long levelId;
 
+    @Column(unique = true)
     private int levelNum;
 
     private String name;
 
-    private String image;
+    private String badge;
 
-    private int challengeCnt;
+    private int exp;
 
     @OneToMany(mappedBy = "level", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Member> members = new ArrayList<>();
@@ -40,15 +41,15 @@ public class Level extends BaseEntity {
     public Level(LevelRequestDto levelRequestDto) {
         this.levelNum = levelRequestDto.getLevelNum();
         this.name = levelRequestDto.getName();
-        this.image = levelRequestDto.getImage();
-        this.challengeCnt = levelRequestDto.getChallengeCnt();
+        this.badge = levelRequestDto.getBadge();
+        this.exp = levelRequestDto.getExp();
     }
 
     public void changeLevel(LevelEditDto levelEditDto) {
         this.levelNum = (levelEditDto.getLevelNum() != 0) ? levelEditDto.getLevelNum() : this.levelNum;
         this.name = Optional.ofNullable(levelEditDto.getName()).orElse(this.name);
-        this.image = Optional.ofNullable(levelEditDto.getImage()).orElse(this.image);
-        this.challengeCnt = (levelEditDto.getChallengeCnt() != 0) ? levelEditDto.getChallengeCnt() : this.challengeCnt;
+        this.badge = Optional.ofNullable(levelEditDto.getBadge()).orElse(this.badge);
+        this.exp = (levelEditDto.getExp() != 0) ? levelEditDto.getExp() : this.exp;
     }
 
 }

@@ -27,8 +27,8 @@ public class LevelInitService implements CommandLineRunner {
                             .builder()
                             .levelNum(1)
                             .name("새싹지키미")
-                            .image("/url/testurl")
-                            .challengeCnt(0)
+                            .badge("/url/testurl")
+                            .exp(0)
                             .build()
             );
         });

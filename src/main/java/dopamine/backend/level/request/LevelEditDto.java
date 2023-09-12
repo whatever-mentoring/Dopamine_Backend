@@ -18,7 +18,7 @@ public class LevelEditDto {
 
     private String name;
 
-    private String image;
+    private String badge;
 
-    private int challengeCnt;
+    private int exp;
 }
