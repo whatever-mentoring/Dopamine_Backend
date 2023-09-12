@@ -1,7 +1,6 @@
 package dopamine.backend.feed.response;
 
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
-import dopamine.backend.feedImage.response.FeedImageResponseDTO;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,12 +9,18 @@ import lombok.Getter;
 public class FeedResponseDTO {
     private String content;
 
+    private String image1Url;
+
+    private String image2Url;
+
+    private String image3Url;
+
     private Boolean openYn;
+
+    private Boolean fulfillYn;
 
     // todo member 정보 어디까지 추가해야하는지 결정
     private Long memberId;
 
     private ChallengeResponseDTO challengeResponseDTO;
-
-    private FeedImageResponseDTO feedImageResponseDTO;
 }

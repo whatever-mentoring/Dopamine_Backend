@@ -11,6 +11,7 @@ import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FeedLikeService {
 
     private final MemberRepository memberRepository;
@@ -53,6 +55,7 @@ public class FeedLikeService {
         feedLikeRepository.delete(feedLike);
     }
 
+    @Transactional(readOnly = true)
     public List<FeedLikeResponseDTO> getFeedLikes(Long feedId) {
         Feed feed = verifiedFeed(feedId);
 
