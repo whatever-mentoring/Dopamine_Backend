@@ -16,7 +16,4 @@ public class LevelResponseDto {
     private String name;
     private String image;
     private int challengeCnt;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
-    private String delYn;
 }

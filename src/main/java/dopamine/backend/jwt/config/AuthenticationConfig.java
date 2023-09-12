@@ -34,8 +34,9 @@ public class AuthenticationConfig {
                 //.authorizeRequests(authorize -> authorize.anyRequest().permitAll())
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
                 .build()
                 ;
+
     }
 }

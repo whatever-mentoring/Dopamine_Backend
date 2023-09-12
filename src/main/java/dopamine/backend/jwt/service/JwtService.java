@@ -8,6 +8,7 @@ import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
 import dopamine.backend.jwt.provider.JwtProvider;
 import dopamine.backend.member.entity.Member;
+import dopamine.backend.member.repository.MemberRepository;
 import dopamine.backend.member.request.MemberEditDto;
 import dopamine.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.net.URL;
 public class JwtService {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -42,9 +44,7 @@ public class JwtService {
         String refreshToken = "Bearer " + JwtProvider.createRefreshToken(member.getMemberId(), secretKey);
 
         // member 엔티티에 refreshToken 저장
-        MemberEditDto memberEditDto = new MemberEditDto();
-        memberEditDto.setRefreshToken(refreshToken);
-        memberService.editMember(member.getMemberId(), memberEditDto);
+        memberService.editMember(member, MemberEditDto.builder().refreshToken(refreshToken).build());
 
         return "Bearer " + JwtProvider.createAccessToken(member.getMemberId(), secretKey);
     }
