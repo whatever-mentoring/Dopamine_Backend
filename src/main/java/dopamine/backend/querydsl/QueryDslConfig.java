@@ -1,4 +1,4 @@
-package dopamine.backend.config;
+package dopamine.backend.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

@@ -2,6 +2,7 @@ package dopamine.backend.challenge.service;
 
 import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.challenge.mapper.ChallengeMapper;
+import dopamine.backend.challenge.repository.ChallengeCustomRepository;
 import dopamine.backend.challenge.repository.ChallengeRepository;
 import dopamine.backend.challenge.request.ChallengeEditDTO;
 import dopamine.backend.challenge.request.ChallengeRequestDTO;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final ChallengeCustomRepository challengeCustomRepository;
+
     private final ChallengeMapper challengeMapper;
 
     private final MemberService memberService;
@@ -69,37 +72,42 @@ public class ChallengeService {
     public List<ChallengeResponseDTO> todayChallenge(Long userId) {
 
         Member member = memberService.verifiedMember(userId);
+        List<ChallengeResponseDTO> challengeResponseList;
 
         // 기존에 챌린지 받은 적 없음
         LocalDateTime existRefreshDate = member.getChallengeRefreshDate();
         if(existRefreshDate == null){
-
+            List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(null);
+            challengeResponseList = getChallengeResponseList(todayChallenges);
         }
 
-        // todo 오늘의 챌린지 3개 아니면 재발급?
-
-        // 오늘 날짜 조회
-        LocalDateTime today = LocalDateTime.now();
-
-        String todayInfo = today.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
-        String existInfo = existRefreshDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
-
-        List<ChallengeResponseDTO> challengeResponseList;
-        // member 오늘의 챌린지 갱신일 != 오늘 날짜 -> 새로운 챌린지 3개 매핑 (member 엔티티의 challengeMembers 갱신)
-        // 이때 필터는 기존 challenge x, 난이도별로 1개 씩 -> 상, 중, 하 대신 3개 뽑으려면 쿼리 3번
-        if(!todayInfo.equals(existInfo)){
-            List<Challenge> randomChallenges = challengeRepository.getRandomChallenges();
-            challengeResponseList = randomChallenges.stream().map(challengeMapper::challengeToChallengeResponseDTO).collect(Collectors.toList());
-        }
-
-        // member 오늘의 챌린지 갱신일 = 오늘 날짜 -> challengeMembers에 저장된 챌린지 리턴
         else {
-            List<ChallengeMember> challengeMembers = member.getChallengeMembers();
-            challengeResponseList = challengeMembers.stream().map(challengeMember ->
-                    challengeMapper.challengeToChallengeResponseDTO(challengeMember.getChallenge())
-            ).collect(Collectors.toList());
+            LocalDateTime today = LocalDateTime.now();
+
+            String todayInfo = getFormatDate(today);
+            String existInfo = getFormatDate(existRefreshDate);
+
+            List<Challenge> exitChallenge = member.getChallengeMembers().stream().map(ChallengeMember::getChallenge).collect(Collectors.toList());
+
+            // 갱신
+            if(!todayInfo.equals(existInfo)){
+                List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
+                challengeResponseList = getChallengeResponseList(todayChallenges);
+            }
+            // 조회
+            else {
+                challengeResponseList = getChallengeResponseList(exitChallenge);
+            }
         }
 
         return challengeResponseList;
+    }
+
+    private static String getFormatDate(LocalDateTime today) {
+        return today.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+    }
+
+    private List<ChallengeResponseDTO> getChallengeResponseList(List<Challenge> challenges) {
+        return challenges.stream().map(challengeMapper::challengeToChallengeResponseDTO).collect(Collectors.toList());
     }
 }
