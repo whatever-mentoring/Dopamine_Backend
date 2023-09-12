@@ -40,3 +40,16 @@ jwt:
   kakao:
     client_id: ${DOPAMINE_KAKAO_CLIENT_ID}
     redirect_url: ${DOPAMINE_KAKAO_REDIRECT_URL}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${DOPAMINE_S3_BUCKET}
+    credentials:
+      access-key: ${DOPAMINE_S3_KEY}
+      secret-key: ${DOPAMINE_S3_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
