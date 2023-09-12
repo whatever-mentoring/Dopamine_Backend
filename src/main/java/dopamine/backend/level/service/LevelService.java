@@ -11,6 +11,7 @@ import dopamine.backend.level.request.LevelRequestDto;
 import dopamine.backend.level.response.LevelResponseDto;
 import dopamine.backend.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class LevelService {
 
     private final LevelRepository levelRepository;
@@ -31,9 +33,10 @@ public class LevelService {
      * @param levelRequestDto
      */
     public Level createLevel(LevelRequestDto levelRequestDto) {
+
         // create
         Level level = Level.builder()
-                .levelNum(levelRequestDto.getLevelNum())
+                .levelNum(createLevelNum())
                 .name(levelRequestDto.getName())
                 .badge(levelRequestDto.getBadge())
                 .exp(levelRequestDto.getExp()).build();
@@ -71,9 +74,10 @@ public class LevelService {
      * @return levelResponseDto
      */
     public LevelResponseDto editLevel(Long levelId, LevelEditDto levelEditDto) {
+        
         // edit
         Level level = verifiedLevel(levelId);
-        level.changeLevel(levelEditDto.getLevelNum(), levelEditDto.getName(), levelEditDto.getBadge(), levelEditDto.getExp());
+        level.changeLevel(levelEditDto.getName(), levelEditDto.getBadge(), levelEditDto.getExp());
 
         // level -> responseDto
         LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
@@ -94,6 +98,15 @@ public class LevelService {
     public Level findMemberByLevelNum(int levelNum) {
         Optional<Level> level = levelRepository.findLevelByLevelNum(levelNum);
         return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
+    }
+
+    /**
+     * DB에서 가장 큰 levelNum 조회 + 1 (순차적으로)
+     */
+    public int createLevelNum(){
+        return levelRepository.findTopByOrderByLevelNumDesc()
+                .map(level -> level.getLevelNum() + 1)
+                .orElse(1);
     }
 
 }

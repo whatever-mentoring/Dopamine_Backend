@@ -25,7 +25,6 @@ public class LevelInitService implements CommandLineRunner {
             return levelService.createLevel(
                     LevelRequestDto
                             .builder()
-                            .levelNum(1)
                             .name("새싹지키미")
                             .badge("/url/testurl")
                             .exp(0)

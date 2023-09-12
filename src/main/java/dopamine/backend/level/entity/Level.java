@@ -45,8 +45,7 @@ public class Level extends BaseEntity {
         this.exp = exp;
     }
 
-    public void changeLevel(int levelNum, String name, String badge, int exp) {
-        this.levelNum = (levelNum != 0) ? levelNum : this.levelNum;
+    public void changeLevel(String name, String badge, int exp) {
         this.name = Optional.ofNullable(name).orElse(this.name);
         this.badge = Optional.ofNullable(badge).orElse(this.badge);
         this.exp = (exp != 0) ? exp : this.exp;
