@@ -1,4 +1,4 @@
-package dopamine.backend.swagger.config;
+package dopamine.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
