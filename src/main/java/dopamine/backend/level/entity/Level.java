@@ -38,18 +38,18 @@ public class Level extends BaseEntity {
     private List<Member> members = new ArrayList<>();
 
     @Builder
-    public Level(LevelRequestDto levelRequestDto) {
-        this.levelNum = levelRequestDto.getLevelNum();
-        this.name = levelRequestDto.getName();
-        this.badge = levelRequestDto.getBadge();
-        this.exp = levelRequestDto.getExp();
+    public Level(int levelNum, String name, String badge, int exp) {
+        this.levelNum = levelNum;
+        this.name = name;
+        this.badge = badge;
+        this.exp = exp;
     }
 
-    public void changeLevel(LevelEditDto levelEditDto) {
-        this.levelNum = (levelEditDto.getLevelNum() != 0) ? levelEditDto.getLevelNum() : this.levelNum;
-        this.name = Optional.ofNullable(levelEditDto.getName()).orElse(this.name);
-        this.badge = Optional.ofNullable(levelEditDto.getBadge()).orElse(this.badge);
-        this.exp = (levelEditDto.getExp() != 0) ? levelEditDto.getExp() : this.exp;
+    public void changeLevel(int levelNum, String name, String badge, int exp) {
+        this.levelNum = (levelNum != 0) ? levelNum : this.levelNum;
+        this.name = Optional.ofNullable(name).orElse(this.name);
+        this.badge = Optional.ofNullable(badge).orElse(this.badge);
+        this.exp = (exp != 0) ? exp : this.exp;
     }
 
 }

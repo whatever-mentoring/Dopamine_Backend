@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-12T22:47:35+0900",
+    date = "2023-09-12T22:53:44+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Oracle Corporation)"
 )
 @Component
@@ -27,6 +27,8 @@ public class LevelMapperImpl implements LevelMapper {
         }
         levelResponseDto.levelNum( level.getLevelNum() );
         levelResponseDto.name( level.getName() );
+        levelResponseDto.badge( level.getBadge() );
+        levelResponseDto.exp( level.getExp() );
 
         return levelResponseDto.build();
     }

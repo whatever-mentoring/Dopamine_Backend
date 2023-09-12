@@ -27,17 +27,23 @@ public class LevelService {
 
     /**
      * CREATE : 생성
+     *
      * @param levelRequestDto
      */
     public Level createLevel(LevelRequestDto levelRequestDto) {
         // create
-        Level level = Level.builder().levelRequestDto(levelRequestDto).build();
+        Level level = Level.builder()
+                .levelNum(levelRequestDto.getLevelNum())
+                .name(levelRequestDto.getName())
+                .badge(levelRequestDto.getBadge())
+                .exp(levelRequestDto.getExp()).build();
         levelRepository.save(level);
         return level;
     }
 
     /**
      * DELTE : 삭제
+     *
      * @param levelId
      */
     public void deleteLevel(Long levelId) {
@@ -47,6 +53,7 @@ public class LevelService {
 
     /**
      * GET : 조회
+     *
      * @param levelId
      * @return levelResponseDto
      */
@@ -59,13 +66,14 @@ public class LevelService {
 
     /**
      * UPDATE : 수정
+     *
      * @param levelId levelEditDto
      * @return levelResponseDto
      */
     public LevelResponseDto editLevel(Long levelId, LevelEditDto levelEditDto) {
         // edit
         Level level = verifiedLevel(levelId);
-        level.changeLevel(levelEditDto);
+        level.changeLevel(levelEditDto.getLevelNum(), levelEditDto.getName(), levelEditDto.getBadge(), levelEditDto.getExp());
 
         // level -> responseDto
         LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
@@ -74,6 +82,7 @@ public class LevelService {
 
     /**
      * 검증 -> levelId 입력하면 관련 ChallengeMember Entity가 있는지 확인
+     *
      * @param levelId
      * @return level
      */
