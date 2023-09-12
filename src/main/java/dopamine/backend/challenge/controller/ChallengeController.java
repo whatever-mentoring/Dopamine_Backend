@@ -4,6 +4,7 @@ import dopamine.backend.challenge.request.ChallengeEditDTO;
 import dopamine.backend.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.challenge.service.ChallengeService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = "챌린지 API")
 public class ChallengeController {
 
     private final ChallengeService challengeService;
