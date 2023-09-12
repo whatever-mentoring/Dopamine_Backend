@@ -18,7 +18,10 @@ public enum ExceptionCode {
     CHALLENGEMEMBER_NOT_FOUND(404, "ChallengeMember not found"),
 
     // 402 UnAuthorized
-    AUTHORIZATION_HEADER_NOT_VALID(402, "Authorization Header Bad Request");
+    AUTHORIZATION_HEADER_NOT_VALID(402, "Authorization Header Bad Request"),
+
+    // 500 Internal Server Error
+    IMAGE_UPLOAD_FAILED(500, "이미지 업로드를 실패하였습니다.");
 
     @Getter
     private int status;
