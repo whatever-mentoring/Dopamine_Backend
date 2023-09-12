@@ -11,6 +11,7 @@ public enum ExceptionCode {
     TOKEN_NOT_VALID(400, "AccessToken이 유효하지 않습니다."),
     KAKAO_CODE_NOT_VALID(400, "코드가 카카오 서버에서 유효하지 않습니다."),
     MISSING_REQUEST_PARAM(400, "필수 파라미터를 작성해야 합니다."),
+    EXP_NOT_VALID(400, "레벨 경험치는 이전 레벨보다 높은 기준으로 설정해주세요."),
 
     // 404 Not Found
     MEMBER_NOT_FOUND(404, "Member not found"),

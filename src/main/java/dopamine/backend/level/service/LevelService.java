@@ -1,5 +1,6 @@
 package dopamine.backend.level.service;
 
+import com.amazonaws.services.ec2.model.ExcessCapacityTerminationPolicy;
 import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.exception.BusinessLogicException;
 import dopamine.backend.exception.ExceptionCode;
@@ -34,9 +35,17 @@ public class LevelService {
      */
     public Level createLevel(LevelRequestDto levelRequestDto) {
 
+        // todo : 기능 돌아가지만 코드 리팩토링 & edit 부분에도 구현 & 더 큰 것기준도 설정
+        int levelNum = createLevelNum();
+
+        int compareExp = levelRepository.findLevelByLevelNum(levelNum - 1).map(Level::getExp).orElse(-1);
+
+        if (compareExp >= levelRequestDto.getExp()) {
+            throw new BusinessLogicException(ExceptionCode.EXP_NOT_VALID);
+        }
         // create
         Level level = Level.builder()
-                .levelNum(createLevelNum())
+                .levelNum(levelNum)
                 .name(levelRequestDto.getName())
                 .badge(levelRequestDto.getBadge())
                 .exp(levelRequestDto.getExp()).build();
@@ -74,7 +83,7 @@ public class LevelService {
      * @return levelResponseDto
      */
     public LevelResponseDto editLevel(Long levelId, LevelEditDto levelEditDto) {
-        
+
         // edit
         Level level = verifiedLevel(levelId);
         level.changeLevel(levelEditDto.getName(), levelEditDto.getBadge(), levelEditDto.getExp());
@@ -86,7 +95,6 @@ public class LevelService {
 
     /**
      * 검증 -> levelId 입력하면 관련 ChallengeMember Entity가 있는지 확인
-     *
      * @param levelId
      * @return level
      */
@@ -108,5 +116,7 @@ public class LevelService {
                 .map(level -> level.getLevelNum() + 1)
                 .orElse(1);
     }
+
+
 
 }
