@@ -3,7 +3,6 @@ package dopamine.backend.feed.entity;
 import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.common.entity.BaseEntity;
 import dopamine.backend.feed.request.FeedEditDTO;
-import dopamine.backend.feedImage.entity.FeedImage;
 import dopamine.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,6 +26,12 @@ public class Feed extends BaseEntity {
 
     private Boolean openYn;
 
+    private String image1Url;
+
+    private String image2Url;
+
+    private String image3Url;
+
     @ColumnDefault("true")
     private Boolean fulfillYn;
 
@@ -38,41 +43,35 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    @OneToOne(mappedBy = "feed", cascade = CascadeType.ALL)
-    private FeedImage feedImage;
+    public void setMember(Member member){
+        this.member = member;
+    }
 
-    private void setChallenge(Challenge challenge) {
+    public void setChallenge(Challenge challenge) {
         this.challenge = challenge;
-        challenge.getFeeds().add(this);
+        if(!this.challenge.getFeeds().contains(this))
+            challenge.getFeeds().add(this);
     }
 
     public void deleteFromChallenge(){
         this.challenge.getFeeds().remove(this);
     }
 
-    // feedImage와 연관관계 생성 - 오직 생성시에만
-    private void setFeedImage(){
-        FeedImage newfeedImage = new FeedImage();
-        feedImage.setFeed(this);
-        this.feedImage = newfeedImage;
-    }
-
     @Builder
-    public Feed(String content, Boolean openYn, Member member, Challenge challenge) {
+    public Feed(String content, Boolean openYn, Member member,String image1Url,String image2Url,String image3Url) {
         this.content = content;
         this.openYn = openYn;
         this.member = member;
-        setChallenge(challenge);
-        setFeedImage();
+        this.image1Url = image1Url;
+        this.image2Url = image2Url;
+        this.image3Url = image3Url;
     }
 
     public void changeFeed(FeedEditDTO feedEditDTO){
         this.content = feedEditDTO.getContent();
         this.openYn = feedEditDTO.getOpenYn();
-        this.feedImage.changeFeedImage(feedEditDTO.getFeedImageRequestDTO());
+        this.image1Url = feedEditDTO.getImage1Url();
+        this.image2Url = feedEditDTO.getImage2Url();
+        this.image3Url = feedEditDTO.getImage3Url();
     }
-
-    // todo Member entity 편의 메소드 추가
-
-    // like 연관관계는 API에서 feedId로 쿼리 조회하므로, 필요없을 것 같습니다 => CASCADE가 필요하면 DDL에서
 }
