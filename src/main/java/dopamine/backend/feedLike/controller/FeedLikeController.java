@@ -2,6 +2,7 @@ package dopamine.backend.feedLike.controller;
 
 import dopamine.backend.feedLike.response.FeedLikeResponseDTO;
 import dopamine.backend.feedLike.service.FeedLikeService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Api(tags = "인증글 좋아요 API")
 public class FeedLikeController {
 
     private final FeedLikeService feedLikeService;

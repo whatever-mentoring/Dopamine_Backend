@@ -4,11 +4,13 @@ import dopamine.backend.feed.request.FeedEditDTO;
 import dopamine.backend.feed.request.FeedRequestDTO;
 import dopamine.backend.feed.response.FeedResponseDTO;
 import dopamine.backend.feed.service.FeedService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = "인증글 API")
 public class FeedController {
 
     private final FeedService feedService;
