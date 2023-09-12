@@ -3,8 +3,8 @@ package dopamine.backend.challenge.response;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 public class ChallengeResponseDTO {
     private String title;
     private String subtitle;
