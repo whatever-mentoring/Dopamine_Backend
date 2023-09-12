@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-10T17:04:10+0900",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.16.1 (Oracle Corporation)"
+    date = "2023-09-12T01:01:41+0900",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.6 (Azul Systems, Inc.)"
 )
 @Component
 public class LevelMapperImpl implements LevelMapper {
@@ -31,7 +31,9 @@ public class LevelMapperImpl implements LevelMapper {
         levelResponseDto.challengeCnt( level.getChallengeCnt() );
         levelResponseDto.createdDate( level.getCreatedDate() );
         levelResponseDto.modifiedDate( level.getModifiedDate() );
-        levelResponseDto.delYn( level.getDelYn() );
+        if ( level.getDelYn() != null ) {
+            levelResponseDto.delYn( String.valueOf( level.getDelYn() ) );
+        }
 
         return levelResponseDto.build();
     }

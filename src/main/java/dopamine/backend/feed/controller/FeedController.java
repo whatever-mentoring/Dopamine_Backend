@@ -2,6 +2,7 @@ package dopamine.backend.feed.controller;
 
 import dopamine.backend.feed.request.FeedEditDTO;
 import dopamine.backend.feed.request.FeedRequestDTO;
+import dopamine.backend.feed.response.FeedResponseDTO;
 import dopamine.backend.feed.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class FeedController {
      * @param feedId
      */
     @GetMapping("/feeds/{feedId}")
-    public void getFeed(@PathVariable Long feedId){
-        feedService.getFeed(feedId);
+    public FeedResponseDTO getFeed(@PathVariable Long feedId){
+        return feedService.getFeed(feedId);
     }
 
     // todo 피드 리스트 조회 페이징 처리
