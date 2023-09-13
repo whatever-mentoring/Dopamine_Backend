@@ -8,6 +8,7 @@ import dopamine.backend.challenge.request.ChallengeEditDTO;
 import dopamine.backend.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.challengemember.entity.ChallengeMember;
+import dopamine.backend.challengemember.repository.ChallengeMemberRepository;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final ChallengeCustomRepository challengeCustomRepository;
+    private final ChallengeMemberRepository challengeMemberRepository;
 
     private final ChallengeMapper challengeMapper;
 
@@ -89,11 +91,19 @@ public class ChallengeService {
             String todayInfo = getFormatDate(today);
             String existInfo = getFormatDate(existRefreshDate);
 
-            List<Challenge> exitChallenge = member.getChallengeMembers().stream().map(ChallengeMember::getChallenge).collect(Collectors.toList());
+            List<ChallengeMember> challengeMembers = member.getChallengeMembers();
+            List<Challenge> exitChallenge = challengeMembers.stream().map(ChallengeMember::getChallenge).collect(Collectors.toList());
 
             // 갱신
             if(!todayInfo.equals(existInfo)){
                 List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
+
+                // 기존 연관관계 삭제
+                for(int i = 0; i < challengeMembers.size(); i++){
+                    challengeMembers.get(i).deleteChallengeMember();
+                }
+                challengeMemberRepository.deleteAllInBatch(challengeMembers);
+
                 challengeResponseList = getChallengeResponseList(todayChallenges);
 
                 todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
