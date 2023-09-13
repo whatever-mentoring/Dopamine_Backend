@@ -3,6 +3,7 @@ package dopamine.backend.member.service;
 import dopamine.backend.exception.BusinessLogicException;
 import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.level.entity.Level;
+import dopamine.backend.level.repository.LevelRepository;
 import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
@@ -27,6 +28,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
     private final LevelService levelService;
+    private final LevelRepository levelRepository;
 
     /**
      * CREATE : 생성
@@ -37,8 +39,8 @@ public class MemberService {
         // 닉네임 중복 검사
         checkNicknameDuplication(null, memberRequestDto.getNickname());
 
-        // create
-        Level level = levelService.verifiedLevel(memberRequestDto.getLevelId());
+        // exp에 해당하는 레벨 생성
+        Level level = getMemberLevel(memberRequestDto.getExp());
 
         Member member = Member.builder()
                 .memberRequestDto(memberRequestDto)
@@ -51,9 +53,9 @@ public class MemberService {
     }
 
     /**
-     * DELTE : 삭제
+     * DELETE : 삭제
      *
-     * @param memberId
+     * @param member
      */
     public void deleteMember(Member member) {
         memberRepository.delete(member);
@@ -84,10 +86,7 @@ public class MemberService {
         checkNicknameDuplication(member, memberEditDto.getNickname());
 
         // level
-        if (memberEditDto.getLevelId() != null) {
-            Level level = levelService.verifiedLevel(memberEditDto.getLevelId());
-            memberEditDto.setLevel(level);
-        }
+        memberEditDto.setLevel(getMemberLevel(memberEditDto.getExp()));
 
         member.changeMember(memberEditDto);
 
@@ -117,7 +116,6 @@ public class MemberService {
     public Member findMemberByKakaoId(String kakaoId) {
         return memberRepository.findMemberByKakaoId(kakaoId).orElseGet(() -> createMember(MemberRequestDto.builder()
                 .kakaoId(kakaoId)
-                .levelId(levelService.findMemberByLevelNum(1).getLevelId())
                 .build()));
     }
 
@@ -125,22 +123,30 @@ public class MemberService {
      * 닉네임 중복 검사<p>
      * 1. 기존 사용자 정보이면, 중복 검사 진행 X<p>
      * 2. nickname 값이 입력되어 있으면, 중복 검사 진행
+     *
      * @param member
      * @param nickname
      */
     public void checkNicknameDuplication(Member member, String nickname) {
-        log.info("여기 닉네임" + nickname);
-        if (member!= null && member.getNickname()!= null) {
-            if(member.getNickname().equals(nickname)){
+        if (member != null && member.getNickname() != null) {
+            if (member.getNickname().equals(nickname)) {
                 return;
             }
         }
 
         if (nickname != null) {
-            log.info("여기2");
             memberRepository.findMemberByNickname(nickname).ifPresent(a -> {
                 throw new BusinessLogicException(ExceptionCode.NICKNAME_DUPLICATE);
             });
         }
+    }
+
+    /**
+     * exp에 해당하는 Level 반환
+     * @param exp
+     * @return
+     */
+    public Level getMemberLevel(int exp) {
+        return levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp);
     }
 }

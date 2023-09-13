@@ -14,4 +14,5 @@ public interface LevelRepository extends JpaRepository<Level, Long> {
     Optional<Level> findLevelByLevelNum(int levelNum);
     Optional<Level> findTopByOrderByLevelNumDesc();
     List<Level> findAllByOrderByLevelNumAsc();
+    Level findTopByExpLessThanEqualOrderByExpDesc(int exp);
 }

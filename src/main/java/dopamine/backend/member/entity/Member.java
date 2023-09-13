@@ -32,6 +32,8 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
+    private int exp;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
     private Level level;
@@ -48,6 +50,7 @@ public class Member extends BaseEntity {
         this.kakaoId = memberRequestDto.getKakaoId();
         this.nickname = memberRequestDto.getNickname();
         this.refreshToken = memberRequestDto.getRefreshToken();
+        this.exp = memberRequestDto.getExp();
         setLevel(level);
     }
 
@@ -59,6 +62,7 @@ public class Member extends BaseEntity {
         this.kakaoId = Optional.ofNullable(memberEditDto.getKakaoId()).orElse(this.kakaoId);
         this.nickname = Optional.ofNullable(memberEditDto.getNickname()).orElse(this.nickname);
         this.refreshToken = Optional.ofNullable(memberEditDto.getRefreshToken()).orElse(this.refreshToken);
+        this.exp = Optional.of(memberEditDto.getExp()).orElse(this.exp);
         setLevel(memberEditDto.getLevel());
     }
 
