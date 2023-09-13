@@ -11,6 +11,6 @@ public class MemberDetailResponseDto {
     private Long memberId;
     private String kakaoId;
     private String nickname;
-    private int feedCnt;
+    private int exp;
     private LevelResponseDto level;
 }

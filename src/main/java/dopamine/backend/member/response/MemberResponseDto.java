@@ -14,4 +14,5 @@ public class MemberResponseDto {
     private Long memberId;
     private String kakaoId;
     private String nickname;
+    private int exp;
 }

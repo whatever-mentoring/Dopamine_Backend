@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name="member_id")
+    @Column(name = "member_id")
     private Long memberId;
 
     private String kakaoId;
@@ -31,6 +31,8 @@ public class Member extends BaseEntity {
     private String nickname;
 
     private String refreshToken;
+
+    private int exp;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
@@ -41,29 +43,29 @@ public class Member extends BaseEntity {
 
     /**
      * 생성자
+     *
      * @param memberRequestDto
      */
     @Builder
-    public Member(MemberRequestDto memberRequestDto, Level level) {
-        this.kakaoId = memberRequestDto.getKakaoId();
-        this.nickname = memberRequestDto.getNickname();
-        this.refreshToken = memberRequestDto.getRefreshToken();
+    public Member(String kakaoId, String nickname, String refreshToken, int exp, Level level) {
+        this.kakaoId = kakaoId;
+        this.nickname = nickname;
+        this.refreshToken = refreshToken;
+        this.exp = exp;
         setLevel(level);
     }
 
     /**
      * 수정(UPDATE)
+     *
      * @param memberEditDto
      */
-    public void changeMember(MemberEditDto memberEditDto) {
-        this.kakaoId = Optional.ofNullable(memberEditDto.getKakaoId()).orElse(this.kakaoId);
-        this.nickname = Optional.ofNullable(memberEditDto.getNickname()).orElse(this.nickname);
-        this.refreshToken = Optional.ofNullable(memberEditDto.getRefreshToken()).orElse(this.refreshToken);
-        setLevel(memberEditDto.getLevel());
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void changeMember(String kakaoId, String nickname, String refreshToken, int exp, Level level) {
+        this.kakaoId = Optional.ofNullable(kakaoId).orElse(this.kakaoId);
+        this.nickname = Optional.ofNullable(nickname).orElse(this.nickname);
+        this.refreshToken = Optional.ofNullable(refreshToken).orElse(this.refreshToken);
+        this.exp = (exp != 0) ? exp : this.exp;
+        setLevel(level);
     }
 
     // == 연관관계 편의 메소드 == //

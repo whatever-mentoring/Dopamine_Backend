@@ -28,11 +28,11 @@ public class LevelController {
     @PostMapping
     public LevelResponseDto createLevel(
             @RequestPart(value = "request") LevelRequestDto levelRequestDto,
-            @RequestPart(value = "image", required = false) MultipartFile file) {
+            @RequestPart(value = "badge", required = false) MultipartFile file) {
 
         // 이미지 업로드
         if (file != null) {
-            levelRequestDto.setImage(imageService.updateImage(file, "level", "image"));
+            levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
         }
 
         // 레벨 생성
@@ -61,11 +61,11 @@ public class LevelController {
     public LevelResponseDto editLevel(
             @Positive @PathVariable("level-id") Long levelId,
             @RequestPart(value = "request") LevelEditDto levelEditDto,
-            @RequestPart(value = "image", required = false) MultipartFile file) {
+            @RequestPart(value = "badge", required = false) MultipartFile file) {
 
         // 이미지 업로드
         if (file != null) {
-            levelEditDto.setImage(imageService.updateImage(file, "level", "image"));
+            levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
         }
 
         return levelService.editLevel(levelId, levelEditDto);
