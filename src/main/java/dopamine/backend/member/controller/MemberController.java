@@ -63,7 +63,6 @@ public class MemberController {
                 .memberId(member.getMemberId())
                 .kakaoId(member.getKakaoId())
                 .nickname(member.getNickname())
-                .feedCnt(1) // Todo : challengeCnt 찾을 수 있는 함수 작성해야 함 <- Feed 엔티티라 미뤘음
                 .level(levelMapper.levelToLevelResponseDto(member.getLevel()))
                 .build();
 

@@ -42,10 +42,13 @@ public class MemberService {
         // exp에 해당하는 레벨 생성
         Level level = getMemberLevel(memberRequestDto.getExp());
 
+        // member 생성
         Member member = Member.builder()
-                .memberRequestDto(memberRequestDto)
-                .level(level)
-                .build();
+                .kakaoId(memberRequestDto.getKakaoId())             // kakaoId
+                .nickname(memberRequestDto.getNickname())           // nickname
+                .refreshToken(memberRequestDto.getRefreshToken())   // refreshToken
+                .level(level)                                       // level
+                .exp(memberRequestDto.getExp()).build();            // exp
 
         memberRepository.save(member);
 
@@ -83,12 +86,20 @@ public class MemberService {
      */
     public Member editMember(Member member, MemberEditDto memberEditDto) {
 
+        // 닉네임 중복 검사
         checkNicknameDuplication(member, memberEditDto.getNickname());
 
-        // level
-        memberEditDto.setLevel(getMemberLevel(memberEditDto.getExp()));
+        // exp에 해당하는 레벨 생성
+        Level level = getMemberLevel(memberEditDto.getExp());
 
-        member.changeMember(memberEditDto);
+        // member 수정
+        member.changeMember(
+                memberEditDto.getKakaoId(),         // kakaoId
+                memberEditDto.getNickname(),        // nickname
+                memberEditDto.getRefreshToken(),    // refreshToken
+                memberEditDto.getExp(),             // exp
+                level                               // level
+        );
 
         return member;
     }
@@ -143,8 +154,9 @@ public class MemberService {
 
     /**
      * exp에 해당하는 Level 반환
+     *
      * @param exp
-     * @return
+     * @return Level
      */
     public Level getMemberLevel(int exp) {
         return levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp);
