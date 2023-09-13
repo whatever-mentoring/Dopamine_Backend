@@ -22,14 +22,14 @@ spring:
 
   jpa:
     database: mysql
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
-        globally_quoted_identifiers: true
+        format_sql: false
+        show_sql: false
+        globally_quoted_identifiers: false
 
 logging:
   level:

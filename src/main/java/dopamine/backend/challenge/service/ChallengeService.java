@@ -2,13 +2,22 @@ package dopamine.backend.challenge.service;
 
 import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.challenge.mapper.ChallengeMapper;
+import dopamine.backend.challenge.repository.ChallengeCustomRepository;
 import dopamine.backend.challenge.repository.ChallengeRepository;
 import dopamine.backend.challenge.request.ChallengeEditDTO;
 import dopamine.backend.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
+import dopamine.backend.challengemember.entity.ChallengeMember;
+import dopamine.backend.member.entity.Member;
+import dopamine.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final ChallengeCustomRepository challengeCustomRepository;
+
     private final ChallengeMapper challengeMapper;
+
+    private final MemberService memberService;
 
     private Challenge verifiedChallenge(Long challengeId) {
         return challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
@@ -54,5 +67,52 @@ public class ChallengeService {
         Challenge challenge = verifiedChallenge(challengeId);
 
         challenge.changeChallenge(challengeEditDTO);
+    }
+
+    public List<ChallengeResponseDTO> todayChallenge(Long userId) {
+
+        Member member = memberService.verifiedMember(userId);
+        List<ChallengeResponseDTO> challengeResponseList;
+
+        // 기존에 챌린지 받은 적 없음
+        LocalDateTime existRefreshDate = member.getChallengeRefreshDate();
+        if(existRefreshDate == null){
+            List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(null);
+            challengeResponseList = getChallengeResponseList(todayChallenges);
+
+            todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
+        }
+
+        else {
+            LocalDateTime today = LocalDateTime.now();
+
+            String todayInfo = getFormatDate(today);
+            String existInfo = getFormatDate(existRefreshDate);
+
+            List<Challenge> exitChallenge = member.getChallengeMembers().stream().map(ChallengeMember::getChallenge).collect(Collectors.toList());
+
+            // 갱신
+            if(!todayInfo.equals(existInfo)){
+                List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
+                challengeResponseList = getChallengeResponseList(todayChallenges);
+
+                todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
+            }
+            // 조회
+            else {
+                challengeResponseList = getChallengeResponseList(exitChallenge);
+            }
+        }
+        member.setChallengeRefreshDate(LocalDateTime.now());
+
+        return challengeResponseList;
+    }
+
+    private static String getFormatDate(LocalDateTime today) {
+        return today.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+    }
+
+    private List<ChallengeResponseDTO> getChallengeResponseList(List<Challenge> challenges) {
+        return challenges.stream().map(challengeMapper::challengeToChallengeResponseDTO).collect(Collectors.toList());
     }
 }
