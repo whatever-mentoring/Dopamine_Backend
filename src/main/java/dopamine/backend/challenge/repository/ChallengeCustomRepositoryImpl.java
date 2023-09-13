@@ -31,7 +31,7 @@ public class ChallengeCustomRepositoryImpl implements ChallengeCustomRepository{
             }
         }
 
-        Predicate duplicatePredicate = ExpressionUtils.anyOf(predicates.toArray(new Predicate[0]));
+        Predicate duplicatePredicate = ExpressionUtils.allOf(predicates.toArray(new Predicate[0]));
 
         Challenge challengeHigh = jpaQueryFactory.selectFrom(challenge)
                 .where(challenge.challengeLevel.eq(ChallengeLevel.HIGH),

@@ -1,10 +1,7 @@
 package dopamine.backend.challengemember.entity;
 
 import dopamine.backend.challenge.entity.Challenge;
-import dopamine.backend.challengemember.request.ChallengeMemberEditDto;
-import dopamine.backend.challengemember.request.ChallengeMemberRequestDto;
 import dopamine.backend.common.entity.BaseEntity;
-import dopamine.backend.level.entity.Level;
 import dopamine.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -42,6 +39,11 @@ public class ChallengeMember extends BaseEntity {
     public ChallengeMember(Member member, Challenge challenge) {
         setMember(member);
         setChallenge(challenge);
+
+        if(!this.member.getChallengeMembers().contains(this))
+            this.member.getChallengeMembers().add(this);
+        if(!this.challenge.getChallengeMembers().contains(this))
+            this.challenge.getChallengeMembers().add(this);
     }
 
 

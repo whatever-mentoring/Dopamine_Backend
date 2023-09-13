@@ -78,4 +78,8 @@ public class Member extends BaseEntity {
         this.level = Optional.ofNullable(level).orElse(this.level);
         this.level.getMembers().add(this);
     }
+
+    public void setChallengeRefreshDate(LocalDateTime localDateTime){
+        challengeRefreshDate = localDateTime;
+    }
 }

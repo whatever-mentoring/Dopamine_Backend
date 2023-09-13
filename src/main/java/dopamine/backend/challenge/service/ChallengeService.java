@@ -79,6 +79,8 @@ public class ChallengeService {
         if(existRefreshDate == null){
             List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(null);
             challengeResponseList = getChallengeResponseList(todayChallenges);
+
+            todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
         }
 
         else {
@@ -93,12 +95,15 @@ public class ChallengeService {
             if(!todayInfo.equals(existInfo)){
                 List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
                 challengeResponseList = getChallengeResponseList(todayChallenges);
+
+                todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
             }
             // 조회
             else {
                 challengeResponseList = getChallengeResponseList(exitChallenge);
             }
         }
+        member.setChallengeRefreshDate(LocalDateTime.now());
 
         return challengeResponseList;
     }
