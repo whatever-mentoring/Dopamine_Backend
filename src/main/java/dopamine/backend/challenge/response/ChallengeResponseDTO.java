@@ -1,5 +1,6 @@
 package dopamine.backend.challenge.response;
 
+import dopamine.backend.challenge.entity.ChallengeLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,5 +11,5 @@ public class ChallengeResponseDTO {
     private String subtitle;
     private String image;
     private String challengeGuide;
-    private Integer challengeLevel;
+    private ChallengeLevel challengeLevel;
 }

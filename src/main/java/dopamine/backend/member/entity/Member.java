@@ -1,16 +1,17 @@
 package dopamine.backend.member.entity;
 
-import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.challengemember.entity.ChallengeMember;
 import dopamine.backend.common.entity.BaseEntity;
 import dopamine.backend.level.entity.Level;
-import dopamine.backend.level.request.LevelEditDto;
-import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.request.MemberEditDto;
 import dopamine.backend.member.request.MemberRequestDto;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,8 @@ public class Member extends BaseEntity {
     private String nickname;
 
     private String refreshToken;
+
+    private LocalDateTime challengeRefreshDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
@@ -75,5 +78,9 @@ public class Member extends BaseEntity {
         }
         this.level = Optional.ofNullable(level).orElse(this.level);
         this.level.getMembers().add(this);
+    }
+
+    public void setChallengeRefreshDate(LocalDateTime localDateTime){
+        challengeRefreshDate = localDateTime;
     }
 }
