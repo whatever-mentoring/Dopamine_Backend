@@ -8,6 +8,8 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "인증글 API")
@@ -24,10 +26,16 @@ public class FeedController {
         return feedService.getFeed(feedId);
     }
 
-    // todo 피드 리스트 조회 페이징 처리
-    @GetMapping("/feeds")
-    public void getFeeds(){
+    @GetMapping("/feeds/order-by-date")
+    public List<FeedResponseDTO> getFeedsByDate(@RequestParam Integer page){
+        return feedService.feedListOrderByDate(page);
+    }
 
+    @GetMapping("/feeds/order-by-likecount")
+    public void getFeedsByLikeCount(@RequestParam Integer page){
+        // todo
+
+        feedService.feedListOrderByLikeCount(page);
     }
 
     /**

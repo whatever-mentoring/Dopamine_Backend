@@ -6,6 +6,7 @@ import dopamine.backend.challenge.repository.ChallengeRepository;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.feed.entity.Feed;
 import dopamine.backend.feed.mapper.FeedMapper;
+import dopamine.backend.feed.repository.FeedCustomRepository;
 import dopamine.backend.feed.repository.FeedRepository;
 import dopamine.backend.feed.request.FeedEditDTO;
 import dopamine.backend.feed.request.FeedRequestDTO;
@@ -16,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -25,6 +29,7 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
+    private final FeedCustomRepository feedCustomRepository;
 
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
@@ -73,5 +78,20 @@ public class FeedService {
         Feed feed = verifiedFeed(feedId);
 
         feedRepository.delete(feed);
+    }
+
+    public List<FeedResponseDTO> feedListOrderByDate(Integer page) {
+
+        List<Feed> feedList = feedCustomRepository.getFeedListOrderByDate(page);
+        List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
+            ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
+            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO);
+        }).collect(Collectors.toList());
+
+        return feedResponseDTOList;
+    }
+
+    public void feedListOrderByLikeCount(Integer page) {
+        // todo
     }
 }

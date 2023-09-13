@@ -77,14 +77,15 @@ class ChallengeServiceTest {
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
         Level level = Level.builder().levelRequestDto(levelRequestDto).build();
+        levelRepository.save(level);
+
         Member member = Member.builder().memberRequestDto(requestDto).level(level).build();
+        memberRepository.save(member);
 
         Challenge challenge1 = Challenge.builder().title("test1").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.HIGH).build();
         Challenge challenge2 = Challenge.builder().title("test2").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.MID).build();
         Challenge challenge3 = Challenge.builder().title("test3").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.LOW).build();
 
-        levelRepository.save(level);
-        memberRepository.save(member);
         challengeRepository.saveAll(List.of(challenge1, challenge2, challenge3));
 
         Member findMember = memberRepository.findMemberByNickname("test").orElseThrow(() -> new RuntimeException("찾을 수 없음"));
