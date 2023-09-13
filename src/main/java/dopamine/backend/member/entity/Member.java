@@ -28,6 +28,7 @@ public class Member extends BaseEntity {
 
     private String kakaoId;
 
+    @Column(unique = true)
     private String nickname;
 
     private String refreshToken;
