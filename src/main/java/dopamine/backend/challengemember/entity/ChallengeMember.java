@@ -39,13 +39,7 @@ public class ChallengeMember extends BaseEntity {
     public ChallengeMember(Member member, Challenge challenge) {
         setMember(member);
         setChallenge(challenge);
-
-        if(!this.member.getChallengeMembers().contains(this))
-            this.member.getChallengeMembers().add(this);
-        if(!this.challenge.getChallengeMembers().contains(this))
-            this.challenge.getChallengeMembers().add(this);
     }
-
 
     /**
      * UPDATE : 수정
@@ -57,27 +51,37 @@ public class ChallengeMember extends BaseEntity {
         setChallenge(challenge);
     }
 
+    public void deleteChallengeMember(){
+        deleteMember();
+        deleteChallenge();
+    }
+
     // == 연관관계 편의 메소드 == //
     private void setMember(Member member) {
+        deleteMember();
+        this.member = Optional.ofNullable(member).orElse(this.member);
+        this.member.getChallengeMembers().add(this);
+    }
+
+    private void deleteMember() {
         if (this.member != null) {
             if (this.member.getChallengeMembers().contains(this)) {
                 this.member.getChallengeMembers().remove(this);
             }
         }
-        this.member = Optional.ofNullable(member).orElse(this.member);
-        this.member.getChallengeMembers().add(this);
     }
 
     private void setChallenge(Challenge challenge) {
+        deleteChallenge();
+        this.challenge = Optional.ofNullable(challenge).orElse(this.challenge);
+        this.challenge.getChallengeMembers().add(this);
+    }
+
+    private void deleteChallenge() {
         if (this.challenge != null) {
             if (this.challenge.getChallengeMembers().contains(this)) {
                 this.challenge.getChallengeMembers().remove(this);
             }
         }
-        this.challenge = Optional.ofNullable(challenge).orElse(this.challenge);
-        this.challenge.getChallengeMembers().add(this);
     }
-
-
-
 }
