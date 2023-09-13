@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface LevelRepository extends JpaRepository<Level, Long> {
 
     Optional<Level> findLevelByLevelNum(int levelNum);
-
     Optional<Level> findTopByOrderByLevelNumDesc();
+    List<Level> findAllByOrderByLevelNumAsc();
 }
