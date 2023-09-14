@@ -36,10 +36,10 @@ public class JwtController {
                                         @RequestParam(value = "redirect-url", required = false) String redirect_url) {
 
         if(StringUtils.isEmpty(code)) {
-            throw new BusinessLogicException(ExceptionCode.MISSING_REQUEST_PARAM);
+            throw new BusinessLogicException(ExceptionCode.MISSING_CODE_REQUEST_PARAM);
         }
         if(StringUtils.isEmpty(redirect_url)) {
-            throw new BusinessLogicException(ExceptionCode.MISSING_REQUEST_PARAM);
+            throw new BusinessLogicException(ExceptionCode.MISSING_REDIRECT_REQUEST_PARAM);
         }
 
         // 유저 정보 얻기
