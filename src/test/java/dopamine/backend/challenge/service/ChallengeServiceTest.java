@@ -51,7 +51,7 @@ class ChallengeServiceTest {
 
         // given
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
         Member member = memberService.createMember(requestDto);
 
@@ -81,7 +81,7 @@ class ChallengeServiceTest {
 
         // given
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
         Member member = memberService.createMember(requestDto);
 
@@ -120,7 +120,7 @@ class ChallengeServiceTest {
 
         // given
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
         Member member = memberService.createMember(requestDto);
 

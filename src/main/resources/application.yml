@@ -45,7 +45,7 @@ cloud:
     s3:
       bucket: ${DOPAMINE_S3_BUCKET}
     credentials:
-      access-key: AKIAZREF643A5FRXWUUC
+      access-key: ${DOPAMINE_S3_KEY}
       secret-key: ${DOPAMINE_S3_SECRET_KEY}
     region:
       static: ap-northeast-2
