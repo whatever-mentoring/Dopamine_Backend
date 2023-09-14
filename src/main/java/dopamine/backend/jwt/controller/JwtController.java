@@ -32,15 +32,16 @@ public class JwtController {
     private final MemberMapper memberMapper;
 
     @GetMapping("/login")
-    public ResponseEntity kakaoCallback(@RequestParam(value = "code", required = false) String code) {
-
-        if(StringUtils.isEmpty(code)) {
-            throw new BusinessLogicException(ExceptionCode.MISSING_REQUEST_PARAM);
-        }
+    public ResponseEntity kakaoCallback(@RequestParam(value = "token", required = false) String token,
+                                        @RequestParam(value = "code", required = false) String code) {
 
         // 유저 정보 얻기
-        String kakaoAccessToken = jwtService.getKakaoAccessToken(code);
-        KakaoUserInfo kakaoUserInfo = jwtService.getKakaoUserInfo(kakaoAccessToken);
+        if(!StringUtils.isEmpty(code)) {
+            token = jwtService.getKakaoAccessToken(code);
+        } else if(StringUtils.isEmpty(token)) {
+            throw new BusinessLogicException(ExceptionCode.MISSING_REQUEST_PARAM);
+        }
+        KakaoUserInfo kakaoUserInfo = jwtService.getKakaoUserInfo(token);
 
         // 해당 kakao ID를 가진 Member 반환
         log.info(kakaoUserInfo.getKakaoId());
