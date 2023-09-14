@@ -89,7 +89,10 @@ public class MemberService {
         checkNicknameDuplication(member, memberEditDto.getNickname());
 
         // exp에 해당하는 레벨 생성
-        Level level = getMemberLevel(memberEditDto.getExp());
+        Level level = member.getLevel();
+        if (memberEditDto.getExp() != 0) {
+            level = getMemberLevel(memberEditDto.getExp());
+        }
 
         // member 수정
         member.changeMember(
@@ -160,5 +163,7 @@ public class MemberService {
     public Level getMemberLevel(int exp) {
         return levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp);
     }
+
+
 
 }

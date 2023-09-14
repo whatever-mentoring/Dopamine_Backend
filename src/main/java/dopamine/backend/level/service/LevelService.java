@@ -9,6 +9,7 @@ import dopamine.backend.level.mapper.LevelMapper;
 import dopamine.backend.level.repository.LevelRepository;
 import dopamine.backend.level.request.LevelEditDto;
 import dopamine.backend.level.request.LevelRequestDto;
+import dopamine.backend.level.response.LevelDetailResponseDto;
 import dopamine.backend.level.response.LevelResponseDto;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.repository.MemberRepository;
@@ -31,10 +32,8 @@ public class LevelService {
 
     private final LevelRepository levelRepository;
     private final LevelMapper levelMapper;
-    private final MemberRepository memberRepository;
-    private final MemberService memberService;
 
-    static int INF = 1000000000;
+    public static int INF = 1000000000;
 
     /**
      * CREATE : 생성(name, exp, badge 설정 & levelNum 자동 설정)
@@ -151,4 +150,21 @@ public class LevelService {
             levels.get(i).changeLevel(i+1, null, null, 0);
         }
     }
+
+    public LevelDetailResponseDto memberDetailLevel(Member member) {
+        int expRange = levelRepository.findLevelByLevelNum(member.getLevel().getLevelNum() + 1).map(Level::getExp).orElse(INF) - member.getLevel().getExp();
+        int expMember = levelRepository.findLevelByLevelNum(member.getLevel().getLevelNum() + 1).map(Level::getExp).orElse(INF) - member.getExp() - 1;
+        int expPercent = (int)Math.round((double) expMember/expRange * 100);
+
+        return LevelDetailResponseDto.builder()
+                .levelId(member.getLevel().getLevelId())
+                .levelNum(member.getLevel().getLevelNum())
+                .name(member.getLevel().getName())
+                .badge(member.getLevel().getBadge())
+                .expRange(expRange)
+                .expMember(expMember)
+                .expPercent(expPercent).build();
+    }
+
+
 }
