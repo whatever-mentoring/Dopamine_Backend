@@ -11,6 +11,9 @@ import dopamine.backend.level.request.LevelEditDto;
 import dopamine.backend.level.request.LevelRequestDto;
 import dopamine.backend.level.response.LevelResponseDto;
 import dopamine.backend.member.entity.Member;
+import dopamine.backend.member.repository.MemberRepository;
+import dopamine.backend.member.request.MemberEditDto;
+import dopamine.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class LevelService {
 
     private final LevelRepository levelRepository;
     private final LevelMapper levelMapper;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     static int INF = 1000000000;
 

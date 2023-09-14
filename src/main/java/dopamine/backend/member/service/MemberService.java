@@ -161,4 +161,5 @@ public class MemberService {
     public Level getMemberLevel(int exp) {
         return levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp);
     }
+
 }
