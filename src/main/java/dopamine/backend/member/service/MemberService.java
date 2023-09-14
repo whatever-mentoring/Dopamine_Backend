@@ -27,7 +27,6 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
-    private final LevelService levelService;
     private final LevelRepository levelRepository;
 
     /**

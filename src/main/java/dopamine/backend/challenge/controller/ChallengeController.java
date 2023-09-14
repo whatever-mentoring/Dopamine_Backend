@@ -63,4 +63,9 @@ public class ChallengeController {
     public void editChallenge(@PathVariable Long challengeId, @RequestBody ChallengeEditDTO challengeEditDTO){
         challengeService.editChallenge(challengeId, challengeEditDTO);
     }
+
+    @GetMapping("/challenges/today-challenge/{userId}")
+    public void todayChallenge(@PathVariable Long userId){
+        challengeService.todayChallenge(userId);
+    }
 }

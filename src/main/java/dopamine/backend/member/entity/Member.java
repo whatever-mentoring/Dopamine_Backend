@@ -8,9 +8,13 @@ import dopamine.backend.level.request.LevelEditDto;
 import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.request.MemberEditDto;
 import dopamine.backend.member.request.MemberRequestDto;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +38,8 @@ public class Member extends BaseEntity {
 
     private int exp;
 
+    private LocalDateTime challengeRefreshDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id")
     private Level level;
@@ -43,9 +49,13 @@ public class Member extends BaseEntity {
 
     /**
      * 생성자
-     *
-     * @param memberRequestDto
+     * @param kakaoId
+     * @param nickname
+     * @param refreshToken
+     * @param exp
+     * @param level
      */
+
     @Builder
     public Member(String kakaoId, String nickname, String refreshToken, int exp, Level level) {
         this.kakaoId = kakaoId;
@@ -57,8 +67,11 @@ public class Member extends BaseEntity {
 
     /**
      * 수정(UPDATE)
-     *
-     * @param memberEditDto
+     * @param kakaoId
+     * @param nickname
+     * @param refreshToken
+     * @param exp
+     * @param level
      */
     public void changeMember(String kakaoId, String nickname, String refreshToken, int exp, Level level) {
         this.kakaoId = Optional.ofNullable(kakaoId).orElse(this.kakaoId);
@@ -77,5 +90,9 @@ public class Member extends BaseEntity {
         }
         this.level = Optional.ofNullable(level).orElse(this.level);
         this.level.getMembers().add(this);
+    }
+
+    public void setChallengeRefreshDate(LocalDateTime localDateTime){
+        challengeRefreshDate = localDateTime;
     }
 }
