@@ -45,6 +45,8 @@ public class FeedLikeService {
 
         FeedLike feedLike = FeedLike.builder().feed(feed).member(member).build();
         feedLikeRepository.save(feedLike);
+
+        feed.addLikeCount();
     }
 
     public void feedLikeCancel(Long feedId, Long memberId) {
@@ -53,6 +55,8 @@ public class FeedLikeService {
 
         FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(member, feed).orElseThrow(() -> new RuntimeException("존재하지 않는 좋아요입니다."));
         feedLikeRepository.delete(feedLike);
+
+        feed.minusLikeCount();
     }
 
     @Transactional(readOnly = true)

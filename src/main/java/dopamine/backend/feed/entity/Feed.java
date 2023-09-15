@@ -32,6 +32,9 @@ public class Feed extends BaseEntity {
 
     private String image3Url;
 
+    @ColumnDefault("0")
+    private Integer likeCount;
+
     @ColumnDefault("true")
     private Boolean fulfillYn;
 
@@ -51,6 +54,14 @@ public class Feed extends BaseEntity {
         this.challenge = challenge;
         if(!this.challenge.getFeeds().contains(this))
             challenge.getFeeds().add(this);
+    }
+
+    public void addLikeCount(){
+        this.likeCount++;
+    }
+
+    public void minusLikeCount(){
+        this.likeCount--;
     }
 
     public void deleteFromChallenge(){
