@@ -8,6 +8,7 @@ import dopamine.backend.level.response.LevelResponseDto;
 import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.s3.service.ImageService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = "레벨 API")
 @RequestMapping("/api/levels")
 public class LevelController {
 

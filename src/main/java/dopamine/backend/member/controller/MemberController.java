@@ -21,6 +21,7 @@ import dopamine.backend.member.service.MemberService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
 import dopamine.backend.member.service.MemberService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ import static dopamine.backend.level.service.LevelService.INF;
 
 @RestController
 @RequestMapping("/api/members")
+@Api(tags = "멤버 API")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
