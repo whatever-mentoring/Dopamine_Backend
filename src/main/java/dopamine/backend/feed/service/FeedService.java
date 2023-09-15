@@ -37,7 +37,7 @@ public class FeedService {
     public FeedResponseDTO getFeed(Long feedId) {
         Feed feed = verifiedFeed(feedId);
 
-        if(!feed.getFulfillYn()) throw new RuntimeException("기준이 미달된 피드입니다.");
+        if (!feed.getFulfillYn()) throw new RuntimeException("기준이 미달된 피드입니다.");
 
         Challenge challenge = feed.getChallenge();
         ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(challenge);
@@ -90,8 +90,10 @@ public class FeedService {
             return 30;
         } else if (challengeLevel == challengeLevel.MID) {
             return 10;
-        } else {
+        } else if (challengeLevel == challengeLevel.LOW) {
             return 5;
+        } else {
+            return 0;
         }
     }
 }
