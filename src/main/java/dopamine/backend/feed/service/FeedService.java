@@ -32,11 +32,9 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
-<<<<<<< HEAD
-=======
+
     private final FeedCustomRepository feedCustomRepository;
 
->>>>>>> feature/karmapol/feedlist
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
 
@@ -90,7 +88,6 @@ public class FeedService {
         feedRepository.delete(feed);
     }
 
-<<<<<<< HEAD
     /**
      * ChallengeLevel에 따른 exp 추출
      * HIGH : 20
@@ -107,7 +104,8 @@ public class FeedService {
         } else {
             return 0;
         }
-=======
+    }
+
     private List<FeedResponseDTO> getFeedResponseDTOS(List<Feed> feedList) {
         List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
             ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
@@ -136,6 +134,5 @@ public class FeedService {
         Member member = memberService.verifiedMember(memberId);
         List<Feed> feedListByMemberOrderByDate = feedCustomRepository.getFeedListByMemberOrderByDate(page, member);
         return getFeedResponseDTOS(feedListByMemberOrderByDate);
->>>>>>> feature/karmapol/feedlist
     }
 }
