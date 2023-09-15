@@ -14,7 +14,7 @@ public enum ExceptionCode {
     MISSING_REQUEST_PARAM(400, "필수 파라미터(token)를 작성해야 합니다."),
     EXP_MIN_NOT_VALID(400, "레벨 경험치는 이전 레벨보다 높은 기준으로 설정해주세요."),
     EXP_MAX_NOT_VALID(400, "레벨 경험치는 이후 레벨보다 낮은 기준으로 설정해주세요."),
-
+    LOGOUT_MEMBER(400, "이미 로그아웃한 유저입니다."),
     // 404 Not Found
     MEMBER_NOT_FOUND(404, "Member not found"),
     LEVEL_NOT_FOUND(404, "Level not found"),
