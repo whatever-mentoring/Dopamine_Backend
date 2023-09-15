@@ -25,6 +25,7 @@ public class MemberMapperImpl implements MemberMapper {
         memberResponseDto.memberId( member.getMemberId() );
         memberResponseDto.kakaoId( member.getKakaoId() );
         memberResponseDto.nickname( member.getNickname() );
+        memberResponseDto.exp( member.getExp() );
 
         return memberResponseDto.build();
     }

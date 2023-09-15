@@ -27,8 +27,8 @@ public class LevelMapperImpl implements LevelMapper {
         }
         levelResponseDto.levelNum( level.getLevelNum() );
         levelResponseDto.name( level.getName() );
-        levelResponseDto.image( level.getImage() );
-        levelResponseDto.challengeCnt( level.getChallengeCnt() );
+        levelResponseDto.badge( level.getBadge() );
+        levelResponseDto.exp( level.getExp() );
 
         return levelResponseDto.build();
     }
