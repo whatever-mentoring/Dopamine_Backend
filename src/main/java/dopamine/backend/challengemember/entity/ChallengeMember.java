@@ -60,13 +60,10 @@ public class ChallengeMember extends BaseEntity {
         deleteChallenge();
     }
 
-<<<<<<< HEAD
-=======
     public void setCertificationYn(Boolean certificationYn){
         this.certificationYn = certificationYn;
     }
 
->>>>>>> feature/karmapol/feedlist
     // == 연관관계 편의 메소드 == //
     private void setMember(Member member) {
         deleteMember();
