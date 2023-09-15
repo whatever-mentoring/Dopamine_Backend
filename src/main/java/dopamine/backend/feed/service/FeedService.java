@@ -4,6 +4,7 @@ import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.challenge.mapper.ChallengeMapper;
 import dopamine.backend.challenge.repository.ChallengeRepository;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
+import dopamine.backend.challenge.service.ChallengeService;
 import dopamine.backend.feed.entity.Feed;
 import dopamine.backend.feed.mapper.FeedMapper;
 import dopamine.backend.feed.repository.FeedCustomRepository;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class FeedService {
 
+    private final ChallengeService challengeService;
     private final MemberService memberService;
 
     private final FeedRepository feedRepository;
@@ -80,18 +82,33 @@ public class FeedService {
         feedRepository.delete(feed);
     }
 
-    public List<FeedResponseDTO> feedListOrderByDate(Integer page) {
-
-        List<Feed> feedList = feedCustomRepository.getFeedListOrderByDate(page);
+    private List<FeedResponseDTO> getFeedResponseDTOS(List<Feed> feedList) {
         List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
             ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
             return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO);
         }).collect(Collectors.toList());
-
         return feedResponseDTOList;
     }
 
-    public void feedListOrderByLikeCount(Integer page) {
-        // todo
+    public List<FeedResponseDTO> feedListOrderByDate(Integer page) {
+        List<Feed> feedList = feedCustomRepository.getFeedListOrderByDate(page);
+        return getFeedResponseDTOS(feedList);
+    }
+
+    public List<FeedResponseDTO> feedListOrderByLikeCount(Integer page) {
+        List<Feed> feedList = feedCustomRepository.getFeedListOrderByLikeCount(page);
+        return getFeedResponseDTOS(feedList);
+    }
+
+    public List<FeedResponseDTO> feedListByChallengeOrderByDate(Long challengeId) {
+        Challenge challenge = challengeService.verifiedChallenge(challengeId);
+        List<Feed> feedListByChallengeOrderByLikeCount = feedCustomRepository.getFeedListByChallengeOrderByLikeCount(challenge);
+        return getFeedResponseDTOS(feedListByChallengeOrderByLikeCount);
+    }
+
+    public List<FeedResponseDTO> feedListByMember(Long memberId, Integer page) {
+        Member member = memberService.verifiedMember(memberId);
+        List<Feed> feedListByMemberOrderByDate = feedCustomRepository.getFeedListByMemberOrderByDate(page, member);
+        return getFeedResponseDTOS(feedListByMemberOrderByDate);
     }
 }

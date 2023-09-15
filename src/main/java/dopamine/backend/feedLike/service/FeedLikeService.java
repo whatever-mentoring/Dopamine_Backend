@@ -36,7 +36,7 @@ public class FeedLikeService {
         return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
     }
 
-    public void feedLike(Long feedId, Long memberId) {
+    public Integer feedLike(Long feedId, Long memberId) {
         Member member = verifiedMember(memberId);
         Feed feed = verifiedFeed(feedId);
 
@@ -47,9 +47,11 @@ public class FeedLikeService {
         feedLikeRepository.save(feedLike);
 
         feed.addLikeCount();
+
+        return feed.getLikeCount();
     }
 
-    public void feedLikeCancel(Long feedId, Long memberId) {
+    public Integer feedLikeCancel(Long feedId, Long memberId) {
         Member member = verifiedMember(memberId);
         Feed feed = verifiedFeed(feedId);
 
@@ -57,6 +59,8 @@ public class FeedLikeService {
         feedLikeRepository.delete(feedLike);
 
         feed.minusLikeCount();
+
+        return feed.getLikeCount();
     }
 
     @Transactional(readOnly = true)

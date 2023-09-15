@@ -26,16 +26,45 @@ public class FeedController {
         return feedService.getFeed(feedId);
     }
 
+    /**
+     * 피드 리스트 조회 - 최신 순
+     * @param page
+     * @return
+     */
     @GetMapping("/feeds/order-by-date")
     public List<FeedResponseDTO> getFeedsByDate(@RequestParam Integer page){
         return feedService.feedListOrderByDate(page);
     }
 
+    /**
+     * 피드 리스트 조회 - 좋아요 순 (한달 내)
+     * @param page
+     * @return
+     */
     @GetMapping("/feeds/order-by-likecount")
-    public void getFeedsByLikeCount(@RequestParam Integer page){
-        // todo
+    public List<FeedResponseDTO> getFeedsByLikeCount(@RequestParam Integer page){
+        return feedService.feedListOrderByLikeCount(page);
+    }
 
-        feedService.feedListOrderByLikeCount(page);
+    /**
+     * 피드 리스트 조회 - 챌린지 기준 좋아요 순 (한달 내)
+     * 메인 페이지 노출 용
+     * @return
+     */
+    @GetMapping("/feeds/main-page/{challengeId}")
+    public List<FeedResponseDTO> getFeedsByChallenge(@PathVariable Long challengeId){
+        return feedService.feedListByChallengeOrderByDate(challengeId);
+    }
+
+    /**
+     * 피드 리스트 조회 - 사용자 기준 최신 순
+     * @param memberId
+     * @param page
+     * @return
+     */
+    @GetMapping("/feeds/by-member/{memberId}")
+    public List<FeedResponseDTO> getFeedsByMember(@PathVariable Long memberId, @RequestParam Integer page){
+        return feedService.feedListByMember(memberId, page);
     }
 
     /**
