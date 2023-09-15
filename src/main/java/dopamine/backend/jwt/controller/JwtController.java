@@ -12,6 +12,7 @@ import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
 import dopamine.backend.member.response.MemberResponseDto;
 import dopamine.backend.member.service.MemberService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@Api(tags = "로그인 API")
 @Validated
 @AllArgsConstructor
 @Slf4j

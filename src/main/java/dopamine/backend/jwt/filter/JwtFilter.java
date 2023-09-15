@@ -35,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         // 로그인일 경우 건너뛰기
         if (
-                path.startsWith("/api/auth/login")
+                path.startsWith("/api/auth/login") || path.startsWith("/swagger-ui/") || path.startsWith("/v3/api-docs/") || path.startsWith("/swagger-resources/")
         ) {
             filterChain.doFilter(request, response);
             return;
