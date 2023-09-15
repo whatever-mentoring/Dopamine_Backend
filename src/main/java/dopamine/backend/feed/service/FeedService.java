@@ -89,7 +89,7 @@ public class FeedService {
     }
 
     /**
-     * ChallengeLevel에 따른 exp 추출
+     * ChallengeLevel에 따른 exp 추출 => ChallengeLevel ENUM에 넣어도 되지 않을까요?
      * HIGH : 20
      * MID : 10
      * LOW : 5

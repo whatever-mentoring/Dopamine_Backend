@@ -31,7 +31,7 @@ public class Feed extends BaseEntity {
     private String image3Url;
 
     @ColumnDefault("0")
-    private Integer likeCount;
+    private Integer likeCount = 0;
 
     @ColumnDefault("true")
     private Boolean fulfillYn;
