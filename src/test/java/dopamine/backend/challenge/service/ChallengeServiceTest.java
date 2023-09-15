@@ -9,9 +9,11 @@ import dopamine.backend.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.level.entity.Level;
 import dopamine.backend.level.repository.LevelRepository;
 import dopamine.backend.level.request.LevelRequestDto;
+import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.repository.MemberRepository;
 import dopamine.backend.member.request.MemberRequestDto;
+import dopamine.backend.member.service.MemberService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,10 @@ class ChallengeServiceTest {
     @Autowired
     private LevelRepository levelRepository;
     @Autowired
+    private LevelService levelService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private ObjectMapper objectMapper;
@@ -45,9 +51,9 @@ class ChallengeServiceTest {
 
         // given
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
-        Level level = Level.builder().levelRequestDto(levelRequestDto).build();
-        Member member = Member.builder().memberRequestDto(requestDto).level(level).build();
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
+        Level level = levelService.createLevel(levelRequestDto);
+        Member member = memberService.createMember(requestDto);
 
         Challenge challenge1 = Challenge.builder().title("test1").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.HIGH).build();
         Challenge challenge2 = Challenge.builder().title("test2").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.MID).build();
@@ -75,9 +81,9 @@ class ChallengeServiceTest {
 
         // given
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
-        Level level = Level.builder().levelRequestDto(levelRequestDto).build();
-        Member member = Member.builder().memberRequestDto(requestDto).level(level).build();
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
+        Level level = levelService.createLevel(levelRequestDto);
+        Member member = memberService.createMember(requestDto);
 
         Challenge challenge1 = Challenge.builder().title("test1").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.HIGH).build();
         Challenge challenge2 = Challenge.builder().title("test2").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.MID).build();
@@ -114,9 +120,9 @@ class ChallengeServiceTest {
 
         // given
         MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").build();
-        Level level = Level.builder().levelRequestDto(levelRequestDto).build();
-        Member member = Member.builder().memberRequestDto(requestDto).level(level).build();
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
+        Level level = levelService.createLevel(levelRequestDto);
+        Member member = memberService.createMember(requestDto);
 
         Challenge challenge1 = Challenge.builder().title("test1").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.HIGH).build();
         Challenge challenge2 = Challenge.builder().title("test2").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.MID).build();

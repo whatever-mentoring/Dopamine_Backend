@@ -25,30 +25,31 @@ public class Level extends BaseEntity {
     @Column(name = "level_id")
     private Long levelId;
 
+    @Column(unique = true)
     private int levelNum;
 
     private String name;
 
-    private String image;
+    private String badge;
 
-    private int challengeCnt;
+    private int exp;
 
     @OneToMany(mappedBy = "level", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Member> members = new ArrayList<>();
 
     @Builder
-    public Level(LevelRequestDto levelRequestDto) {
-        this.levelNum = levelRequestDto.getLevelNum();
-        this.name = levelRequestDto.getName();
-        this.image = levelRequestDto.getImage();
-        this.challengeCnt = levelRequestDto.getChallengeCnt();
+    public Level(int levelNum, String name, String badge, int exp) {
+        this.levelNum = levelNum;
+        this.name = name;
+        this.badge = badge;
+        this.exp = exp;
     }
 
-    public void changeLevel(LevelEditDto levelEditDto) {
-        this.levelNum = (levelEditDto.getLevelNum() != 0) ? levelEditDto.getLevelNum() : this.levelNum;
-        this.name = Optional.ofNullable(levelEditDto.getName()).orElse(this.name);
-        this.image = Optional.ofNullable(levelEditDto.getImage()).orElse(this.image);
-        this.challengeCnt = (levelEditDto.getChallengeCnt() != 0) ? levelEditDto.getChallengeCnt() : this.challengeCnt;
+    public void changeLevel(int levelNum, String name, String badge, int exp) {
+        this.levelNum = (levelNum != 0) ? levelNum : this.levelNum;
+        this.name = Optional.ofNullable(name).orElse(this.name);
+        this.badge = Optional.ofNullable(badge).orElse(this.badge);
+        this.exp = (exp != 0) ? exp : this.exp;
     }
 
 }

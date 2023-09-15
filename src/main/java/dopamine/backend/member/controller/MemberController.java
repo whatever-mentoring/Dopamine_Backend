@@ -1,12 +1,18 @@
 package dopamine.backend.member.controller;
 
+import dopamine.backend.challenge.entity.Challenge;
 import dopamine.backend.challengemember.entity.ChallengeMember;
 import dopamine.backend.challengemember.service.ChallengeMemberService;
 import dopamine.backend.feed.repository.FeedRepository;
 import dopamine.backend.jwt.dto.KakaoUserInfo;
 import dopamine.backend.jwt.response.JwtResponse;
 import dopamine.backend.jwt.service.JwtService;
+import dopamine.backend.level.entity.Level;
 import dopamine.backend.level.mapper.LevelMapper;
+import dopamine.backend.level.repository.LevelRepository;
+import dopamine.backend.level.response.LevelDetailResponseDto;
+import dopamine.backend.level.response.LevelResponseDto;
+import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.request.MemberEditDto;
 import dopamine.backend.member.request.MemberRequestDto;
 import dopamine.backend.member.response.MemberDetailResponseDto;
@@ -24,6 +30,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static dopamine.backend.level.service.LevelService.INF;
 
 
 @RestController
@@ -33,8 +43,9 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
     private final JwtService jwtService;
-    private final LevelMapper levelMapper;
-    private final FeedRepository feedRepository;
+    private final LevelService levelService;
+
+
 
     // CREATE : 생성
     @PostMapping
@@ -56,12 +67,15 @@ public class MemberController {
     public ResponseEntity getMember(@RequestHeader("Authorization") String accessToken) {
 
         Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+
+        LevelDetailResponseDto levelDetailResponseDto = levelService.memberDetailLevel(member);
+
         MemberDetailResponseDto response = MemberDetailResponseDto.builder()
                 .memberId(member.getMemberId())
                 .kakaoId(member.getKakaoId())
                 .nickname(member.getNickname())
-                .feedCnt(1) // Todo : challengeCnt 찾을 수 있는 함수 작성해야 함 <- Feed 엔티티라 미뤘음
-                .level(levelMapper.levelToLevelResponseDto(member.getLevel()))
+                .exp(member.getExp())
+                .level(levelDetailResponseDto)
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
