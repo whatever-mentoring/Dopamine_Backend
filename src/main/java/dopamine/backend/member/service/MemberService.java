@@ -3,6 +3,7 @@ package dopamine.backend.member.service;
 import dopamine.backend.exception.BusinessLogicException;
 import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.level.entity.Level;
+import dopamine.backend.level.repository.LevelRepository;
 import dopamine.backend.level.service.LevelService;
 import dopamine.backend.member.entity.Member;
 import dopamine.backend.member.mapper.MemberMapper;
@@ -26,7 +27,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
-    private final LevelService levelService;
+    private final LevelRepository levelRepository;
 
     /**
      * CREATE : 생성
@@ -37,13 +38,16 @@ public class MemberService {
         // 닉네임 중복 검사
         checkNicknameDuplication(null, memberRequestDto.getNickname());
 
-        // create
-        Level level = levelService.verifiedLevel(memberRequestDto.getLevelId());
+        // exp에 해당하는 레벨 생성
+        Level level = getMemberLevel(memberRequestDto.getExp());
 
+        // member 생성
         Member member = Member.builder()
-                .memberRequestDto(memberRequestDto)
-                .level(level)
-                .build();
+                .kakaoId(memberRequestDto.getKakaoId())             // kakaoId
+                .nickname(memberRequestDto.getNickname())           // nickname
+                .refreshToken(memberRequestDto.getRefreshToken())   // refreshToken
+                .level(level)                                       // level
+                .exp(memberRequestDto.getExp()).build();            // exp
 
         memberRepository.save(member);
 
@@ -51,9 +55,9 @@ public class MemberService {
     }
 
     /**
-     * DELTE : 삭제
+     * DELETE : 삭제
      *
-     * @param memberId
+     * @param member
      */
     public void deleteMember(Member member) {
         memberRepository.delete(member);
@@ -81,15 +85,23 @@ public class MemberService {
      */
     public Member editMember(Member member, MemberEditDto memberEditDto) {
 
+        // 닉네임 중복 검사
         checkNicknameDuplication(member, memberEditDto.getNickname());
 
-        // level
-        if (memberEditDto.getLevelId() != null) {
-            Level level = levelService.verifiedLevel(memberEditDto.getLevelId());
-            memberEditDto.setLevel(level);
+        // exp에 해당하는 레벨 생성
+        Level level = member.getLevel();
+        if (memberEditDto.getExp() != 0) {
+            level = getMemberLevel(memberEditDto.getExp());
         }
 
-        member.changeMember(memberEditDto);
+        // member 수정
+        member.changeMember(
+                memberEditDto.getKakaoId(),         // kakaoId
+                memberEditDto.getNickname(),        // nickname
+                memberEditDto.getRefreshToken(),    // refreshToken
+                memberEditDto.getExp(),             // exp
+                level                               // level
+        );
 
         return member;
     }
@@ -117,7 +129,6 @@ public class MemberService {
     public Member findMemberByKakaoId(String kakaoId) {
         return memberRepository.findMemberByKakaoId(kakaoId).orElseGet(() -> createMember(MemberRequestDto.builder()
                 .kakaoId(kakaoId)
-                .levelId(levelService.findMemberByLevelNum(1).getLevelId())
                 .build()));
     }
 
@@ -125,22 +136,58 @@ public class MemberService {
      * 닉네임 중복 검사<p>
      * 1. 기존 사용자 정보이면, 중복 검사 진행 X<p>
      * 2. nickname 값이 입력되어 있으면, 중복 검사 진행
+     *
      * @param member
      * @param nickname
      */
     public void checkNicknameDuplication(Member member, String nickname) {
-        log.info("여기 닉네임" + nickname);
-        if (member!= null && member.getNickname()!= null) {
-            if(member.getNickname().equals(nickname)){
+        if (member != null && member.getNickname() != null) {
+            if (member.getNickname().equals(nickname)) {
                 return;
             }
         }
 
         if (nickname != null) {
-            log.info("여기2");
             memberRepository.findMemberByNickname(nickname).ifPresent(a -> {
                 throw new BusinessLogicException(ExceptionCode.NICKNAME_DUPLICATE);
             });
+        }
+    }
+
+    /**
+     * exp에 해당하는 Level 반환
+     *
+     * @param exp
+     * @return Level
+     */
+    public Level getMemberLevel(int exp) {
+        return levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp);
+    }
+
+
+    /**
+     * Member의 exp 증가
+     *
+     * @param member
+     * @param exp
+     */
+    public void plusMemberExp(Member member, int exp) {
+        exp = member.getExp() + exp;
+        Level level = getMemberLevel(exp);
+        member.changeMember(null, null, null, exp, level);
+    }
+
+    /**
+     * Member의 exp 감소
+     *
+     * @param member
+     * @param exp
+     */
+    public void minusMemberExp(Member member, int exp) {
+        if (member.getExp() >= exp) {
+            exp = member.getExp() + exp;
+            Level level = getMemberLevel(exp);
+            member.changeMember(null, null, null, exp, level);
         }
     }
 }

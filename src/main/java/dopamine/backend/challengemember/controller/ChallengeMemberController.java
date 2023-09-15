@@ -4,6 +4,7 @@ import dopamine.backend.challengemember.request.ChallengeMemberEditDto;
 import dopamine.backend.challengemember.request.ChallengeMemberRequestDto;
 import dopamine.backend.challengemember.response.ChallengeMemberResponseDto;
 import dopamine.backend.challengemember.service.ChallengeMemberService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = "챌린지 멤버 API : 챌린지에 참여하는 멤버 확인")
 @RequestMapping("/api/challenge-members")
 public class ChallengeMemberController {
 

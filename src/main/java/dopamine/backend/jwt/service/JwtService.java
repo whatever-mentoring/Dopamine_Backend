@@ -98,6 +98,7 @@ public class JwtService {
     }
 
     public KakaoUserInfo getKakaoUserInfo(String token) {
+        log.info("token : " + token);
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         KakaoUserInfo kakaoUserInfo = new KakaoUserInfo();
@@ -113,6 +114,9 @@ public class JwtService {
 
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                throw new BusinessLogicException(ExceptionCode.KAKAO_CODE_NOT_VALID);
+            }
             log.info("responseCode : " + responseCode);
 
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기

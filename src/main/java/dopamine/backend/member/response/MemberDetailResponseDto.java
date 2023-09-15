@@ -1,6 +1,6 @@
 package dopamine.backend.member.response;
 
-import dopamine.backend.level.response.LevelResponseDto;
+import dopamine.backend.level.response.LevelDetailResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,6 +11,6 @@ public class MemberDetailResponseDto {
     private Long memberId;
     private String kakaoId;
     private String nickname;
-    private int feedCnt;
-    private LevelResponseDto level;
+    private int exp;
+    private LevelDetailResponseDto level;
 }
