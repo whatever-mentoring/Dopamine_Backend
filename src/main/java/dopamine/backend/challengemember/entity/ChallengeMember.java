@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -20,6 +21,9 @@ public class ChallengeMember extends BaseEntity {
     @GeneratedValue
     @Column(name = "challenge_member_id")
     private Long challengeMemberId;
+
+    @ColumnDefault("false")
+    private Boolean certificationYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -56,6 +60,13 @@ public class ChallengeMember extends BaseEntity {
         deleteChallenge();
     }
 
+<<<<<<< HEAD
+=======
+    public void setCertificationYn(Boolean certificationYn){
+        this.certificationYn = certificationYn;
+    }
+
+>>>>>>> feature/karmapol/feedlist
     // == 연관관계 편의 메소드 == //
     private void setMember(Member member) {
         deleteMember();

@@ -33,7 +33,7 @@ public class ChallengeService {
 
     private final MemberService memberService;
 
-    private Challenge verifiedChallenge(Long challengeId) {
+    public Challenge verifiedChallenge(Long challengeId) {
         return challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
     }
 
