@@ -15,6 +15,7 @@ import dopamine.backend.member.service.MemberService;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -32,9 +33,10 @@ public class JwtController {
     private final MemberService memberService;
     private final JwtService jwtService;
     private final MemberMapper memberMapper;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @GetMapping("/login")
-    public ResponseEntity kakaoCallback(@RequestParam(value = "token", required = false) String token,
+    public ResponseEntity login(@RequestParam(value = "token", required = false) String token,
                                         @RequestParam(value = "code", required = false) String code) {
 
         // 유저 정보 얻기
@@ -62,5 +64,10 @@ public class JwtController {
                 .token(tokenResponse)
                 .member(memberResponse).build();
         return new ResponseEntity<>(jwtResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/logout")
+    public void logout(@RequestHeader("Authorization") String accessToken) {
+        redisTemplate.opsForValue().set(accessToken, "logout");
     }
 }

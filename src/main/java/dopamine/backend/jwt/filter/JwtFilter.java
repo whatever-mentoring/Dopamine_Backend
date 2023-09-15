@@ -6,11 +6,13 @@ import dopamine.backend.jwt.provider.JwtProvider;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -25,6 +27,7 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final String secretKey;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -44,6 +47,8 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_VALID);
         }
+
+        validBlackToken(authorization);
 
         // Token 꺼내기
         String token = authorization.split(" ")[1];
@@ -79,5 +84,12 @@ public class JwtFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         log.info("[+] Token in SecurityContextHolder");
         filterChain.doFilter(request, response);
+    }
+
+    private void validBlackToken(String accessToken) {
+        String blackToken = redisTemplate.opsForValue().get(accessToken);
+        if(StringUtils.hasText(blackToken)) {
+            throw new BusinessLogicException(ExceptionCode.LOGOUT_MEMBER);
+        }
     }
 }

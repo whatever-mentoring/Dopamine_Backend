@@ -24,13 +24,14 @@ public class Feed extends BaseEntity {
 
     private String content;
 
-    private Boolean openYn;
-
     private String image1Url;
 
     private String image2Url;
 
     private String image3Url;
+
+    @ColumnDefault("0")
+    private Integer likeCount;
 
     @ColumnDefault("true")
     private Boolean fulfillYn;
@@ -53,6 +54,14 @@ public class Feed extends BaseEntity {
             challenge.getFeeds().add(this);
     }
 
+    public void addLikeCount(){
+        this.likeCount++;
+    }
+
+    public void minusLikeCount(){
+        this.likeCount--;
+    }
+
     public void deleteFromChallenge(){
         this.challenge.getFeeds().remove(this);
     }
@@ -60,7 +69,6 @@ public class Feed extends BaseEntity {
     @Builder
     public Feed(String content, Boolean openYn, Member member,String image1Url,String image2Url,String image3Url) {
         this.content = content;
-        this.openYn = openYn;
         this.member = member;
         this.image1Url = image1Url;
         this.image2Url = image2Url;
@@ -69,7 +77,6 @@ public class Feed extends BaseEntity {
 
     public void changeFeed(FeedEditDTO feedEditDTO){
         this.content = feedEditDTO.getContent();
-        this.openYn = feedEditDTO.getOpenYn();
         this.image1Url = feedEditDTO.getImage1Url();
         this.image2Url = feedEditDTO.getImage2Url();
         this.image3Url = feedEditDTO.getImage3Url();

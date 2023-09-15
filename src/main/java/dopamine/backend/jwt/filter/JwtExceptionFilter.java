@@ -4,11 +4,15 @@ package dopamine.backend.jwt.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dopamine.backend.exception.ErrorResponse;
 import dopamine.backend.exception.ExceptionCode;
+import dopamine.backend.jwt.provider.JwtProvider;
+import dopamine.backend.member.service.MemberService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.Data;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtExceptionFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -25,21 +30,22 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        try{
+        try {
             filterChain.doFilter(request, response);
-        }catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             //토큰의 유효기간 만료
             setErrorResponse(request, response, ExceptionCode.TOKEN_NOT_VALID);
-        }catch (JwtException | IllegalArgumentException e){
+        } catch (JwtException | IllegalArgumentException e) {
             //유효하지 않은 토큰
             setErrorResponse(request, response, ExceptionCode.TOKEN_NOT_VALID);
         }
     }
+
     private void setErrorResponse(
             HttpServletRequest request,
             HttpServletResponse response,
             ExceptionCode exceptionCode
-    ){
+    ) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         int status = 400;
@@ -49,11 +55,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         ErrorResponse errorResponse = new ErrorResponse(status, error, exception, message, path);
-        try{
+        try {
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

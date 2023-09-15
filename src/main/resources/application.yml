@@ -9,6 +9,11 @@ server:
 
 spring:
 
+  redis:
+    host: 54.180.66.83
+    port: 6379
+    password: ${DOPAMINE_REDIS_PASSWORD}
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
