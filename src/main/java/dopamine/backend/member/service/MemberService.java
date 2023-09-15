@@ -165,5 +165,29 @@ public class MemberService {
     }
 
 
+    /**
+     * Member의 exp 증가
+     *
+     * @param member
+     * @param exp
+     */
+    public void plusMemberExp(Member member, int exp) {
+        exp = member.getExp() + exp;
+        Level level = getMemberLevel(exp);
+        member.changeMember(null, null, null, exp, level);
+    }
 
+    /**
+     * Member의 exp 감소
+     *
+     * @param member
+     * @param exp
+     */
+    public void minusMemberExp(Member member, int exp) {
+        if (member.getExp() >= exp) {
+            exp = member.getExp() + exp;
+            Level level = getMemberLevel(exp);
+            member.changeMember(null, null, null, exp, level);
+        }
+    }
 }

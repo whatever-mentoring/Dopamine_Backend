@@ -1,6 +1,7 @@
 package dopamine.backend.feed.service;
 
 import dopamine.backend.challenge.entity.Challenge;
+import dopamine.backend.challenge.entity.ChallengeLevel;
 import dopamine.backend.challenge.mapper.ChallengeMapper;
 import dopamine.backend.challenge.repository.ChallengeRepository;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
@@ -25,7 +26,6 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
-
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
 
@@ -54,6 +54,10 @@ public class FeedService {
         feed.setChallenge(challenge);
         feed.setMember(member);
 
+        // member의 exp추가 & level 반영
+        int exp = getExpByChallengeLevel(feed.getChallenge().getChallengeLevel());
+        memberService.plusMemberExp(member, exp);
+
         feedRepository.save(feed);
     }
 
@@ -73,5 +77,21 @@ public class FeedService {
         Feed feed = verifiedFeed(feedId);
 
         feedRepository.delete(feed);
+    }
+
+    /**
+     * ChallengeLevel에 따른 exp 추출
+     * HIGH : 20
+     * MID : 10
+     * LOW : 5
+     */
+    private int getExpByChallengeLevel(ChallengeLevel challengeLevel) {
+        if (challengeLevel == ChallengeLevel.HIGH) {
+            return 30;
+        } else if (challengeLevel == challengeLevel.MID) {
+            return 10;
+        } else {
+            return 5;
+        }
     }
 }
