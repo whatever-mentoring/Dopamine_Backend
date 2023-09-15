@@ -21,8 +21,8 @@ public class FeedLikeController {
      * @param memberId
      */
     @PostMapping("/feeds/{feedId}/likes")
-    public void feedLike(@PathVariable Long feedId, @RequestParam Long memberId){
-        feedLikeService.feedLike(feedId, memberId);
+    public Integer feedLike(@PathVariable Long feedId, @RequestParam Long memberId){
+        return feedLikeService.feedLike(feedId, memberId);
     }
 
     /**
@@ -31,8 +31,8 @@ public class FeedLikeController {
      * @param memberId
      */
     @DeleteMapping("/feeds/{feedId}/likes")
-    public void feedLikeCancel(@PathVariable Long feedId, @RequestParam Long memberId){
-        feedLikeService.feedLikeCancel(feedId, memberId);
+    public Integer feedLikeCancel(@PathVariable Long feedId, @RequestParam Long memberId){
+        return feedLikeService.feedLikeCancel(feedId, memberId);
     }
 
     /**

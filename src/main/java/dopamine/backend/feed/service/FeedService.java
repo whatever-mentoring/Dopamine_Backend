@@ -5,8 +5,10 @@ import dopamine.backend.challenge.entity.ChallengeLevel;
 import dopamine.backend.challenge.mapper.ChallengeMapper;
 import dopamine.backend.challenge.repository.ChallengeRepository;
 import dopamine.backend.challenge.response.ChallengeResponseDTO;
+import dopamine.backend.challenge.service.ChallengeService;
 import dopamine.backend.feed.entity.Feed;
 import dopamine.backend.feed.mapper.FeedMapper;
+import dopamine.backend.feed.repository.FeedCustomRepository;
 import dopamine.backend.feed.repository.FeedRepository;
 import dopamine.backend.feed.request.FeedEditDTO;
 import dopamine.backend.feed.request.FeedRequestDTO;
@@ -17,15 +19,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class FeedService {
 
+    private final ChallengeService challengeService;
     private final MemberService memberService;
 
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
+<<<<<<< HEAD
+=======
+    private final FeedCustomRepository feedCustomRepository;
+
+>>>>>>> feature/karmapol/feedlist
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
 
@@ -79,6 +90,7 @@ public class FeedService {
         feedRepository.delete(feed);
     }
 
+<<<<<<< HEAD
     /**
      * ChallengeLevel에 따른 exp 추출
      * HIGH : 20
@@ -95,5 +107,35 @@ public class FeedService {
         } else {
             return 0;
         }
+=======
+    private List<FeedResponseDTO> getFeedResponseDTOS(List<Feed> feedList) {
+        List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
+            ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
+            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO);
+        }).collect(Collectors.toList());
+        return feedResponseDTOList;
+    }
+
+    public List<FeedResponseDTO> feedListOrderByDate(Integer page) {
+        List<Feed> feedList = feedCustomRepository.getFeedListOrderByDate(page);
+        return getFeedResponseDTOS(feedList);
+    }
+
+    public List<FeedResponseDTO> feedListOrderByLikeCount(Integer page) {
+        List<Feed> feedList = feedCustomRepository.getFeedListOrderByLikeCount(page);
+        return getFeedResponseDTOS(feedList);
+    }
+
+    public List<FeedResponseDTO> feedListByChallengeOrderByDate(Long challengeId) {
+        Challenge challenge = challengeService.verifiedChallenge(challengeId);
+        List<Feed> feedListByChallengeOrderByLikeCount = feedCustomRepository.getFeedListByChallengeOrderByLikeCount(challenge);
+        return getFeedResponseDTOS(feedListByChallengeOrderByLikeCount);
+    }
+
+    public List<FeedResponseDTO> feedListByMember(Long memberId, Integer page) {
+        Member member = memberService.verifiedMember(memberId);
+        List<Feed> feedListByMemberOrderByDate = feedCustomRepository.getFeedListByMemberOrderByDate(page, member);
+        return getFeedResponseDTOS(feedListByMemberOrderByDate);
+>>>>>>> feature/karmapol/feedlist
     }
 }
