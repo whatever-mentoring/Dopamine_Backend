@@ -66,12 +66,17 @@ dependencies {
 			'org.projectlombok:lombok-mapstruct-binding:0.1.0',
 			'org.mapstruct:mapstruct-processor:1.4.2.Final'
 	)
+
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 }
 
 clean {

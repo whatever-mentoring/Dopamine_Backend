@@ -10,6 +10,10 @@ server:
 
 spring:
 
+  redis:
+    host: localhost # todo : 배포 서버 고려해보기
+    port: 6379
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
