@@ -3,9 +3,11 @@ package dopamine.backend.jwt.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dopamine.backend.jwt.filter.JwtExceptionFilter;
 import dopamine.backend.jwt.filter.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,12 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AuthenticationConfig {
 
 
     @Value("${jwt.secret}")
     private String secretKey;
 
+    private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Bean
@@ -33,10 +37,9 @@ public class AuthenticationConfig {
                 .authorizeRequests(authorize -> authorize.antMatchers("/api/auth/login").permitAll())
                 //.authorizeRequests(authorize -> authorize.anyRequest().permitAll())
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
-                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(secretKey, redisTemplate), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
                 .build()
                 ;
-
     }
 }

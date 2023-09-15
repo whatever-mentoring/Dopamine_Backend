@@ -14,7 +14,10 @@ import dopamine.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -23,10 +26,11 @@ import java.net.URL;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class JwtService {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -145,5 +149,14 @@ public class JwtService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 로그아웃
+     * @param accessToken
+     */
+    public void logout(String accessToken){
+        //Redis Cache에 저장
+        redisTemplate.opsForValue().set(accessToken, "logout");
     }
 }
