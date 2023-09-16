@@ -1,6 +1,8 @@
 package dopamine.backend.jwt.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dopamine.backend.exception.BusinessLogicException;
+import dopamine.backend.exception.ErrorResponse;
 import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.jwt.provider.JwtProvider;
 import io.jsonwebtoken.JwtException;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +18,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +77,7 @@ public class JwtFilter extends OncePerRequestFilter {
         ) {
             // 재발행 요청 api인데, access token을 전달했을 경우
             // 아니면 access token을 넣어줘야하는데, 다른 토큰을 넣었을 경우
-            throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_HEADER_NOT_VALID);
+            throw new AuthenticationException();
         }
 
         // 권한 부여
@@ -89,7 +93,30 @@ public class JwtFilter extends OncePerRequestFilter {
     private void validBlackToken(String accessToken) {
         String blackToken = redisTemplate.opsForValue().get(accessToken);
         if(StringUtils.hasText(blackToken)) {
-            throw new BusinessLogicException(ExceptionCode.LOGOUT_MEMBER);
+            throw new IllegalStateException();
+        }
+    }
+
+    private void setErrorResponse(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            ExceptionCode exceptionCode
+    ) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        int status = 400;
+        String error = HttpStatus.valueOf(status).getReasonPhrase();
+        String exception = exceptionCode.getClass().getName();
+        String message = exceptionCode.getMessage();
+        String path = request.getServletPath();
+
+        ErrorResponse errorResponse = new ErrorResponse(status, error, exception, message, path);
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
