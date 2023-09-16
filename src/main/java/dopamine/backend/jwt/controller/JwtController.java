@@ -37,11 +37,15 @@ public class JwtController {
 
     @GetMapping("/login")
     public ResponseEntity login(@RequestParam(value = "token", required = false) String token,
-                                        @RequestParam(value = "code", required = false) String code) {
+                                @RequestParam(value = "code", required = false) String code,
+                                @RequestParam(value = "redirect_url", required = false) String redirect_url) {
 
         // 유저 정보 얻기
         if(!StringUtils.isEmpty(code)) {
-            token = jwtService.getKakaoAccessToken(code);
+            if (StringUtils.isEmpty(redirect_url)){
+                throw new BusinessLogicException(ExceptionCode.MISSING_REDIRECT_REQUEST_PARAM);
+            }
+            token = jwtService.getKakaoAccessToken(code, redirect_url);
         } else if(StringUtils.isEmpty(token)) {
             throw new BusinessLogicException(ExceptionCode.MISSING_REQUEST_PARAM);
         }
