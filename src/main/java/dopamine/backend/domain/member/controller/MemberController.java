@@ -1,5 +1,6 @@
 package dopamine.backend.domain.member.controller;
 
+import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.level.service.LevelService;
 import dopamine.backend.domain.member.request.MemberEditDto;
 import dopamine.backend.domain.member.request.MemberRequestDto;
@@ -28,6 +29,7 @@ public class MemberController {
     private final MemberMapper memberMapper;
     private final JwtService jwtService;
     private final LevelService levelService;
+    private final FeedRepository feedRepository;
 
 
 
@@ -54,10 +56,13 @@ public class MemberController {
 
         LevelDetailResponseDto levelDetailResponseDto = levelService.memberDetailLevel(member);
 
+        int successCnt = feedRepository.findFeedByMember(member).size(); // todo : fullfillyn default값 추가되면 수정해야함
+
         MemberDetailResponseDto response = MemberDetailResponseDto.builder()
                 .memberId(member.getMemberId())
                 .kakaoId(member.getKakaoId())
                 .nickname(member.getNickname())
+                .successCnt(successCnt)
                 .exp(member.getExp())
                 .level(levelDetailResponseDto)
                 .build();

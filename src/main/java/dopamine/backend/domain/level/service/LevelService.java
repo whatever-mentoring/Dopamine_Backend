@@ -45,6 +45,7 @@ public class LevelService {
                 .name(levelRequestDto.getName())
                 .badge(levelRequestDto.getBadge())
                 .exp(levelRequestDto.getExp()).build();
+
         levelRepository.save(level);
         return level;
     }

@@ -1,4 +1,4 @@
-package dopamine.backend.feed.service;
+package dopamine.backend.domain.feed.service;
 
 import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.mapper.FeedMapper;
