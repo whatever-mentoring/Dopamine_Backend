@@ -38,9 +38,6 @@ public class JwtService {
     @Value("${jwt.kakao.client_id}")
     private String client_id;
 
-    @Value("${jwt.kakao.redirect_url}")
-    private String redirect_url;
-
     public String getAccessToken(Member member){
 
         // accessToken, refreshToken 발급
@@ -59,7 +56,7 @@ public class JwtService {
         return memberService.verifiedMember(userId);
     }
 
-    public String getKakaoAccessToken(String code) {
+    public String getKakaoAccessToken(String code, String redirect_url) {
 
         String accessToken = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";

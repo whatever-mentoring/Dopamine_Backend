@@ -12,6 +12,8 @@ public enum ExceptionCode {
     KAKAO_CODE_NOT_VALID(400, "코드가 카카오 서버에서 유효하지 않습니다."),
     KAKAO_TOKEN_NOT_VALID(400, "카카오 토큰의 만료기한이 지났습니다.(또는 유효하지 않습니다.)."),
     MISSING_REQUEST_PARAM(400, "필수 파라미터(token)를 작성해야 합니다."),
+    MISSING_REDIRECT_REQUEST_PARAM(400, "필수 파라미터(redirect_url)를 작성해야 합니다."),
+
     EXP_MIN_NOT_VALID(400, "레벨 경험치는 이전 레벨보다 높은 기준으로 설정해주세요."),
     EXP_MAX_NOT_VALID(400, "레벨 경험치는 이후 레벨보다 낮은 기준으로 설정해주세요."),
     LOGOUT_MEMBER(400, "이미 로그아웃한 유저입니다."),
