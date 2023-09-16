@@ -1,4 +1,4 @@
-package dopamine.backend.challenge.service;
+package dopamine.backend.domain.challenge.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
