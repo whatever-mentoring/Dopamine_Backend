@@ -2,6 +2,7 @@ package dopamine.backend.jwt.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dopamine.backend.exception.BusinessLogicException;
 import dopamine.backend.exception.ErrorResponse;
 import dopamine.backend.exception.ExceptionCode;
 import dopamine.backend.jwt.provider.JwtProvider;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +37,13 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             //토큰의 유효기간 만료
             setErrorResponse(request, response, ExceptionCode.TOKEN_NOT_VALID);
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException e) {
             //유효하지 않은 토큰
             setErrorResponse(request, response, ExceptionCode.TOKEN_NOT_VALID);
+        } catch (IllegalStateException e) {
+            setErrorResponse(request, response, ExceptionCode.LOGOUT_MEMBER);
+        } catch (AuthenticationException e) {
+            setErrorResponse(request, response, ExceptionCode.AUTHORIZATION_HEADER_NOT_VALID);
         }
     }
 
