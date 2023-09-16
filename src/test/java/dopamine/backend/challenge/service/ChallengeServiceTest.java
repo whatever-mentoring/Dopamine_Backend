@@ -16,6 +16,7 @@ import dopamine.backend.domain.member.repository.MemberRepository;
 import dopamine.backend.domain.member.request.MemberRequestDto;
 import dopamine.backend.domain.member.service.MemberService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,14 +47,21 @@ class ChallengeServiceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @BeforeEach
+    void clean(){
+        levelRepository.deleteAll();
+        memberRepository.deleteAll();
+        challengeRepository.deleteAll();
+    }
+
     @DisplayName("오늘의 챌린지 테스트 - 신규 발급일때")
     @Test
     void todayChallengeNew() throws JsonProcessingException {
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         Member member = memberService.createMember(requestDto);
 
         Challenge challenge1 = Challenge.builder().title("test1").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.HIGH).build();
@@ -81,10 +89,9 @@ class ChallengeServiceTest {
     void todayChallengeYesterday() throws JsonProcessingException {
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
-
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         Member member = memberService.createMember(requestDto);
         levelRepository.save(level);
         memberRepository.save(member);
@@ -121,9 +128,9 @@ class ChallengeServiceTest {
     void todayChallengeAlready() throws JsonProcessingException {
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         Member member = memberService.createMember(requestDto);
 
         Challenge challenge1 = Challenge.builder().title("test1").challengeGuide(".").subtitle("1").image("i1").challengeLevel(ChallengeLevel.HIGH).build();
