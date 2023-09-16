@@ -1,7 +1,7 @@
 package dopamine.backend.domain.member.service;
 
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.level.repository.LevelRepository;
 import dopamine.backend.domain.member.request.MemberEditDto;
 import dopamine.backend.domain.member.request.MemberRequestDto;

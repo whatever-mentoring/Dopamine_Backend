@@ -8,8 +8,8 @@ import dopamine.backend.domain.challengemember.repository.ChallengeMemberReposit
 import dopamine.backend.domain.challengemember.request.ChallengeMemberEditDto;
 import dopamine.backend.domain.challengemember.request.ChallengeMemberRequestDto;
 import dopamine.backend.domain.challengemember.response.ChallengeMemberResponseDto;
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;

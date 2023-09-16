@@ -1,4 +1,4 @@
-package dopamine.backend.domain.exception;
+package dopamine.backend.global.exception;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;

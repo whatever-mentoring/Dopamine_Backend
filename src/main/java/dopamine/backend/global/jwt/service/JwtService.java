@@ -3,19 +3,17 @@ package dopamine.backend.global.jwt.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.global.jwt.dto.KakaoUserInfo;
 import dopamine.backend.global.jwt.provider.JwtProvider;
 import dopamine.backend.domain.member.entity.Member;
-import dopamine.backend.domain.member.repository.MemberRepository;
 import dopamine.backend.domain.member.request.MemberEditDto;
 import dopamine.backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

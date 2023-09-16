@@ -1,9 +1,9 @@
 package dopamine.backend.global.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ErrorResponse;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ErrorResponse;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.global.jwt.provider.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

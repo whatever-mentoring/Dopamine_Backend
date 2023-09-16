@@ -1,4 +1,4 @@
-package dopamine.backend.domain.exception;
+package dopamine.backend.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

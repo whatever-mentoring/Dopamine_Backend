@@ -1,7 +1,7 @@
 package dopamine.backend.global.jwt.controller;
 
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.global.jwt.dto.KakaoUserInfo;
 import dopamine.backend.global.jwt.response.JwtResponse;
 import dopamine.backend.global.jwt.service.JwtService;

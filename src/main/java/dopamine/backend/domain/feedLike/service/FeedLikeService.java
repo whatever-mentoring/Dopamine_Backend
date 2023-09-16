@@ -1,7 +1,7 @@
 package dopamine.backend.domain.feedLike.service;
 
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feedLike.entity.FeedLike;

@@ -1,4 +1,4 @@
-package dopamine.backend.domain.exception;
+package dopamine.backend.global.exception;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package dopamine.backend.domain.level.service;
 
-import dopamine.backend.domain.exception.BusinessLogicException;
-import dopamine.backend.domain.exception.ExceptionCode;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.level.repository.LevelRepository;
 import dopamine.backend.domain.level.request.LevelRequestDto;
 import dopamine.backend.domain.level.entity.Level;

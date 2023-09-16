@@ -2,26 +2,12 @@ package dopamine.backend.global.jwt.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD:src/main/java/dopamine/backend/jwt/filter/JwtExceptionFilter.java
-import dopamine.backend.exception.BusinessLogicException;
-import dopamine.backend.exception.ErrorResponse;
-import dopamine.backend.exception.ExceptionCode;
-import dopamine.backend.jwt.provider.JwtProvider;
-import dopamine.backend.member.service.MemberService;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import lombok.Data;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-=======
-import dopamine.backend.domain.exception.ErrorResponse;
-import dopamine.backend.domain.exception.ExceptionCode;
+
+import dopamine.backend.global.exception.ErrorResponse;
+import dopamine.backend.global.exception.ExceptionCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
->>>>>>> 546735a (refactor-#42 : refactor package architecture):src/main/java/dopamine/backend/global/jwt/filter/JwtExceptionFilter.java
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.security.sasl.AuthenticationException;
