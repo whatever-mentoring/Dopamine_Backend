@@ -4,7 +4,6 @@ import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.mapper.FeedMapper;
 import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
-import dopamine.backend.domain.feed.service.FeedService;
 import dopamine.backend.domain.feedLike.service.FeedLikeService;
 import dopamine.backend.domain.level.entity.Level;
 import dopamine.backend.domain.level.repository.LevelRepository;
@@ -14,6 +13,7 @@ import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.repository.MemberRepository;
 import dopamine.backend.domain.member.request.MemberRequestDto;
 import dopamine.backend.domain.member.service.MemberService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +47,13 @@ class FeedServiceTest {
     @Autowired
     private FeedMapper feedMapper;
 
+    @BeforeEach
+    void beforeEach(){
+        feedRepository.deleteAll();
+        levelRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("인증글 리스트 - 최신순")
     void feedlistbydate(){
@@ -79,12 +86,12 @@ class FeedServiceTest {
     void feedlistbylikecount(){
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
-        Member member = memberService.createMember(requestDto);
-
         levelRepository.save(level);
+
+        Member member = memberService.createMember(requestDto);
         memberRepository.save(member);
 
         Feed feed1 = Feed.builder().content("1").build();
@@ -119,7 +126,7 @@ class FeedServiceTest {
     void feedlistbymember(){
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
         Member member = memberService.createMember(requestDto);

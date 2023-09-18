@@ -6,7 +6,6 @@ import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.challenge.entity.ChallengeLevel;
 import dopamine.backend.domain.challenge.repository.ChallengeRepository;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
-import dopamine.backend.domain.challenge.service.ChallengeService;
 import dopamine.backend.domain.level.entity.Level;
 import dopamine.backend.domain.level.repository.LevelRepository;
 import dopamine.backend.domain.level.request.LevelRequestDto;
@@ -16,6 +15,7 @@ import dopamine.backend.domain.member.repository.MemberRepository;
 import dopamine.backend.domain.member.request.MemberRequestDto;
 import dopamine.backend.domain.member.service.MemberService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -46,12 +46,18 @@ class ChallengeServiceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @BeforeEach
+    void beforeEach(){
+        levelRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
+
     @DisplayName("오늘의 챌린지 테스트 - 신규 발급일때")
     @Test
     void todayChallengeNew() throws JsonProcessingException {
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
         Member member = memberService.createMember(requestDto);
@@ -81,7 +87,7 @@ class ChallengeServiceTest {
     void todayChallengeYesterday() throws JsonProcessingException {
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
 
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
@@ -121,7 +127,7 @@ class ChallengeServiceTest {
     void todayChallengeAlready() throws JsonProcessingException {
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
         Member member = memberService.createMember(requestDto);
