@@ -37,6 +37,10 @@ public class ChallengeService {
         return challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
     }
 
+    /**
+     * 챌린지 생성
+     * @param challengeRequestDTO
+     */
     public void createChallenge(ChallengeRequestDTO challengeRequestDTO) {
 
         Challenge challenge = challengeMapper.challengeRequestDtoToChallenge(challengeRequestDTO);
@@ -44,18 +48,31 @@ public class ChallengeService {
         challengeRepository.save(challenge);
     }
 
+    /**
+     * 챌린지 삭제
+     * @param challengeId
+     */
     public void deleteChallenge(Long challengeId) {
         Challenge challenge = verifiedChallenge(challengeId);
 
         challenge.changeDelYn(true);
     }
 
+    /**
+     * 챌린지 완전 삭제 (DB)
+     * @param challengeId
+     */
     public void deleteChallengeHard(Long challengeId) {
         Challenge challenge = verifiedChallenge(challengeId);
 
         challengeRepository.delete(challenge);
     }
 
+    /**
+     * 챌린지 조회
+     * @param challengeId
+     * @return
+     */
     @Transactional(readOnly = true)
     public ChallengeResponseDTO getChallenge(Long challengeId) {
         Challenge challenge = verifiedChallenge(challengeId);
@@ -65,12 +82,22 @@ public class ChallengeService {
         return challengeResponseDTO;
     }
 
+    /**
+     * 챌린지 수정
+     * @param challengeId
+     * @param challengeEditDTO
+     */
     public void editChallenge(Long challengeId, ChallengeEditDTO challengeEditDTO) {
         Challenge challenge = verifiedChallenge(challengeId);
 
         challenge.changeChallenge(challengeEditDTO);
     }
 
+    /**
+     * 오늘의 챌린지
+     * @param userId
+     * @return
+     */
     public List<ChallengeResponseDTO> todayChallenge(Long userId) {
 
         Member member = memberService.verifiedMember(userId);
@@ -94,7 +121,7 @@ public class ChallengeService {
             List<ChallengeMember> challengeMembers = member.getChallengeMembers();
             List<Challenge> exitChallenge = challengeMembers.stream().map(ChallengeMember::getChallenge).collect(Collectors.toList());
 
-            // 갱신
+            // 갱신일자가 오늘이 아닐 경우, 새로운 챌린지 발급
             if(!todayInfo.equals(existInfo)){
                 List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
 
@@ -104,6 +131,7 @@ public class ChallengeService {
                 }
                 challengeMemberRepository.deleteAllInBatch(challengeMembers);
 
+                // 오늘의 챌린지 생성
                 challengeResponseList = getChallengeResponseList(todayChallenges);
 
                 todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));

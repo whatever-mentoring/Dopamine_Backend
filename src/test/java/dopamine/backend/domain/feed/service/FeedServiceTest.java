@@ -14,6 +14,7 @@ import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.repository.MemberRepository;
 import dopamine.backend.domain.member.request.MemberRequestDto;
 import dopamine.backend.domain.member.service.MemberService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,12 @@ class FeedServiceTest {
     @Autowired
     private FeedMapper feedMapper;
 
+    @BeforeEach
+    void clean(){
+        levelRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("인증글 리스트 - 최신순")
     void feedlistbydate(){
@@ -79,9 +86,9 @@ class FeedServiceTest {
     void feedlistbylikecount(){
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         Member member = memberService.createMember(requestDto);
 
         levelRepository.save(level);
@@ -119,9 +126,9 @@ class FeedServiceTest {
     void feedlistbymember(){
 
         // given
-        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").build();
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
         Level level = levelService.createLevel(levelRequestDto);
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
         Member member = memberService.createMember(requestDto);
 
         levelRepository.save(level);

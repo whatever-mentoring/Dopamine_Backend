@@ -15,4 +15,8 @@ public class ChallengeEditDTO {
     private String image;
     private String challengeGuide;
     private ChallengeLevel challengeLevel;
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

@@ -4,9 +4,11 @@ import dopamine.backend.domain.feed.request.FeedEditDTO;
 import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
 import dopamine.backend.domain.feed.service.FeedService;
+import dopamine.backend.global.s3.service.ImageService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import java.util.List;
 public class FeedController {
 
     private final FeedService feedService;
+
+    private final ImageService imageService;
 
     /**
      * 피드 조회
@@ -72,7 +76,28 @@ public class FeedController {
      * @param feedRequestDTO
      */
     @PostMapping("/feeds")
-    public void postFeed(@RequestBody FeedRequestDTO feedRequestDTO){
+    public void postFeed(@RequestPart(value = "request") FeedRequestDTO feedRequestDTO,
+                         @RequestPart(value = "images") List<MultipartFile> files){
+
+        int index = 0;
+
+        for(MultipartFile file : files){
+            if(file == null) continue;
+
+            if(index > 3) break;
+
+            if(index == 0)
+                feedRequestDTO.setImage1Url(imageService.updateImage(file, "challenge", "image1"));
+
+            else if(index == 1)
+                feedRequestDTO.setImage2Url(imageService.updateImage(file, "challenge", "image2"));
+
+            else if(index == 2)
+                feedRequestDTO.setImage3Url(imageService.updateImage(file, "challenge", "image3"));
+
+            index++;
+        }
+
         feedService.postFeed(feedRequestDTO);
     }
 
@@ -82,7 +107,28 @@ public class FeedController {
      * @param feedEditDTO
      */
     @PutMapping("/feeds/{feedId}")
-    public void editFeed(@PathVariable Long feedId, @RequestBody FeedEditDTO feedEditDTO) {
+    public void editFeed(@PathVariable Long feedId,
+                         @RequestPart(value = "request") FeedEditDTO feedEditDTO,
+                         @RequestPart(value = "images") List<MultipartFile> files) {
+        int index = 0;
+
+        for(MultipartFile file : files){
+            if(file == null) continue;
+
+            if(index > 3) break;
+
+            if(index == 0)
+                feedEditDTO.setImage1Url(imageService.updateImage(file, "challenge", "image1"));
+
+            else if(index == 1)
+                feedEditDTO.setImage2Url(imageService.updateImage(file, "challenge", "image2"));
+
+            else if(index == 2)
+                feedEditDTO.setImage3Url(imageService.updateImage(file, "challenge", "image3"));
+
+            index++;
+        }
+
         feedService.editFeed(feedId, feedEditDTO);
     }
 
@@ -92,7 +138,9 @@ public class FeedController {
      * @param value
      */
     @PatchMapping("/feeds/{feedId}/fulfill")
-    public void patchFeedFulfill(@PathVariable Long feedId, @RequestParam Boolean value){}
+    public void patchFeedFulfill(@PathVariable Long feedId, @RequestParam Boolean value){
+        feedService.patchFeedFulfill(feedId, value);
+    }
 
     /**
      * 피드 삭제

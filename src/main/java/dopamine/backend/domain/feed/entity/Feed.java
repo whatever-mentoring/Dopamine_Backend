@@ -34,7 +34,7 @@ public class Feed extends BaseEntity {
     private Integer likeCount = 0;
 
     @ColumnDefault("true")
-    private Boolean fulfillYn;
+    private Boolean fulfillYn = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -52,6 +52,10 @@ public class Feed extends BaseEntity {
         this.challenge = challenge;
         if(!this.challenge.getFeeds().contains(this))
             challenge.getFeeds().add(this);
+    }
+
+    public void setFulfillYn(Boolean fulfillYn) {
+        this.fulfillYn = fulfillYn;
     }
 
     public void addLikeCount(){
