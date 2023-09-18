@@ -1,0 +1,2 @@
+GET http://localhost:9000//challenges/today-challenge/1001
+Authorization: Bearer eyJ0eXBlIjoiYWNjZXNzIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VySWQiOjEwMDEsImlhdCI6MTY5NTAxNjg3OSwiZXhwIjoxNjk2MjI2NDc5fQ.VghjpLAVY-7xRNJGY-Pu2W-4gEBL_oyFakfUwE0gN-Y
