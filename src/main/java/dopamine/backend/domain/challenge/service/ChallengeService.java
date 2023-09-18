@@ -119,7 +119,7 @@ public class ChallengeService {
             String existInfo = getFormatDate(existRefreshDate);
 
             List<ChallengeMember> challengeMembers = member.getChallengeMembers();
-            List<Challenge> exitChallenge = challengeMembers.stream().map(ChallengeMember::getChallenge).collect(Collectors.toList());
+            List<Challenge> exitChallenge = challengeMembers.stream().map(challengeMember -> challengeMember.getChallenge()).collect(Collectors.toList());
 
             // 갱신일자가 오늘이 아닐 경우, 새로운 챌린지 발급
             if(!todayInfo.equals(existInfo)){
