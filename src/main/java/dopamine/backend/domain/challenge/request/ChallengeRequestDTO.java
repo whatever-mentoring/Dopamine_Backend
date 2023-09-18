@@ -1,6 +1,7 @@
 package dopamine.backend.domain.challenge.request;
 
 import dopamine.backend.domain.challenge.entity.ChallengeLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,5 +19,14 @@ public class ChallengeRequestDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Builder
+    public ChallengeRequestDTO(String title, String subtitle, String image, String challengeGuide, ChallengeLevel challengeLevel) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.image = image;
+        this.challengeGuide = challengeGuide;
+        this.challengeLevel = challengeLevel;
     }
 }
