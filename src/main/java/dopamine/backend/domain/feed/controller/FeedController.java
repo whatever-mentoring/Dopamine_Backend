@@ -3,6 +3,7 @@ package dopamine.backend.domain.feed.controller;
 import dopamine.backend.domain.feed.request.FeedEditDTO;
 import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
+import dopamine.backend.domain.feed.response.FeedYearResponseDto;
 import dopamine.backend.domain.feed.service.FeedService;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.global.exception.BusinessLogicException;
@@ -102,6 +103,23 @@ public class FeedController {
         }
         Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
         return feedService.feedListByMemberAndMonth(member, month);
+    }
+
+    /**
+     * Year을 기준으로 인증글이 몇 개 있는지 조회
+     *
+     * @param accessToken
+     * @param years      => 2021, 2022, 2023, ...
+     * @return
+     */
+    @GetMapping("/feeds/year/by-member")
+    public List<FeedYearResponseDto> getFeedsByMemberAndYear(@RequestHeader("Authorization") String accessToken,
+                                                             @RequestParam(value = "years", required = false) List<String> years) {
+        if(StringUtils.isEmpty(years)) {
+            throw new BusinessLogicException(ExceptionCode.MISSING_YEAR_REQUEST_PARAM);
+        }
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        return feedService.feedListByMemberAndYear(member, years);
     }
 
     /**

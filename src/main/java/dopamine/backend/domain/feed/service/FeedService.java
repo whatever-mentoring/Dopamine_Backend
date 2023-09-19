@@ -16,6 +16,7 @@ import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
 import dopamine.backend.domain.feedLike.mapper.FeedLikeMapper;
 import dopamine.backend.domain.feedLike.response.FeedLikeResponseDTO;
+import dopamine.backend.domain.feed.response.FeedYearResponseDto;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.mapper.MemberMapper;
 import dopamine.backend.domain.member.response.MemberResponseDto;
@@ -23,18 +24,21 @@ import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class FeedService {
 
     private final ChallengeService challengeService;
@@ -51,8 +55,8 @@ public class FeedService {
     private final MemberMapper memberMapper;
     private final FeedLikeMapper feedLikeMapper;
 
-    private Feed verifiedFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.FEED_NOT_FOUND));
+    public Feed verifiedFeed(Long feedId) {
+        return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
     }
 
     /**
@@ -83,23 +87,20 @@ public class FeedService {
      * @param feedRequestDTO
      */
     public void postFeed(Member member, FeedRequestDTO feedRequestDTO) {
-        Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
+        Challenge challenge = challengeService.verifiedChallenge(feedRequestDTO.getChallengeId());
 
         Feed feed = feedMapper.feedRequestDtoToFeed(feedRequestDTO);
         feed.setChallenge(challenge);
         feed.setMember(member);
-
         setCertification(member, challenge);
-
         int exp = feed.getChallenge().getChallengeLevel().getExp();
-
         memberService.plusMemberExp(member, exp);
-
         feedRepository.save(feed);
     }
 
     /**
      * 인증 여부 갱신
+     *
      * @param member
      * @param challenge
      */
@@ -108,6 +109,7 @@ public class FeedService {
         // todo 테스트 용이성 위해 주석처리, 프론트에서만 인증여부 체크해도 된다
 //        if(challengeMember.getCertificationYn())
 //            throw new BusinessLogicException(CHALLENGE_ALREADY_CERTIFIED);
+
         challengeMember.setCertificationYn(true);
     }
 
@@ -130,7 +132,6 @@ public class FeedService {
      */
     public void deleteFeed(Long feedId) {
         Feed feed = verifiedFeed(feedId);
-
         feed.changeDelYn(true);
     }
 
@@ -212,6 +213,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 조회 - 월 필터
+     *
      * @param member
      * @param month
      * @return
@@ -225,6 +227,35 @@ public class FeedService {
         List<Feed> findListByMemberAndDate = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate);
 
         return getFeedResponseDTOS(findListByMemberAndDate);
+    }
+
+    /**
+     * 피드 리스트 조회 - 년도 기준 월별 인증글 개수
+     *
+     * @param member
+     * @param years
+     * @return
+     */
+    public List<FeedYearResponseDto> feedListByMemberAndYear(Member member, List<String> years) {
+
+        List<FeedYearResponseDto> feedYearResponseDtoList = new ArrayList<>();
+        String yearMonth;
+        LocalDate date;
+        LocalDateTime startDate;
+        LocalDateTime finishDate;
+        Boolean feedYn;
+
+        for(String year:years) {
+            for (int month = 1; month <= 12; month++) {
+                yearMonth = year + "-" + String.format("%1$02d", month);
+                date = LocalDate.parse(yearMonth + "-01");
+                startDate = date.withDayOfMonth(1).atStartOfDay();
+                finishDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
+                feedYn = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate).size() != 0;
+                feedYearResponseDtoList.add(FeedYearResponseDto.builder().yearMonth(yearMonth).feedYn(feedYn).build());
+            }
+        }
+        return feedYearResponseDtoList;
     }
 
 
