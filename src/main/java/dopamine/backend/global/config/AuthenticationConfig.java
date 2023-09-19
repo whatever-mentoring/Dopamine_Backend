@@ -30,7 +30,16 @@ public class AuthenticationConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**", "/favicon.ico");
+        return (web) -> web.ignoring()
+                .antMatchers("/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/favicon.ico",
+                        "/css/**",
+                        "/scripts/**",
+                        "/img/**",
+                        "/static/**");
     }
 
     @Bean
