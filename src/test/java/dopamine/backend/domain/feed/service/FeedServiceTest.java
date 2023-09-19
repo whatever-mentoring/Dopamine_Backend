@@ -63,6 +63,14 @@ class FeedServiceTest {
     void feedlistbydate(){
 
         // given
+        LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
+        Level level = levelService.createLevel(levelRequestDto);
+        MemberRequestDto requestDto = MemberRequestDto.builder().nickname("test").exp(5).build();
+        Member member = memberService.createMember(requestDto);
+
+        levelRepository.save(level);
+        memberRepository.save(member);
+
         Feed feed1 = Feed.builder().content("1").build();
         Feed feed2 = Feed.builder().content("2").build();
         Feed feed3 = Feed.builder().content("3").build();
@@ -78,7 +86,7 @@ class FeedServiceTest {
         feedRepository.save(feed10);
 
         // when
-        List<FeedResponseDTO> feedResponseDTOS = feedService.feedListOrderByDate(1);
+        List<FeedResponseDTO> feedResponseDTOS = feedService.feedListOrderByDate(member, 1);
 
         // then;
         assertThat(feedResponseDTOS.stream().map(FeedResponseDTO::getContent).collect(Collectors.toList())).contains("10");
@@ -118,7 +126,7 @@ class FeedServiceTest {
 
         // when
         feedLikeService.feedLike(feedId, memberId);
-        List<FeedResponseDTO> feedResponseDTOS = feedService.feedListOrderByLikeCount(1);
+        List<FeedResponseDTO> feedResponseDTOS = feedService.feedListOrderByLikeCount(findMember, 1);
 
         // then
         assertThat(feedResponseDTOS.get(0).getContent()).isEqualTo("9");
@@ -164,8 +172,7 @@ class FeedServiceTest {
 
         // when
         Member findMember = memberRepository.findMemberByNickname("test").orElseThrow(() -> new RuntimeException("찾을 수 없음"));
-        Long memberId = findMember.getMemberId();
-        List<FeedResponseDTO> feedResponseDTOS = feedService.feedListByMember(memberId, 1);
+        List<FeedResponseDTO> feedResponseDTOS = feedService.feedListByMember(findMember, 1);
 
         // then
         assertThat(feedResponseDTOS.stream().map(FeedResponseDTO::getContent).collect(Collectors.toList())).contains("10","2","3","4","5","6","7","8","9");

@@ -14,6 +14,7 @@ public enum ExceptionCode {
     MISSING_REQUEST_PARAM(400, "필수 파라미터(token)를 작성해야 합니다."),
     MISSING_MONTH_REQUEST_PARAM(400, "필수 파라미터(month)를 작성해야 합니다."),
     MISSING_REDIRECT_REQUEST_PARAM(400, "필수 파라미터(redirect_url)를 작성해야 합니다."),
+    CHALLENGE_ALREADY_CERTIFIED(400, "이미 완료한 챌린지입니다."),
 
     EXP_MIN_NOT_VALID(400, "레벨 경험치는 이전 레벨보다 높은 기준으로 설정해주세요."),
     EXP_MAX_NOT_VALID(400, "레벨 경험치는 이후 레벨보다 낮은 기준으로 설정해주세요."),
