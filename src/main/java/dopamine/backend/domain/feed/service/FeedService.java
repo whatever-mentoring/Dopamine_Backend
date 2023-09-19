@@ -103,7 +103,6 @@ public class FeedService {
      */
     public void deleteFeed(Long feedId) {
         Feed feed = verifiedFeed(feedId);
-
         feed.changeDelYn(true);
     }
 

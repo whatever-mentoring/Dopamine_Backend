@@ -16,7 +16,7 @@
 <div layout:fragment="content">
 
   <!--  피드 목록  -->
-  <div style="text-align: center; margin: auto; width: 30%">
+  <div style="text-align: center; margin: auto">
     <table class="table table-striped">
       <thead>
       <tr>
@@ -26,8 +26,9 @@
         <th>서브이미지1</th>
         <th>서브이미지2</th>
         <th>작성자(id)</th>
-        <th>챌린지명(id)</th>
-        <th>챌린지 달성 여부</th>
+        <th>챌린지 제목</th>
+        <th>챌린지 상태 변경</th>
+        <th>피드 삭제(강제 삭제)</th>
       </tr>
       </thead>
       <tbody>
@@ -42,7 +43,7 @@
         <td th:if="${feed.fulfillYn}">충족</td>
         <td th:unless="${feed.fulfillYn}">달성</td>
         <td>
-          <a href="#" th:href="@{/backoffice/level/{id}/delete (id=${level.levelId})}">삭제</a>
+          <a href="#" th:href="@{/backoffice/feed/{feedId}/delete (feedId=${feed.feedId})}">삭제</a>
         </td>
       </tr>
       </tbody>
