@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
 
-</body>
+<!--    css 추가     -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!--    script 추가     -->
+<th:block layout:fragment="script">
+</th:block>
+
+<!-- Content -->
+<div layout:fragment="content">
+
+    <!--  레벨 목록  -->
+    <div style="text-align: center; margin: auto; width: 30%">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>레벨</th>
+            <th>레벨 이름</th>
+            <th>뱃지 url</th>
+            <th>exp 최소 충족 기준</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="level : ${levels}">
+            <td th:text="${level.levelNum}"></td>
+            <td th:text="${level.name}"></td>
+            <td><a href="#" th:href="${level.badge}">뱃지 이미지</a></td>
+            <td th:text="${level.exp}"></td>
+            <td>
+                <a href="#" th:href="@{/backoffice/level/{id}/delete (id=${level.levelId})}">삭제</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+    <!--  레벨 생성  -->
+    <div style="text-align: center">
+        <button type="button" class="btn btn-primary" onclick="location.href='/backoffice/level/create'">생성</button>
+    </div>
+</div>
+
 </html>
