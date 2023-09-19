@@ -229,7 +229,7 @@ public class FeedService {
      * 피드 리스트 조회 - 년도 기준 월별 인증글 개수
      *
      * @param member
-     * @param year
+     * @param years
      * @return
      */
     public List<FeedYearResponseDto> feedListByMemberAndYear(Member member, List<String> years) {
@@ -239,7 +239,7 @@ public class FeedService {
         LocalDate date;
         LocalDateTime startDate;
         LocalDateTime finishDate;
-        Boolean feedNum;
+        Boolean feedYn;
 
         for(String year:years) {
             for (int month = 1; month <= 12; month++) {
@@ -247,8 +247,8 @@ public class FeedService {
                 date = LocalDate.parse(yearMonth + "-01");
                 startDate = date.withDayOfMonth(1).atStartOfDay();
                 finishDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
-                feedNum = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate).size() != 0;
-                feedYearResponseDtoList.add(FeedYearResponseDto.builder().yearMonth(yearMonth).feedNum(feedNum).build());
+                feedYn = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate).size() != 0;
+                feedYearResponseDtoList.add(FeedYearResponseDto.builder().yearMonth(yearMonth).feedYn(feedYn).build());
             }
         }
         return feedYearResponseDtoList;
