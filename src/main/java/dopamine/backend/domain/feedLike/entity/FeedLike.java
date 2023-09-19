@@ -32,5 +32,9 @@ public class FeedLike extends BaseEntity {
     public FeedLike(Member member, Feed feed) {
         this.member = member;
         this.feed = feed;
+
+        if(!this.feed.getFeedLikeList().contains(this)){
+            this.feed.getFeedLikeList().add(this);
+        }
     }
 }
