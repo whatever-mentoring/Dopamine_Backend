@@ -35,6 +35,11 @@ spring:
         show_sql: false
         globally_quoted_identifiers: false
 
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false
+
 logging:
   level:
     jwt.kakao: DEBUG

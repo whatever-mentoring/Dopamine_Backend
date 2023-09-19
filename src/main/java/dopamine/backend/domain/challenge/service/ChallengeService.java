@@ -11,6 +11,8 @@ import dopamine.backend.domain.challengemember.entity.ChallengeMember;
 import dopamine.backend.domain.challengemember.repository.ChallengeMemberRepository;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +36,7 @@ public class ChallengeService {
     private final MemberService memberService;
 
     public Challenge verifiedChallenge(Long challengeId) {
-        return challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
+        return challengeRepository.findById(challengeId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
     }
 
     /**
@@ -110,6 +112,7 @@ public class ChallengeService {
             List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(null);
             challengeResponseList = getChallengeResponseList(todayChallenges);
 
+            // 첫 발급 시 무조건 false 이므로, false 담아주기
             for (int i = 0; i < challengeResponseList.size(); i++) {
                 challengeResponseList.get(i).setCertificationYn(false);
             }
@@ -117,6 +120,7 @@ public class ChallengeService {
             todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
         }
 
+        // 기존에 챌린지 받은 적 있음
         else {
             LocalDateTime today = LocalDateTime.now();
 
@@ -140,6 +144,7 @@ public class ChallengeService {
                 // 오늘의 챌린지 생성
                 challengeResponseList = getChallengeResponseList(todayChallenges);
 
+                // 첫 발급이므로 false
                 for (int i = 0; i < challengeResponseList.size(); i++) {
                     challengeResponseList.get(i).setCertificationYn(false);
                 }
@@ -148,6 +153,7 @@ public class ChallengeService {
             }
             // 조회
             else {
+                // 기존 챌린지 그대로 리턴
                 challengeResponseList = getChallengeResponseList(exitChallenge);
                 for (int i = 0; i < challengeResponseList.size(); i++) {
                     challengeResponseList.get(i).setCertificationYn(certificationYnList.get(i));
@@ -155,6 +161,7 @@ public class ChallengeService {
             }
         }
 
+        // 날짜 갱신
         member.setChallengeRefreshDate(LocalDateTime.now());
 
         return challengeResponseList;

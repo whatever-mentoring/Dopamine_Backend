@@ -30,7 +30,16 @@ public class AuthenticationConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html","/swagger-ui/**");
+        return (web) -> web.ignoring()
+                .antMatchers("/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/favicon.ico",
+                        "/css/**",
+                        "/scripts/**",
+                        "/img/**",
+                        "/static/**");
     }
 
     @Bean
@@ -41,7 +50,7 @@ public class AuthenticationConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt 사용하는 경우 사용
                 .and()
-                .authorizeRequests(authorize -> authorize.antMatchers("/api/auth/login", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll())
+                .authorizeRequests(authorize -> authorize.antMatchers("/api/auth/login", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/backoffice/**").permitAll())
                 //.authorizeRequests(authorize -> authorize.anyRequest().permitAll())
                 .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(secretKey, redisTemplate), UsernamePasswordAuthenticationFilter.class)
