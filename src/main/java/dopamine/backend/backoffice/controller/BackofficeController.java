@@ -31,49 +31,4 @@ public class BackofficeController {
         return "home/home";
     }
 
-    @GetMapping("/challenge")
-    public String challenge(Model model) {
-        model.addAttribute("data", "안녕");
-        return "challenge/challenge";
-    }
-
-    @GetMapping("/feed")
-    public String feed(Model model) {
-        model.addAttribute("data", "안녕");
-        return "feed/feed";
-    }
-
-    @GetMapping("/level")
-    public String level(Model model) {
-        List<Level> levels = levelRepository.findAll();
-        model.addAttribute("levels", levels);
-        return "level/level";
-    }
-
-    @GetMapping("/level/{levelId}/delete")
-    public String levelDelete(@PathVariable("levelId") Long levelId) {
-        levelService.deleteLevel(levelId);
-        return "redirect:/backoffice/level";
-    }
-
-    @GetMapping("/level/create")
-    public String levelCreate(Model model) {
-        model.addAttribute("levelNum", levelService.createLevelNum());
-        model.addAttribute("form", new LevelRequestDto());
-        return "level/levelCreate";
-    }
-
-    @PostMapping("/level/create")
-    public String levelCreate(LevelRequestDto levelRequestDto,
-                              @RequestParam("file") MultipartFile file) {
-        // 이미지 업로드
-        if (file != null) {
-            levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
-        }
-
-        // 레벨 생성
-        Level level = levelService.createLevel(levelRequestDto);
-
-        return "redirect:/backoffice/level";
-    }
 }
