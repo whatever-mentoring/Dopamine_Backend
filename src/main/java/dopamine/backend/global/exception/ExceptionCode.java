@@ -13,6 +13,7 @@ public enum ExceptionCode {
     KAKAO_TOKEN_NOT_VALID(400, "카카오 토큰의 만료기한이 지났습니다.(또는 유효하지 않습니다.)."),
     MISSING_REQUEST_PARAM(400, "필수 파라미터(token)를 작성해야 합니다."),
     MISSING_MONTH_REQUEST_PARAM(400, "필수 파라미터(month)를 작성해야 합니다."),
+    MISSING_YEAR_REQUEST_PARAM(400, "필수 파라미터(year)를 작성해야 합니다."),
     MISSING_REDIRECT_REQUEST_PARAM(400, "필수 파라미터(redirect_url)를 작성해야 합니다."),
 
     EXP_MIN_NOT_VALID(400, "레벨 경험치는 이전 레벨보다 높은 기준으로 설정해주세요."),
@@ -23,6 +24,7 @@ public enum ExceptionCode {
     LEVEL_NOT_FOUND(404, "Level not found"),
     CHALLENGEMEMBER_NOT_FOUND(404, "유효하지 않은 챌린지입니다."),
     CHALLENGE_NOT_FOUND(404, "존재하지 않는 챌린지입니다."),
+    CHALLENGE_MEMBER_NOT_FOUND(404, "참여 신청하지 않은 챌린지입니다."),
     FEED_NOT_FOUND(404, "존재하지 않는 인증글입니다."),
     FEEDLIKE_NOT_FOUND(404, "유효하지 않은 좋아요입니다."),
     FEEDLIKE_ALREADY_FOUND(404, "이미 존재하는 좋아요입니다."),
