@@ -16,6 +16,8 @@ import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +46,7 @@ public class FeedService {
     private final FeedMapper feedMapper;
 
     private Feed verifiedFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
+        return feedRepository.findById(feedId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.FEED_NOT_FOUND));
     }
 
     /**
@@ -57,7 +59,7 @@ public class FeedService {
     public FeedResponseDTO getFeed(Long feedId) {
         Feed feed = verifiedFeed(feedId);
 
-        if (!feed.getFulfillYn()) throw new RuntimeException("기준이 미달된 피드입니다.");
+        if (!feed.getFulfillYn()) throw new BusinessLogicException(ExceptionCode.FEED_FULFILL_NOT_VALID);
 
         Challenge challenge = feed.getChallenge();
         ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(challenge);
@@ -71,7 +73,7 @@ public class FeedService {
      * @param feedRequestDTO
      */
     public void postFeed(Member member, FeedRequestDTO feedRequestDTO) {
-        Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
+        Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
 
         Feed feed = feedMapper.feedRequestDtoToFeed(feedRequestDTO);
         feed.setChallenge(challenge);
@@ -92,7 +94,7 @@ public class FeedService {
      * @param challenge
      */
     private void setCertification(Member member, Challenge challenge) {
-        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new RuntimeException("유효하지 않은 챌린지입니다."));
+        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
         challengeMember.setCertificationYn(true);
     }
 
