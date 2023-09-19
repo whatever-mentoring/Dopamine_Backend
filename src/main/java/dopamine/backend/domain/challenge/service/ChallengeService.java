@@ -106,8 +106,13 @@ public class ChallengeService {
         // 기존에 챌린지 받은 적 없음
         LocalDateTime existRefreshDate = member.getChallengeRefreshDate();
         if(existRefreshDate == null){
+
             List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(null);
             challengeResponseList = getChallengeResponseList(todayChallenges);
+
+            for (int i = 0; i < challengeResponseList.size(); i++) {
+                challengeResponseList.get(i).setCertificationYn(false);
+            }
 
             todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
         }
@@ -120,13 +125,14 @@ public class ChallengeService {
 
             List<ChallengeMember> challengeMembers = member.getChallengeMembers();
             List<Challenge> exitChallenge = challengeMembers.stream().map(challengeMember -> challengeMember.getChallenge()).collect(Collectors.toList());
+            List<Boolean> certificationYnList = challengeMembers.stream().map(ChallengeMember::getCertificationYn).collect(Collectors.toList());
 
             // 갱신일자가 오늘이 아닐 경우, 새로운 챌린지 발급
-            if(!todayInfo.equals(existInfo)){
+            if (!todayInfo.equals(existInfo)) {
                 List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
 
                 // 기존 연관관계 삭제
-                for(int i = 0; i < challengeMembers.size(); i++){
+                for (int i = 0; i < challengeMembers.size(); i++) {
                     challengeMembers.get(i).deleteChallengeMember();
                 }
                 challengeMemberRepository.deleteAllInBatch(challengeMembers);
@@ -134,13 +140,21 @@ public class ChallengeService {
                 // 오늘의 챌린지 생성
                 challengeResponseList = getChallengeResponseList(todayChallenges);
 
+                for (int i = 0; i < challengeResponseList.size(); i++) {
+                    challengeResponseList.get(i).setCertificationYn(false);
+                }
+
                 todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
             }
             // 조회
             else {
                 challengeResponseList = getChallengeResponseList(exitChallenge);
+                for (int i = 0; i < challengeResponseList.size(); i++) {
+                    challengeResponseList.get(i).setCertificationYn(certificationYnList.get(i));
+                }
             }
         }
+
         member.setChallengeRefreshDate(LocalDateTime.now());
 
         return challengeResponseList;
