@@ -10,7 +10,9 @@ import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.global.jwt.service.JwtService;
 import dopamine.backend.global.s3.service.ImageService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,9 +105,11 @@ public class FeedController {
      *
      * @param feedRequestDTO
      */
-    @PostMapping("/feeds")
+    @ApiOperation(value = "인증글 작성", notes = "요청값으로 form 데이터에 \n 1. Key:request, Value:문서 하단 Models-FeedRequestDTO를 json \n 2. Key:images, Value:image 여러 개를 한번에")
+    @PostMapping(value = "/feeds", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void postFeed(@RequestPart(value = "request") FeedRequestDTO feedRequestDTO,
-                         @RequestPart(value = "images") List<MultipartFile> files) {
+                         @RequestPart(value = "images") List<MultipartFile> files,
+                         @RequestHeader("Authorization") String accessToken) {
 
         int index = 0;
 
@@ -126,7 +130,9 @@ public class FeedController {
             index++;
         }
 
-        feedService.postFeed(feedRequestDTO);
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+
+        feedService.postFeed(member, feedRequestDTO);
     }
 
     /**
@@ -135,7 +141,8 @@ public class FeedController {
      * @param feedId
      * @param feedEditDTO
      */
-    @PutMapping("/feeds/{feedId}")
+    @ApiOperation(value = "인증글 수정", notes = "요청값으로 url에 feedId \n form 데이터에 \n 1. Key:request, Value:문서 하단 Models-FeedEditDTO를 json \n 2. Key:images Value:image 여러 개를 한번에")
+    @PutMapping(value = "/feeds/{feedId}", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void editFeed(@PathVariable Long feedId,
                          @RequestPart(value = "request") FeedEditDTO feedEditDTO,
                          @RequestPart(value = "images") List<MultipartFile> files) {

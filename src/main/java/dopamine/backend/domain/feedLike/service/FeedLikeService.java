@@ -33,7 +33,7 @@ public class FeedLikeService {
     }
 
     private Feed verifiedFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
+        return feedRepository.findById(feedId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.FEED_NOT_FOUND));
     }
 
     public Integer feedLike(Long feedId, Long memberId) {
@@ -41,7 +41,7 @@ public class FeedLikeService {
         Feed feed = verifiedFeed(feedId);
 
         Optional<FeedLike> findFeedLike = feedLikeRepository.findByMemberAndFeed(member, feed);
-        if(findFeedLike.isPresent()) throw new RuntimeException("이미 존재하는 좋아요입니다.");
+        if(findFeedLike.isPresent()) throw new BusinessLogicException(ExceptionCode.FEEDLIKE_ALREADY_FOUND);
 
         FeedLike feedLike = FeedLike.builder().feed(feed).member(member).build();
         feedLikeRepository.save(feedLike);
@@ -55,7 +55,7 @@ public class FeedLikeService {
         Member member = verifiedMember(memberId);
         Feed feed = verifiedFeed(feedId);
 
-        FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(member, feed).orElseThrow(() -> new RuntimeException("존재하지 않는 좋아요입니다."));
+        FeedLike feedLike = feedLikeRepository.findByMemberAndFeed(member, feed).orElseThrow(() -> new BusinessLogicException(ExceptionCode.FEEDLIKE_NOT_FOUND));
         feedLikeRepository.delete(feedLike);
 
         feed.minusLikeCount();

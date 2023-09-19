@@ -11,6 +11,8 @@ import dopamine.backend.domain.challengemember.entity.ChallengeMember;
 import dopamine.backend.domain.challengemember.repository.ChallengeMemberRepository;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +36,7 @@ public class ChallengeService {
     private final MemberService memberService;
 
     public Challenge verifiedChallenge(Long challengeId) {
-        return challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
+        return challengeRepository.findById(challengeId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
     }
 
     /**
@@ -106,12 +108,19 @@ public class ChallengeService {
         // 기존에 챌린지 받은 적 없음
         LocalDateTime existRefreshDate = member.getChallengeRefreshDate();
         if(existRefreshDate == null){
+
             List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(null);
             challengeResponseList = getChallengeResponseList(todayChallenges);
+
+            // 첫 발급 시 무조건 false 이므로, false 담아주기
+            for (int i = 0; i < challengeResponseList.size(); i++) {
+                challengeResponseList.get(i).setCertificationYn(false);
+            }
 
             todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
         }
 
+        // 기존에 챌린지 받은 적 있음
         else {
             LocalDateTime today = LocalDateTime.now();
 
@@ -120,13 +129,14 @@ public class ChallengeService {
 
             List<ChallengeMember> challengeMembers = member.getChallengeMembers();
             List<Challenge> exitChallenge = challengeMembers.stream().map(challengeMember -> challengeMember.getChallenge()).collect(Collectors.toList());
+            List<Boolean> certificationYnList = challengeMembers.stream().map(ChallengeMember::getCertificationYn).collect(Collectors.toList());
 
             // 갱신일자가 오늘이 아닐 경우, 새로운 챌린지 발급
-            if(!todayInfo.equals(existInfo)){
+            if (!todayInfo.equals(existInfo)) {
                 List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
 
                 // 기존 연관관계 삭제
-                for(int i = 0; i < challengeMembers.size(); i++){
+                for (int i = 0; i < challengeMembers.size(); i++) {
                     challengeMembers.get(i).deleteChallengeMember();
                 }
                 challengeMemberRepository.deleteAllInBatch(challengeMembers);
@@ -134,13 +144,24 @@ public class ChallengeService {
                 // 오늘의 챌린지 생성
                 challengeResponseList = getChallengeResponseList(todayChallenges);
 
+                // 첫 발급이므로 false
+                for (int i = 0; i < challengeResponseList.size(); i++) {
+                    challengeResponseList.get(i).setCertificationYn(false);
+                }
+
                 todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
             }
             // 조회
             else {
+                // 기존 챌린지 그대로 리턴
                 challengeResponseList = getChallengeResponseList(exitChallenge);
+                for (int i = 0; i < challengeResponseList.size(); i++) {
+                    challengeResponseList.get(i).setCertificationYn(certificationYnList.get(i));
+                }
             }
         }
+
+        // 날짜 갱신
         member.setChallengeRefreshDate(LocalDateTime.now());
 
         return challengeResponseList;

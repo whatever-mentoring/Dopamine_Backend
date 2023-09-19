@@ -21,10 +21,17 @@ public enum ExceptionCode {
     // 404 Not Found
     MEMBER_NOT_FOUND(404, "Member not found"),
     LEVEL_NOT_FOUND(404, "Level not found"),
-    CHALLENGEMEMBER_NOT_FOUND(404, "ChallengeMember not found"),
+    CHALLENGEMEMBER_NOT_FOUND(404, "유효하지 않은 챌린지입니다."),
+    CHALLENGE_NOT_FOUND(404, "존재하지 않는 챌린지입니다."),
+    FEED_NOT_FOUND(404, "존재하지 않는 인증글입니다."),
+    FEEDLIKE_NOT_FOUND(404, "유효하지 않은 좋아요입니다."),
+    FEEDLIKE_ALREADY_FOUND(404, "이미 존재하는 좋아요입니다."),
 
     // 402 UnAuthorized
     AUTHORIZATION_HEADER_NOT_VALID(402, "Authorization Header Bad Request"),
+
+    // 403 UnAuthorized
+    FEED_FULFILL_NOT_VALID(403, "기준이 미달된 인증글입니다. 접근할 수 없습니다."),
 
     // 500 Internal Server Error
     IMAGE_UPLOAD_FAILED(500, "이미지 업로드를 실패하였습니다.");

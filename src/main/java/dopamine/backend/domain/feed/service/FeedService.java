@@ -5,6 +5,8 @@ import dopamine.backend.domain.challenge.mapper.ChallengeMapper;
 import dopamine.backend.domain.challenge.repository.ChallengeRepository;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.domain.challenge.service.ChallengeService;
+import dopamine.backend.domain.challengemember.entity.ChallengeMember;
+import dopamine.backend.domain.challengemember.repository.ChallengeMemberRepository;
 import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.mapper.FeedMapper;
 import dopamine.backend.domain.feed.repository.FeedCustomRepository;
@@ -14,6 +16,8 @@ import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
+import dopamine.backend.global.exception.BusinessLogicException;
+import dopamine.backend.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,7 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeMemberRepository challengeMemberRepository;
 
     private final FeedCustomRepository feedCustomRepository;
 
@@ -54,7 +59,7 @@ public class FeedService {
     public FeedResponseDTO getFeed(Long feedId) {
         Feed feed = verifiedFeed(feedId);
 
-        if (!feed.getFulfillYn()) throw new RuntimeException("기준이 미달된 피드입니다.");
+        if (!feed.getFulfillYn()) throw new BusinessLogicException(ExceptionCode.FEED_FULFILL_NOT_VALID);
 
         Challenge challenge = feed.getChallenge();
         ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(challenge);
@@ -67,21 +72,30 @@ public class FeedService {
      *
      * @param feedRequestDTO
      */
-    public void postFeed(FeedRequestDTO feedRequestDTO) {
-        Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
-
-        Member member = memberService.verifiedMember(feedRequestDTO.getMemberId());
+    public void postFeed(Member member, FeedRequestDTO feedRequestDTO) {
+        Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
 
         Feed feed = feedMapper.feedRequestDtoToFeed(feedRequestDTO);
         feed.setChallenge(challenge);
         feed.setMember(member);
 
-        // member의 exp추가 & level 반영 => ChallengeLevel Enum 값에 경험치 넣어주었습니다
+        setCertification(member, challenge);
+
         int exp = feed.getChallenge().getChallengeLevel().getExp();
 
         memberService.plusMemberExp(member, exp);
 
         feedRepository.save(feed);
+    }
+
+    /**
+     * 인증 여부 갱신
+     * @param member
+     * @param challenge
+     */
+    private void setCertification(Member member, Challenge challenge) {
+        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
+        challengeMember.setCertificationYn(true);
     }
 
     /**
@@ -180,6 +194,12 @@ public class FeedService {
         return getFeedResponseDTOS(feedListByMemberOrderByDate);
     }
 
+    /**
+     * 피드 리스트 조회 - 월 필터
+     * @param member
+     * @param month
+     * @return
+     */
     public List<FeedResponseDTO> feedListByMemberAndMonth(Member member, String month) {
 
         LocalDate date = LocalDate.parse(month + "-01");

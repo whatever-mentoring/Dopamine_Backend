@@ -15,8 +15,6 @@ public class FeedRequestDTO {
 
     private String image3Url;
 
-    private Long memberId;
-
     private Long challengeId;
 
     public void setImage1Url(String image1Url) {
