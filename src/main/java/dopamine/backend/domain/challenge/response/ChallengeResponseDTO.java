@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ChallengeResponseDTO {
+    private Long challengeId;
     private String title;
     private String subtitle;
     private String image;

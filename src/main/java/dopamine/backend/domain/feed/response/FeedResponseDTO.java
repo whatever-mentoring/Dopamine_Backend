@@ -7,6 +7,8 @@ import lombok.Getter;
 @Builder
 @Getter
 public class FeedResponseDTO {
+    private Long feedId;
+
     private String content;
 
     private String image1Url;

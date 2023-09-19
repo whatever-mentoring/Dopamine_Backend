@@ -1,10 +1,11 @@
 package dopamine.backend.domain.feed.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.mapper.FeedMapper;
 import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
-import dopamine.backend.domain.feed.service.FeedService;
 import dopamine.backend.domain.feedLike.service.FeedLikeService;
 import dopamine.backend.domain.level.entity.Level;
 import dopamine.backend.domain.level.repository.LevelRepository;
@@ -47,6 +48,9 @@ class FeedServiceTest {
 
     @Autowired
     private FeedMapper feedMapper;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void clean(){
@@ -123,7 +127,7 @@ class FeedServiceTest {
 
     @Test
     @DisplayName("인증글 리스트 - 사용자기준 최신 순")
-    void feedlistbymember(){
+    void feedlistbymember() throws JsonProcessingException {
 
         // given
         LevelRequestDto levelRequestDto = LevelRequestDto.builder().name("testLev").exp(5).build();
@@ -166,6 +170,7 @@ class FeedServiceTest {
         // then
         assertThat(feedResponseDTOS.stream().map(FeedResponseDTO::getContent).collect(Collectors.toList())).contains("10","2","3","4","5","6","7","8","9");
         assertThat(feedResponseDTOS.size()).isEqualTo(9);
+        System.out.println(objectMapper.writeValueAsString(feedResponseDTOS));
     }
 
 }
