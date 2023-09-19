@@ -14,23 +14,27 @@ import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feed.request.FeedEditDTO;
 import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
+import dopamine.backend.domain.feed.response.FeedYearResponseDto;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class FeedService {
 
     private final ChallengeService challengeService;
@@ -73,28 +77,25 @@ public class FeedService {
      * @param feedRequestDTO
      */
     public void postFeed(Member member, FeedRequestDTO feedRequestDTO) {
-        Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
+        Challenge challenge = challengeService.verifiedChallenge(feedRequestDTO.getChallengeId());
 
         Feed feed = feedMapper.feedRequestDtoToFeed(feedRequestDTO);
         feed.setChallenge(challenge);
         feed.setMember(member);
-
         setCertification(member, challenge);
-
         int exp = feed.getChallenge().getChallengeLevel().getExp();
-
         memberService.plusMemberExp(member, exp);
-
         feedRepository.save(feed);
     }
 
     /**
      * 인증 여부 갱신
+     *
      * @param member
      * @param challenge
      */
     private void setCertification(Member member, Challenge challenge) {
-        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
+        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_MEMBER_NOT_FOUND));
         challengeMember.setCertificationYn(true);
     }
 
@@ -197,6 +198,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 조회 - 월 필터
+     *
      * @param member
      * @param month
      * @return
@@ -210,6 +212,35 @@ public class FeedService {
         List<Feed> findListByMemberAndDate = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate);
 
         return getFeedResponseDTOS(findListByMemberAndDate);
+    }
+
+    /**
+     * 피드 리스트 조회 - 년도 기준 월별 인증글 개수
+     *
+     * @param member
+     * @param year
+     * @return
+     */
+    public List<FeedYearResponseDto> feedListByMemberAndYear(Member member, List<String> years) {
+
+        List<FeedYearResponseDto> feedYearResponseDtoList = new ArrayList<>();
+        String yearMonth;
+        LocalDate date;
+        LocalDateTime startDate;
+        LocalDateTime finishDate;
+        Boolean feedNum;
+
+        for(String year:years) {
+            for (int month = 1; month <= 12; month++) {
+                yearMonth = year + "-" + String.format("%1$02d", month);
+                date = LocalDate.parse(yearMonth + "-01");
+                startDate = date.withDayOfMonth(1).atStartOfDay();
+                finishDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
+                feedNum = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate).size() != 0;
+                feedYearResponseDtoList.add(FeedYearResponseDto.builder().yearMonth(yearMonth).feedNum(feedNum).build());
+            }
+        }
+        return feedYearResponseDtoList;
     }
 
 
