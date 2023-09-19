@@ -18,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +46,7 @@ public class FeedService {
 
     /**
      * 단건 피드 가져오기
+     *
      * @param feedId
      * @return
      */
@@ -60,6 +64,7 @@ public class FeedService {
 
     /**
      * 피드 작성
+     *
      * @param feedRequestDTO
      */
     public void postFeed(FeedRequestDTO feedRequestDTO) {
@@ -81,6 +86,7 @@ public class FeedService {
 
     /**
      * 피드 수정
+     *
      * @param feedId
      * @param feedEditDTO
      */
@@ -92,6 +98,7 @@ public class FeedService {
 
     /**
      * 피드 삭제 처리
+     *
      * @param feedId
      */
     public void deleteFeed(Long feedId) {
@@ -102,6 +109,7 @@ public class FeedService {
 
     /**
      * 피드 완전 삭제 (DB)
+     *
      * @param feedId
      */
     public void deleteFeedHard(Long feedId) {
@@ -114,6 +122,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 변환 List<feed> -> List<feedResponseDTO>
+     *
      * @param feedList
      * @return
      */
@@ -127,6 +136,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 조회 - 최신순
+     *
      * @param page
      * @return
      */
@@ -137,6 +147,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 조회 - 좋아요 순
+     *
      * @param page
      * @return
      */
@@ -147,6 +158,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 조회 - 챌린지 기준
+     *
      * @param challengeId
      * @return
      */
@@ -158,6 +170,7 @@ public class FeedService {
 
     /**
      * 피드 리스트 조회 - 유저 기준
+     *
      * @param memberId
      * @param page
      * @return
@@ -168,8 +181,21 @@ public class FeedService {
         return getFeedResponseDTOS(feedListByMemberOrderByDate);
     }
 
+    public List<FeedResponseDTO> feedListByMemberAndMonth(Member member, String month) {
+
+        LocalDate date = LocalDate.parse(month + "-01");
+        LocalDateTime startDate = date.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime finishDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
+
+        List<Feed> findListByMemberAndDate = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate);
+
+        return getFeedResponseDTOS(findListByMemberAndDate);
+    }
+
+
     /**
      * 인증 미달 여부 변경
+     *
      * @param feedId
      * @param value
      */
