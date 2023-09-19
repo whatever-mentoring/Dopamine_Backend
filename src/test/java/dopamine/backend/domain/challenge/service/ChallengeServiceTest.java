@@ -6,7 +6,6 @@ import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.challenge.entity.ChallengeLevel;
 import dopamine.backend.domain.challenge.repository.ChallengeRepository;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
-import dopamine.backend.domain.challenge.service.ChallengeService;
 import dopamine.backend.domain.level.entity.Level;
 import dopamine.backend.domain.level.repository.LevelRepository;
 import dopamine.backend.domain.level.request.LevelRequestDto;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -50,7 +49,6 @@ class ChallengeServiceTest {
     @BeforeEach
     void clean(){
         levelRepository.deleteAll();
-        memberRepository.deleteAll();
         challengeRepository.deleteAll();
     }
 

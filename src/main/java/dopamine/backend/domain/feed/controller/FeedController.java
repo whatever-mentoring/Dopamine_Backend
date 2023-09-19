@@ -34,8 +34,9 @@ public class FeedController {
      * @param feedId
      */
     @GetMapping("/feeds/{feedId}")
-    public FeedResponseDTO getFeed(@PathVariable Long feedId) {
-        return feedService.getFeed(feedId);
+    public FeedResponseDTO getFeed(@PathVariable Long feedId, @RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        return feedService.getFeed(member, feedId);
     }
 
     /**
@@ -45,8 +46,9 @@ public class FeedController {
      * @return
      */
     @GetMapping("/feeds/order-by-date")
-    public List<FeedResponseDTO> getFeedsByDate(@RequestParam Integer page) {
-        return feedService.feedListOrderByDate(page);
+    public List<FeedResponseDTO> getFeedsByDate(@RequestParam Integer page, @RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        return feedService.feedListOrderByDate(member, page);
     }
 
     /**
@@ -56,8 +58,9 @@ public class FeedController {
      * @return
      */
     @GetMapping("/feeds/order-by-likecount")
-    public List<FeedResponseDTO> getFeedsByLikeCount(@RequestParam Integer page) {
-        return feedService.feedListOrderByLikeCount(page);
+    public List<FeedResponseDTO> getFeedsByLikeCount(@RequestParam Integer page, @RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        return feedService.feedListOrderByLikeCount(member, page);
     }
 
     /**
@@ -67,8 +70,9 @@ public class FeedController {
      * @return
      */
     @GetMapping("/feeds/main-page/{challengeId}")
-    public List<FeedResponseDTO> getFeedsByChallenge(@PathVariable Long challengeId) {
-        return feedService.feedListByChallengeOrderByDate(challengeId);
+    public List<FeedResponseDTO> getFeedsByChallenge(@PathVariable Long challengeId, @RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        return feedService.feedListByChallengeOrderByDate(member, challengeId);
     }
 
     /**
@@ -78,9 +82,10 @@ public class FeedController {
      * @param page
      * @return
      */
-    @GetMapping("/feeds/by-member/{memberId}")
-    public List<FeedResponseDTO> getFeedsByMember(@PathVariable Long memberId, @RequestParam Integer page) {
-        return feedService.feedListByMember(memberId, page);
+    @GetMapping("/feeds/by-member")
+    public List<FeedResponseDTO> getFeedsByMember(@PathVariable Long memberId, @RequestParam Integer page, @RequestHeader("Authorization") String accessToken) {
+        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        return feedService.feedListByMember(member, page);
     }
 
     /**
