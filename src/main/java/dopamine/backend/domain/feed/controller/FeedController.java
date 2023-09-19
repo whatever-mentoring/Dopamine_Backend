@@ -85,7 +85,7 @@ public class FeedController {
      * Month를 기준으로 회원 정보 조회
      *
      * @param accessToken
-     * @param months      => 2023_1
+     * @param month      => 2023-01
      * @return
      */
     @GetMapping("/feeds/month/by-member")

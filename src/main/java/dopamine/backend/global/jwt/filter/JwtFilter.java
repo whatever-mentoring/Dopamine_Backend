@@ -36,10 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getServletPath();
-        // 로그인일 경우 건너뛰기
-        if (
-                path.startsWith("/api/auth/login") || path.startsWith("/swagger-ui/") || path.startsWith("/v3/api-docs/") || path.startsWith("/swagger-resources/")
-        ) {
+        if (path.startsWith("/api/auth/login") || path.startsWith("/swagger-ui/") || path.startsWith("/backoffice")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -91,7 +88,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private void validBlackToken(String accessToken) {
         String blackToken = redisTemplate.opsForValue().get(accessToken);
-        if(StringUtils.hasText(blackToken)) {
+        if (StringUtils.hasText(blackToken)) {
             throw new IllegalStateException();
         }
     }
