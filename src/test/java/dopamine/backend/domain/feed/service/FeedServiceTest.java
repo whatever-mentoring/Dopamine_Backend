@@ -71,16 +71,16 @@ class FeedServiceTest {
         levelRepository.save(level);
         memberRepository.save(member);
 
-        Feed feed1 = Feed.builder().content("1").build();
-        Feed feed2 = Feed.builder().content("2").build();
-        Feed feed3 = Feed.builder().content("3").build();
-        Feed feed4 = Feed.builder().content("4").build();
-        Feed feed5 = Feed.builder().content("5").build();
-        Feed feed6 = Feed.builder().content("6").build();
-        Feed feed7 = Feed.builder().content("7").build();
-        Feed feed8 = Feed.builder().content("8").build();
-        Feed feed9 = Feed.builder().content("9").build();
-        Feed feed10 = Feed.builder().content("10").build();
+        Feed feed1 = Feed.builder().content("1").member(member).build();
+        Feed feed2 = Feed.builder().content("2").member(member).build();
+        Feed feed3 = Feed.builder().content("3").member(member).build();
+        Feed feed4 = Feed.builder().content("4").member(member).build();
+        Feed feed5 = Feed.builder().content("5").member(member).build();
+        Feed feed6 = Feed.builder().content("6").member(member).build();
+        Feed feed7 = Feed.builder().content("7").member(member).build();
+        Feed feed8 = Feed.builder().content("8").member(member).build();
+        Feed feed9 = Feed.builder().content("9").member(member).build();
+        Feed feed10 = Feed.builder().content("10").member(member).build();
 
         feedRepository.saveAll(List.of(feed1,feed2,feed3,feed4,feed5,feed6,feed7,feed8,feed9));
         feedRepository.save(feed10);
@@ -106,15 +106,15 @@ class FeedServiceTest {
         levelRepository.save(level);
         memberRepository.save(member);
 
-        Feed feed1 = Feed.builder().content("1").build();
-        Feed feed2 = Feed.builder().content("2").build();
-        Feed feed3 = Feed.builder().content("3").build();
-        Feed feed4 = Feed.builder().content("4").build();
-        Feed feed5 = Feed.builder().content("5").build();
-        Feed feed6 = Feed.builder().content("6").build();
-        Feed feed7 = Feed.builder().content("7").build();
-        Feed feed8 = Feed.builder().content("8").build();
-        Feed feed9 = Feed.builder().content("9").build();
+        Feed feed1 = Feed.builder().content("1").member(member).build();
+        Feed feed2 = Feed.builder().content("2").member(member).build();
+        Feed feed3 = Feed.builder().content("3").member(member).build();
+        Feed feed4 = Feed.builder().content("4").member(member).build();
+        Feed feed5 = Feed.builder().content("5").member(member).build();
+        Feed feed6 = Feed.builder().content("6").member(member).build();
+        Feed feed7 = Feed.builder().content("7").member(member).build();
+        Feed feed8 = Feed.builder().content("8").member(member).build();
+        Feed feed9 = Feed.builder().content("9").member(member).build();
 
         feedRepository.saveAll(List.of(feed1,feed2,feed3,feed4,feed5,feed6,feed7,feed8,feed9));
 
