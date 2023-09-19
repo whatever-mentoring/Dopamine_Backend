@@ -7,10 +7,12 @@ import dopamine.backend.domain.challenge.service.ChallengeService;
 import dopamine.backend.global.s3.service.ImageService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class ChallengeController {
      * 챌린지 생성
      * @param challengeRequestDTO
      */
-    @PostMapping("/challenges")
+    @PostMapping(value = "/challenges", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void createChallenge(@Valid @RequestPart(value = "request") ChallengeRequestDTO challengeRequestDTO,
                                 @RequestPart(value = "image", required = false) MultipartFile file){
         if(file != null){
@@ -68,7 +70,7 @@ public class ChallengeController {
      * @param challengeId
      * @param challengeEditDTO
      */
-    @PutMapping("/challenges/{challengeId}")
+    @PutMapping(value = "/challenges/{challengeId}", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void editChallenge(@PathVariable Long challengeId, @RequestPart(value = "request") ChallengeEditDTO challengeEditDTO,
                               @RequestPart(value = "image", required = false) MultipartFile file){
         if(file != null){
@@ -83,7 +85,7 @@ public class ChallengeController {
      * @param userId
      */
     @GetMapping("/challenges/today-challenge/{userId}")
-    public void todayChallenge(@PathVariable Long userId){
-        challengeService.todayChallenge(userId);
+    public List<ChallengeResponseDTO> todayChallenge(@PathVariable Long userId){
+        return challengeService.todayChallenge(userId);
     }
 }

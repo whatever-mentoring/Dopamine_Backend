@@ -5,6 +5,8 @@ import dopamine.backend.domain.challenge.mapper.ChallengeMapper;
 import dopamine.backend.domain.challenge.repository.ChallengeRepository;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.domain.challenge.service.ChallengeService;
+import dopamine.backend.domain.challengemember.entity.ChallengeMember;
+import dopamine.backend.domain.challengemember.repository.ChallengeMemberRepository;
 import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.mapper.FeedMapper;
 import dopamine.backend.domain.feed.repository.FeedCustomRepository;
@@ -34,6 +36,7 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeMemberRepository challengeMemberRepository;
 
     private final FeedCustomRepository feedCustomRepository;
 
@@ -67,21 +70,30 @@ public class FeedService {
      *
      * @param feedRequestDTO
      */
-    public void postFeed(FeedRequestDTO feedRequestDTO) {
+    public void postFeed(Member member, FeedRequestDTO feedRequestDTO) {
         Challenge challenge = challengeRepository.findById(feedRequestDTO.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다."));
-
-        Member member = memberService.verifiedMember(feedRequestDTO.getMemberId());
 
         Feed feed = feedMapper.feedRequestDtoToFeed(feedRequestDTO);
         feed.setChallenge(challenge);
         feed.setMember(member);
 
-        // member의 exp추가 & level 반영 => ChallengeLevel Enum 값에 경험치 넣어주었습니다
+        setCertification(member, challenge);
+
         int exp = feed.getChallenge().getChallengeLevel().getExp();
 
         memberService.plusMemberExp(member, exp);
 
         feedRepository.save(feed);
+    }
+
+    /**
+     * 인증 여부 갱신
+     * @param member
+     * @param challenge
+     */
+    private void setCertification(Member member, Challenge challenge) {
+        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new RuntimeException("유효하지 않은 챌린지입니다."));
+        challengeMember.setCertificationYn(true);
     }
 
     /**
@@ -181,6 +193,12 @@ public class FeedService {
         return getFeedResponseDTOS(feedListByMemberOrderByDate);
     }
 
+    /**
+     * 피드 리스트 조회 - 월 필터
+     * @param member
+     * @param month
+     * @return
+     */
     public List<FeedResponseDTO> feedListByMemberAndMonth(Member member, String month) {
 
         LocalDate date = LocalDate.parse(month + "-01");

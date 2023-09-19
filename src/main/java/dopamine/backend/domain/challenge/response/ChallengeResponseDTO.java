@@ -12,4 +12,9 @@ public class ChallengeResponseDTO {
     private String image;
     private String challengeGuide;
     private ChallengeLevel challengeLevel;
+    private Boolean certificationYn;
+
+    public void setCertificationYn(Boolean certificationYn) {
+        this.certificationYn = certificationYn;
+    }
 }
