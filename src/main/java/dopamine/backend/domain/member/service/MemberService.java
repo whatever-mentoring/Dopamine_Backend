@@ -182,7 +182,7 @@ public class MemberService {
      */
     public void minusMemberExp(Member member, int exp) {
         if (member.getExp() >= exp) {
-            exp = member.getExp() + exp;
+            exp = member.getExp() - exp;
             Level level = getMemberLevel(exp);
             member.changeMember(null, null, null, exp, level);
         }

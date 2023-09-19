@@ -40,7 +40,7 @@ public class FeedService {
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
 
-    private Feed verifiedFeed(Long feedId) {
+    public Feed verifiedFeed(Long feedId) {
         return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
     }
 

@@ -16,7 +16,7 @@
 <div layout:fragment="content">
 
   <!--  피드 목록  -->
-  <div style="text-align: center; margin: auto">
+  <div style="text-align: center; margin: auto; width: 90%">
     <table class="table table-striped">
       <thead>
       <tr>
@@ -40,8 +40,12 @@
         <td><a href="#" th:href="${feed.image3Url}">서브이미지2</a></td>
         <td th:text="${feed.member.getNickname()} + '(' + ${feed.member.getMemberId()} +')'"></td>
         <td th:text="${feed.challenge.getTitle()} + '(' + ${feed.challenge.getChallengeId()} +')'"></td>
-        <td th:if="${feed.fulfillYn}">충족</td>
-        <td th:unless="${feed.fulfillYn}">달성</td>
+        <td th:if="${feed.fulfillYn}">
+          달성 | <a href="#" th:href="@{/backoffice/feed/{feedId}/fullfill (feedId=${feed.feedId})}">미달성으로 변경</a>
+        </td>
+        <td th:unless="${feed.fulfillYn}">
+          미달성 | <a href="#" th:href="@{/backoffice/feed/{feedId}/fullfill (feedId=${feed.feedId})}">달성으로 변경</a>
+        </td>
         <td>
           <a href="#" th:href="@{/backoffice/feed/{feedId}/delete (feedId=${feed.feedId})}">삭제</a>
         </td>
@@ -49,10 +53,7 @@
       </tbody>
     </table>
   </div>
-  <!--  레벨 생성  -->
-  <div style="text-align: center">
-    <button type="button" class="btn btn-primary" onclick="location.href='/backoffice/level/create'">생성</button>
-  </div>
+
 </div>
 
 </html>

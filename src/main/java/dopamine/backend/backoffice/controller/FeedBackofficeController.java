@@ -4,6 +4,7 @@ import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feed.service.FeedService;
 import dopamine.backend.domain.level.entity.Level;
+import dopamine.backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,8 @@ import java.util.List;
 public class FeedBackofficeController {
     private final FeedRepository feedRepository;
     private final FeedService feedService;
+    private final MemberService memberService;
+
     @GetMapping
     public String feed(Model model) {
         List<Feed> feeds = feedRepository.findAll();
@@ -29,8 +32,26 @@ public class FeedBackofficeController {
     }
 
     @GetMapping("/{feedId}/delete")
-    public String feed(@PathVariable("feedId") Long feedId) {
+    public String feedDelete(@PathVariable("feedId") Long feedId) {
+        Feed feed = feedService.verifiedFeed(feedId);
         feedService.deleteFeedHard(feedId);
+        if (feed.getFulfillYn()) {
+            memberService.minusMemberExp(feed.getMember(), feed.getChallenge().getChallengeLevel().getExp());
+        }
+        return "redirect:/backoffice/feed";
+    }
+
+    @GetMapping("/{feedId}/fullfill")
+    public String feedFullfill(@PathVariable("feedId") Long feedId) {
+        Feed feed = feedService.verifiedFeed(feedId);
+
+        if (feedService.verifiedFeed(feedId).getFulfillYn()) {
+            feedService.patchFeedFulfill(feedId, false);
+            memberService.minusMemberExp(feed.getMember(), feed.getChallenge().getChallengeLevel().getExp());
+        } else {
+            feedService.patchFeedFulfill(feedId, true);
+            memberService.plusMemberExp(feed.getMember(), feed.getChallenge().getChallengeLevel().getExp());
+        }
         return "redirect:/backoffice/feed";
     }
 
