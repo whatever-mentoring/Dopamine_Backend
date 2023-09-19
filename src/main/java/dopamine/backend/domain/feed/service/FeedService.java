@@ -49,8 +49,8 @@ public class FeedService {
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
 
-    private Feed verifiedFeed(Long feedId) {
-        return feedRepository.findById(feedId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.FEED_NOT_FOUND));
+    public Feed verifiedFeed(Long feedId) {
+        return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
     }
 
     /**
@@ -118,7 +118,6 @@ public class FeedService {
      */
     public void deleteFeed(Long feedId) {
         Feed feed = verifiedFeed(feedId);
-
         feed.changeDelYn(true);
     }
 
