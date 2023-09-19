@@ -16,6 +16,8 @@ import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
 import dopamine.backend.domain.feed.response.FeedYearResponseDto;
 import dopamine.backend.domain.member.entity.Member;
+import dopamine.backend.domain.member.mapper.MemberMapper;
+import dopamine.backend.domain.member.response.MemberResponseDto;
 import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
@@ -48,6 +50,7 @@ public class FeedService {
 
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
+    private final MemberMapper memberMapper;
 
     public Feed verifiedFeed(Long feedId) {
         return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
@@ -60,15 +63,17 @@ public class FeedService {
      * @return
      */
     @Transactional(readOnly = true)
-    public FeedResponseDTO getFeed(Long feedId) {
+    public FeedResponseDTO getFeed(Member member, Long feedId) {
         Feed feed = verifiedFeed(feedId);
 
         if (!feed.getFulfillYn()) throw new BusinessLogicException(ExceptionCode.FEED_FULFILL_NOT_VALID);
 
         Challenge challenge = feed.getChallenge();
+        MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(feed.getMember());
         ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(challenge);
+        String badgeimage = feed.getMember().getLevel().getBadge();
 
-        return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO);
+        return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage);
     }
 
     /**
@@ -95,7 +100,11 @@ public class FeedService {
      * @param challenge
      */
     private void setCertification(Member member, Challenge challenge) {
-        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_MEMBER_NOT_FOUND));
+        ChallengeMember challengeMember = challengeMemberRepository.findChallengeMemberByChallengeAndMember(challenge, member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHALLENGE_NOT_FOUND));
+        // todo 테스트 용이성 위해 주석처리, 프론트에서만 인증여부 체크해도 된다
+//        if(challengeMember.getCertificationYn())
+//            throw new BusinessLogicException(CHALLENGE_ALREADY_CERTIFIED);
+
         challengeMember.setCertificationYn(true);
     }
 
@@ -141,9 +150,13 @@ public class FeedService {
      * @return
      */
     private List<FeedResponseDTO> getFeedResponseDTOS(List<Feed> feedList) {
+
+
         List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
+            MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(feed.getMember());
+            String badgeimage = feed.getMember().getLevel().getBadge();
             ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
-            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO);
+            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage);
         }).collect(Collectors.toList());
         return feedResponseDTOList;
     }
@@ -154,7 +167,7 @@ public class FeedService {
      * @param page
      * @return
      */
-    public List<FeedResponseDTO> feedListOrderByDate(Integer page) {
+    public List<FeedResponseDTO> feedListOrderByDate(Member member, Integer page) {
         List<Feed> feedList = feedCustomRepository.getFeedListOrderByDate(page);
         return getFeedResponseDTOS(feedList);
     }
@@ -165,7 +178,7 @@ public class FeedService {
      * @param page
      * @return
      */
-    public List<FeedResponseDTO> feedListOrderByLikeCount(Integer page) {
+    public List<FeedResponseDTO> feedListOrderByLikeCount(Member member, Integer page) {
         List<Feed> feedList = feedCustomRepository.getFeedListOrderByLikeCount(page);
         return getFeedResponseDTOS(feedList);
     }
@@ -176,7 +189,7 @@ public class FeedService {
      * @param challengeId
      * @return
      */
-    public List<FeedResponseDTO> feedListByChallengeOrderByDate(Long challengeId) {
+    public List<FeedResponseDTO> feedListByChallengeOrderByDate(Member member, Long challengeId) {
         Challenge challenge = challengeService.verifiedChallenge(challengeId);
         List<Feed> feedListByChallengeOrderByLikeCount = feedCustomRepository.getFeedListByChallengeOrderByLikeCount(challenge);
         return getFeedResponseDTOS(feedListByChallengeOrderByLikeCount);
@@ -185,12 +198,11 @@ public class FeedService {
     /**
      * 피드 리스트 조회 - 유저 기준
      *
-     * @param memberId
+     * @param member
      * @param page
      * @return
      */
-    public List<FeedResponseDTO> feedListByMember(Long memberId, Integer page) {
-        Member member = memberService.verifiedMember(memberId);
+    public List<FeedResponseDTO> feedListByMember(Member member, Integer page) {
         List<Feed> feedListByMemberOrderByDate = feedCustomRepository.getFeedListByMemberOrderByDate(page, member);
         return getFeedResponseDTOS(feedListByMemberOrderByDate);
     }

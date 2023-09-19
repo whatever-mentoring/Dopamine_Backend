@@ -1,8 +1,11 @@
 package dopamine.backend.domain.feed.response;
 
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
+import dopamine.backend.domain.member.response.MemberResponseDto;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -21,8 +24,11 @@ public class FeedResponseDTO {
 
     private Boolean fulfillYn;
 
-    // todo member 정보 어디까지 추가해야하는지 결정
-    private Long memberId;
+    private LocalDateTime createdDate;
+
+    private MemberResponseDto memberResponseDto;
+
+    private String badgeimage;
 
     private ChallengeResponseDTO challengeResponseDTO;
 }
