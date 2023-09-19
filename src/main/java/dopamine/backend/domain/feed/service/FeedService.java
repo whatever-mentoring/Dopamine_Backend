@@ -14,6 +14,8 @@ import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feed.request.FeedEditDTO;
 import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
+import dopamine.backend.domain.feedLike.mapper.FeedLikeMapper;
+import dopamine.backend.domain.feedLike.response.FeedLikeResponseDTO;
 import dopamine.backend.domain.feed.response.FeedYearResponseDto;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.mapper.MemberMapper;
@@ -51,6 +53,7 @@ public class FeedService {
     private final ChallengeMapper challengeMapper;
     private final FeedMapper feedMapper;
     private final MemberMapper memberMapper;
+    private final FeedLikeMapper feedLikeMapper;
 
     public Feed verifiedFeed(Long feedId) {
         return feedRepository.findById(feedId).orElseThrow(() -> new RuntimeException("존재하지 않는 피드입니다."));
@@ -73,7 +76,9 @@ public class FeedService {
         ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(challenge);
         String badgeimage = feed.getMember().getLevel().getBadge();
 
-        return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage);
+        List<FeedLikeResponseDTO> feedLikeResponseDTOList = feed.getFeedLikeList().stream().map(feedLike -> feedLikeMapper.feedLikeToFeedLikeResponseDto(feedLike)).collect(Collectors.toList());
+
+        return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage, feedLikeResponseDTOList);
     }
 
     /**
@@ -150,13 +155,12 @@ public class FeedService {
      * @return
      */
     private List<FeedResponseDTO> getFeedResponseDTOS(List<Feed> feedList) {
-
-
         List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
+            List<FeedLikeResponseDTO> feedLikeResponseDTOList = feed.getFeedLikeList().stream().map(feedLike -> feedLikeMapper.feedLikeToFeedLikeResponseDto(feedLike)).collect(Collectors.toList());
             MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(feed.getMember());
             String badgeimage = feed.getMember().getLevel().getBadge();
             ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
-            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage);
+            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage, feedLikeResponseDTOList);
         }).collect(Collectors.toList());
         return feedResponseDTOList;
     }

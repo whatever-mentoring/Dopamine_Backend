@@ -3,6 +3,7 @@ package dopamine.backend.domain.feed.entity;
 import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.common.entity.BaseEntity;
 import dopamine.backend.domain.feed.request.FeedEditDTO;
+import dopamine.backend.domain.feedLike.entity.FeedLike;
 import dopamine.backend.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -43,6 +46,9 @@ public class Feed extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
+
+    @OneToMany(mappedBy = "feed")
+    private List<FeedLike> feedLikeList = new ArrayList<>();
 
     public void setMember(Member member){
         this.member = member;
