@@ -78,12 +78,11 @@ public class FeedController {
     /**
      * 피드 리스트 조회 - 사용자 기준 최신 순
      *
-     * @param memberId
      * @param page
      * @return
      */
     @GetMapping("/feeds/by-member")
-    public List<FeedResponseDTO> getFeedsByMember(@PathVariable Long memberId, @RequestParam Integer page, @RequestHeader("Authorization") String accessToken) {
+    public List<FeedResponseDTO> getFeedsByMember(@RequestParam Integer page, @RequestHeader("Authorization") String accessToken) {
         Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
         return feedService.feedListByMember(member, page);
     }
