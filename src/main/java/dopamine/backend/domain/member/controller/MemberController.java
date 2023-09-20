@@ -13,6 +13,7 @@ import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.mapper.MemberMapper;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/members")
 @Api(tags = "멤버 API")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
@@ -38,6 +40,8 @@ public class MemberController {
     public ResponseEntity createMember(@Valid @RequestBody MemberRequestDto memberRequestDto) {
         Member member = memberService.createMember(memberRequestDto);
         MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
+        log.info("임시 accessToken");
+        log.info(jwtService.getAccessToken(member));
         return new ResponseEntity<>(memberResponseDto, HttpStatus.CREATED);
     }
 

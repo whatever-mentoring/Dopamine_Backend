@@ -50,7 +50,7 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    @OneToMany(mappedBy = "feed")
+    @OneToMany(mappedBy = "feed", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<FeedLike> feedLikeList = new ArrayList<>();
 
     public void setChallenge(Challenge challenge) {
@@ -92,28 +92,14 @@ public class Feed extends BaseEntity {
 
     //== 연관관계 매핑 ==//
     public void setMember(Member member) {
-        log.info("피드5");
-
         deleteMember();
-        log.info("피드6");
-
         this.member = Optional.ofNullable(member).orElse(this.member);
-        log.info("피드7");
-
-        log.info(this.member.getNickname());
-        System.out.println(this);
         this.member.getFeeds().add(this);
-        log.info("피드 스페셜");
     }
 
     private void deleteMember() {
-        log.info("피드8");
-
         if (this.member != null) {
-            log.info("피드9");
             if (this.member.getFeeds().contains(this)) {
-
-                log.info("피드10");
                 this.member.getFeeds().remove(this);
             }
         }
