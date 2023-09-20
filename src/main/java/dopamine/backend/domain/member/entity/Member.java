@@ -2,6 +2,8 @@ package dopamine.backend.domain.member.entity;
 
 import dopamine.backend.domain.challengemember.entity.ChallengeMember;
 import dopamine.backend.domain.common.entity.BaseEntity;
+import dopamine.backend.domain.feed.entity.Feed;
+import dopamine.backend.domain.feedLike.entity.FeedLike;
 import dopamine.backend.domain.level.entity.Level;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,6 +43,12 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ChallengeMember> challengeMembers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Feed> feeds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<FeedLike> feedLikes = new ArrayList<>();
 
     /**
      * 생성자
