@@ -14,9 +14,10 @@ import dopamine.backend.domain.feed.repository.FeedRepository;
 import dopamine.backend.domain.feed.request.FeedEditDTO;
 import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
-import dopamine.backend.domain.feedLike.mapper.FeedLikeMapper;
-import dopamine.backend.domain.feedLike.response.FeedLikeResponseDTO;
 import dopamine.backend.domain.feed.response.FeedYearResponseDto;
+import dopamine.backend.domain.feedLike.mapper.FeedLikeMapper;
+import dopamine.backend.domain.feedLike.repository.FeedLikeRepository;
+import dopamine.backend.domain.feedLike.response.FeedLikeResponseDTO;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.mapper.MemberMapper;
 import dopamine.backend.domain.member.response.MemberResponseDto;
@@ -47,6 +48,7 @@ public class FeedService {
     private final FeedRepository feedRepository;
     private final ChallengeRepository challengeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
+    private final FeedLikeRepository feedLikeRepository;
 
     private final FeedCustomRepository feedCustomRepository;
 
@@ -77,8 +79,9 @@ public class FeedService {
         String badgeimage = feed.getMember().getLevel().getBadge();
 
         List<FeedLikeResponseDTO> feedLikeResponseDTOList = feed.getFeedLikeList().stream().map(feedLike -> feedLikeMapper.feedLikeToFeedLikeResponseDto(feedLike)).collect(Collectors.toList());
+        boolean likePresent = feedLikeRepository.findByMemberAndFeed(member, feed).isPresent();
 
-        return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage, feedLikeResponseDTOList);
+        return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage, feedLikeResponseDTOList, likePresent);
     }
 
     /**
@@ -154,13 +157,14 @@ public class FeedService {
      * @param feedList
      * @return
      */
-    private List<FeedResponseDTO> getFeedResponseDTOS(List<Feed> feedList) {
+    private List<FeedResponseDTO> getFeedResponseDTOS(Member member, List<Feed> feedList) {
         List<FeedResponseDTO> feedResponseDTOList = feedList.stream().map(feed -> {
             List<FeedLikeResponseDTO> feedLikeResponseDTOList = feed.getFeedLikeList().stream().map(feedLike -> feedLikeMapper.feedLikeToFeedLikeResponseDto(feedLike)).collect(Collectors.toList());
             MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(feed.getMember());
             String badgeimage = feed.getMember().getLevel().getBadge();
             ChallengeResponseDTO challengeResponseDTO = challengeMapper.challengeToChallengeResponseDTO(feed.getChallenge());
-            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage, feedLikeResponseDTOList);
+            boolean likePresent = feedLikeRepository.findByMemberAndFeed(member, feed).isPresent();
+            return feedMapper.feedToFeedResponseDto(feed, challengeResponseDTO, memberResponseDto, badgeimage, feedLikeResponseDTOList, likePresent);
         }).collect(Collectors.toList());
         return feedResponseDTOList;
     }
@@ -173,7 +177,7 @@ public class FeedService {
      */
     public List<FeedResponseDTO> feedListOrderByDate(Member member, Integer page) {
         List<Feed> feedList = feedCustomRepository.getFeedListOrderByDate(page);
-        return getFeedResponseDTOS(feedList);
+        return getFeedResponseDTOS(member, feedList);
     }
 
     /**
@@ -184,7 +188,7 @@ public class FeedService {
      */
     public List<FeedResponseDTO> feedListOrderByLikeCount(Member member, Integer page) {
         List<Feed> feedList = feedCustomRepository.getFeedListOrderByLikeCount(page);
-        return getFeedResponseDTOS(feedList);
+        return getFeedResponseDTOS(member, feedList);
     }
 
     /**
@@ -196,7 +200,7 @@ public class FeedService {
     public List<FeedResponseDTO> feedListByChallengeOrderByDate(Member member, Long challengeId) {
         Challenge challenge = challengeService.verifiedChallenge(challengeId);
         List<Feed> feedListByChallengeOrderByLikeCount = feedCustomRepository.getFeedListByChallengeOrderByLikeCount(challenge);
-        return getFeedResponseDTOS(feedListByChallengeOrderByLikeCount);
+        return getFeedResponseDTOS(member, feedListByChallengeOrderByLikeCount);
     }
 
     /**
@@ -208,7 +212,7 @@ public class FeedService {
      */
     public List<FeedResponseDTO> feedListByMember(Member member, Integer page) {
         List<Feed> feedListByMemberOrderByDate = feedCustomRepository.getFeedListByMemberOrderByDate(page, member);
-        return getFeedResponseDTOS(feedListByMemberOrderByDate);
+        return getFeedResponseDTOS(member, feedListByMemberOrderByDate);
     }
 
     /**
@@ -226,7 +230,7 @@ public class FeedService {
 
         List<Feed> findListByMemberAndDate = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate);
 
-        return getFeedResponseDTOS(findListByMemberAndDate);
+        return getFeedResponseDTOS(member, findListByMemberAndDate);
     }
 
     /**
