@@ -35,11 +35,7 @@ public class AuthenticationConfig {
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
-                        "/favicon.ico",
-                        "/css/**",
-                        "/scripts/**",
-                        "/img/**",
-                        "/static/**");
+                        "/favicon.ico");
     }
 
     @Bean
