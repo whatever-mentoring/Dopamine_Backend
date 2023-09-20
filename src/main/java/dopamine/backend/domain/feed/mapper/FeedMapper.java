@@ -18,5 +18,5 @@ public interface FeedMapper {
     Feed feedRequestDtoToFeed(FeedRequestDTO feedRequestDTO);
 
     // Feed -> FeedResponseDTO
-    FeedResponseDTO feedToFeedResponseDto(Feed feed, ChallengeResponseDTO challengeResponseDTO, MemberResponseDto memberResponseDto, String badgeimage, List<FeedLikeResponseDTO> feedLikeResponseDTOList);
+    FeedResponseDTO feedToFeedResponseDto(Feed feed, ChallengeResponseDTO challengeResponseDTO, MemberResponseDto memberResponseDto, String badgeimage, List<FeedLikeResponseDTO> feedLikeResponseDTOList, boolean likePresent);
 }

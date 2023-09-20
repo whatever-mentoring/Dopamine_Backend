@@ -32,6 +32,8 @@ public class FeedResponseDTO {
 
     private String badgeimage;
 
+    private Boolean likePresent;
+
     private ChallengeResponseDTO challengeResponseDTO;
 
     private List<FeedLikeResponseDTO> feedLikeResponseDTOList;
