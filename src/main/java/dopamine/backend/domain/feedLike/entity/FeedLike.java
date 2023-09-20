@@ -33,10 +33,6 @@ public class FeedLike extends BaseEntity {
     public FeedLike(Member member, Feed feed) {
         this.member = member;
         this.feed = feed;
-
-        if(!this.feed.getFeedLikeList().contains(this)){
-            this.feed.getFeedLikeList().add(this);
-        }
     }
 
     //== 연관관계 매핑 ==//
@@ -50,6 +46,20 @@ public class FeedLike extends BaseEntity {
         if (this.member != null) {
             if (this.member.getFeedLikes().contains(this)) {
                 this.member.getFeedLikes().remove(this);
+            }
+        }
+    }
+
+    public void setFeed(Feed feed) {
+        deleteFeed();
+        this.feed = Optional.ofNullable(feed).orElse(this.feed);
+        this.feed.getFeedLikeList().add(this);
+    }
+
+    private void deleteFeed() {
+        if (this.feed != null) {
+            if (this.feed.getFeedLikeList().contains(this)) {
+                this.feed.getFeedLikeList().remove(this);
             }
         }
     }
