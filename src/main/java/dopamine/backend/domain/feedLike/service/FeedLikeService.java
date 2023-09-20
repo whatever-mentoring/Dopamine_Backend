@@ -44,8 +44,8 @@ public class FeedLikeService {
         if(findFeedLike.isPresent()) throw new BusinessLogicException(ExceptionCode.FEEDLIKE_ALREADY_FOUND);
 
         FeedLike feedLike = FeedLike.builder().feed(feed).member(member).build();
+        feedLike.setMember(member);
         feedLikeRepository.save(feedLike);
-
         feed.addLikeCount();
 
         return feed.getLikeCount();

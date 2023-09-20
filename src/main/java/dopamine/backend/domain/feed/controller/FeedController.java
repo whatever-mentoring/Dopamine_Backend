@@ -13,6 +13,7 @@ import dopamine.backend.global.s3.service.ImageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @Api(tags = "인증글 API")
 public class FeedController {
@@ -134,7 +136,7 @@ public class FeedController {
                          @RequestHeader("Authorization") String accessToken) {
 
         int index = 0;
-
+        log.info("피드1");
         for (MultipartFile file : files) {
             if (file == null) continue;
 
@@ -151,10 +153,11 @@ public class FeedController {
 
             index++;
         }
-
+        log.info("피드2");
         Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
-
+        log.info("피드3");
         feedService.postFeed(member, feedRequestDTO);
+        log.info("피드4");
     }
 
     /**
