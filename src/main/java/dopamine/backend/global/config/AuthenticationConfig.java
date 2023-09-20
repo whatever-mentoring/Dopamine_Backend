@@ -34,8 +34,7 @@ public class AuthenticationConfig {
                 .antMatchers("/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
-                        "/swagger-ui/**",
-                        "/favicon.ico");
+                        "/swagger-ui/**");
     }
 
     @Bean
