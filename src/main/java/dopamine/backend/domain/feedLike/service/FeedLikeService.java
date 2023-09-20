@@ -26,7 +26,6 @@ public class FeedLikeService {
     private final FeedRepository feedRepository;
     private final FeedLikeRepository feedLikeRepository;
 
-    // service를 di 받는게 나은지, repo를 가져와서 메소드를 작성해주는게 나은지 -> memberserivce의 메소드를 쓰면 코드 의존이 높아질거 같다
     public Member verifiedMember(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
