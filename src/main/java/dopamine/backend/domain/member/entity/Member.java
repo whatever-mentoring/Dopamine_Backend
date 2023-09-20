@@ -26,6 +26,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long memberId;
 
+    @Column(unique = true)
     private String kakaoId;
 
     @Column(unique = true)
