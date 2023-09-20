@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -35,6 +36,21 @@ public class FeedLike extends BaseEntity {
 
         if(!this.feed.getFeedLikeList().contains(this)){
             this.feed.getFeedLikeList().add(this);
+        }
+    }
+
+    //== 연관관계 매핑 ==//
+    public void setMember(Member member) {
+        deleteMember();
+        this.member = Optional.ofNullable(member).orElse(this.member);
+        this.member.getFeedLikes().add(this);
+    }
+
+    private void deleteMember() {
+        if (this.member != null) {
+            if (this.member.getFeedLikes().contains(this)) {
+                this.member.getFeedLikes().remove(this);
+            }
         }
     }
 }
