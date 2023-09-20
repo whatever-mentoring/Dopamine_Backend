@@ -44,6 +44,7 @@ public class FeedLikeService {
 
         FeedLike feedLike = FeedLike.builder().feed(feed).member(member).build();
         feedLike.setMember(member);
+        feedLike.setFeed(feed);
         feedLikeRepository.save(feedLike);
         feed.addLikeCount();
 
