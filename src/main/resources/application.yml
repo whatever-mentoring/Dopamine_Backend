@@ -13,6 +13,7 @@ server:
     key-store-password: admin1234
     enabled: true
 
+
 spring:
 
   redis:
