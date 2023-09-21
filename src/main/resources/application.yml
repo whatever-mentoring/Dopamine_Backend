@@ -7,7 +7,7 @@ server:
       enabled: true             # 서버 오류 발생시 브라우저에 보여줄 기본 페이지 생성 여부
 #    include-message: always
   ssl:
-    key-store: classpath:keystore.p12
+    key-store: classpath:/keystore.p12
     key-store-type: PKCS12
     key-alias: bns-ssl
     key-store-password: admin1234
