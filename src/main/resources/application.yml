@@ -1,5 +1,5 @@
 server:
-  port: 443
+  port: 9000
   error:
     include-exception: true     # 응답에 exception의 내용을 포함할지 여부
     path: '/error'               # 응답을 처리할 Handler의 경로
