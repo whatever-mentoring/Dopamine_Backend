@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+
+<!--    css 추가     -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!--    script 추가     -->
+<th:block layout:fragment="script">
+</th:block>
+
+<!-- Content -->
+<div layout:fragment="content">
+  <div style="text-align: center; margin: auto; width: 30%">
+    <p th:text="${levelNum} + '레벨을 수정합니다'" >레벨 생성</p>
+    <form th:action="@{/backoffice/level/{id}/update (id=${levelId})}" th:object="${form}" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label th:for="name">레벨명</label>
+        <input type="text"  th:value="*{name}" th:field="*{name}" class="form-control" placeholder="레벨명을 입력하세요">
+      </div>
+      <div class="form-group">
+        <label>뱃지 이미지</label>
+        <input type="file" name="file" class="form-control" placeholder="이미지를 선택해주세요.">
+      </div>
+      <div class="form-group">
+        <label th:for="exp">exp최소 충족 기준</label>
+        <input type="number" th:value="*{exp}" th:field="*{exp}" class="form-control" placeholder="exp최소 충족 기준을 입력하세요">
+      </div>
+      <button style="margin-top: 2rem" type="submit" class="btn btn-success">Submit</button>
+    </form>
+  </div>
+</div>
+</html>
