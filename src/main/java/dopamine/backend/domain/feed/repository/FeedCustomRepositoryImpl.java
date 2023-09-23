@@ -29,7 +29,8 @@ public class FeedCustomRepositoryImpl implements FeedCustomRepository {
     @Override
     public List<Feed> getFeedListOrderByDate(int page) {
         return jpaQueryFactory.selectFrom(feed)
-                .where(feed.fulfillYn.eq(true))
+                .where(feed.fulfillYn.eq(true),
+                        feed.delYn.eq(false))
                 .orderBy(feed.createdDate.desc())
                 .limit(9)
                 .offset((long) (page - 1) * PAGEOFFSET)
@@ -47,7 +48,8 @@ public class FeedCustomRepositoryImpl implements FeedCustomRepository {
 
         return jpaQueryFactory.selectFrom(feed)
                 .where(feed.createdDate.after(dayOffset),
-                        feed.fulfillYn.eq(true))
+                        feed.fulfillYn.eq(true),
+                        feed.delYn.eq(false))
                 .orderBy(feed.likeCount.desc())
                 .limit(9)
                 .offset((long) (page - 1) * PAGEOFFSET)
@@ -66,7 +68,8 @@ public class FeedCustomRepositoryImpl implements FeedCustomRepository {
         return jpaQueryFactory.selectFrom(feed)
                 .where(feed.createdDate.after(dayOffset),
                         feed.challenge.eq(challenge),
-                        feed.fulfillYn.eq(true))
+                        feed.fulfillYn.eq(true),
+                        feed.delYn.eq(false))
                 .orderBy(feed.likeCount.desc())
                 .limit(6)
                 .fetch();
@@ -81,7 +84,8 @@ public class FeedCustomRepositoryImpl implements FeedCustomRepository {
     public List<Feed> getFeedListByMemberOrderByDate(int page, Member member) {
         return jpaQueryFactory.selectFrom(feed)
                 .where(feed.member.eq(member),
-                        feed.fulfillYn.eq(true))
+                        feed.fulfillYn.eq(true),
+                        feed.delYn.eq(false))
                 .orderBy(feed.createdDate.desc())
                 .limit(9)
                 .offset((long) (page - 1) * PAGEOFFSET)
