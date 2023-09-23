@@ -1,7 +1,5 @@
 package dopamine.backend.global.config;
 
-import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -31,6 +29,8 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",
                 "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        response.setHeader("Content-Type", "application/json");
+        response.setHeader("Accept", "application/json");
 
         if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
