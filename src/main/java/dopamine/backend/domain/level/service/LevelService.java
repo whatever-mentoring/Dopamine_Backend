@@ -141,7 +141,6 @@ public class LevelService {
     public void orderLevelNum() {
         List<Level> levels = levelRepository.findAllByOrderByLevelNumAsc();
         for (int i=0; i < levels.size() ; i++) {
-            System.out.println(levels.get(i).getLevelId());
             levels.get(i).changeLevel(i+1, null, null, 0);
         }
     }
