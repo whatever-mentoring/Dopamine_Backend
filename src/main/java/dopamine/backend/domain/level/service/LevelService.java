@@ -63,6 +63,10 @@ public class LevelService {
      */
     public void deleteLevel(Long levelId) {
         Level level = verifiedLevel(levelId);
+        List<Member> members = memberRepository.findAllByLevel(level);
+        for(Member member : members) {
+            member.changeMember(null, null, null, 0, findLevelByLevelNum(1));
+        }
         levelRepository.delete(level);
         orderLevelNum();
         allMemberLevelChange();
@@ -112,7 +116,7 @@ public class LevelService {
         return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
     }
 
-    public Level findMemberByLevelNum(int levelNum) {
+    public Level findLevelByLevelNum(int levelNum) {
         Optional<Level> level = levelRepository.findLevelByLevelNum(levelNum);
         return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
     }
@@ -171,6 +175,7 @@ public class LevelService {
                 .expPercent(expPercent).build();
     }
 
+    // Level 변경시 모든 멤버의 레벨에 반영
     private void allMemberLevelChange(){
         List<Member> members = memberRepository.findAll();
         for (Member member : members) {
