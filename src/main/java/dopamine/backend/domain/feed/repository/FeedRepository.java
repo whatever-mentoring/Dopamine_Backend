@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findFeedByMemberAndDelYn(Member member, Boolean delYn);
 
-    public List<Feed> findFeedByMemberAndDelYnAndCreatedDateBetweenOrderByCreatedDate(Member member, Boolean DelYn, LocalDateTime startDate, LocalDateTime finishDate);
+    public List<Feed> findFeedByMemberAndDelYnAndCreatedDateBetweenOrderByCreatedDate(Member member, Boolean delYn, LocalDateTime startDate, LocalDateTime finishDate);
 }
