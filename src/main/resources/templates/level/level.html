@@ -16,7 +16,7 @@
 <div layout:fragment="content">
 
     <!--  레벨 목록  -->
-    <div style="text-align: center; margin: auto; width: 30%">
+    <div style="text-align: center; margin: auto; width: 70%">
     <table class="table table-striped">
         <thead>
         <tr>
@@ -24,6 +24,8 @@
             <th>레벨 이름</th>
             <th>뱃지 url</th>
             <th>exp 최소 충족 기준</th>
+            <th>수정</th>
+            <th>삭제</th>
             <th></th>
         </tr>
         </thead>
@@ -31,8 +33,11 @@
         <tr th:each="level : ${levels}">
             <td th:text="${level.levelNum}"></td>
             <td th:text="${level.name}"></td>
-            <td><a href="#" th:href="${level.badge}">뱃지 이미지</a></td>
+            <td><img th:src="${level.badge}" style="height: 70px"/></td>
             <td th:text="${level.exp}"></td>
+            <td>
+                <a href="#" th:href="@{/backoffice/level/{id}/update (id=${level.levelId})}">수정</a>
+            </td>
             <td>
                 <a href="#" th:href="@{/backoffice/level/{id}/delete (id=${level.levelId})}">삭제</a>
             </td>
