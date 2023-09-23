@@ -10,7 +10,7 @@ server:
     key-store: ${DOPAMINE_KEYSTORE}
     key-store-type: PKCS12
     key-alias: ${DOPAMINE_KEY_ALIAS}
-    key-store-password: ${DB_PASSWORD}
+    key-store-password: admin1234
     enabled: true
 
 spring:
