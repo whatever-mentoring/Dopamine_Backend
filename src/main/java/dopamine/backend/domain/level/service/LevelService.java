@@ -1,5 +1,7 @@
 package dopamine.backend.domain.level.service;
 
+import dopamine.backend.domain.member.repository.MemberRepository;
+import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.level.repository.LevelRepository;
@@ -26,6 +28,8 @@ public class LevelService {
 
     private final LevelRepository levelRepository;
     private final LevelMapper levelMapper;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     public static int INF = 1000000000;
 
@@ -47,6 +51,8 @@ public class LevelService {
                 .exp(levelRequestDto.getExp()).build();
 
         levelRepository.save(level);
+        allMemberLevelChange();
+
         return level;
     }
 
@@ -59,6 +65,7 @@ public class LevelService {
         Level level = verifiedLevel(levelId);
         levelRepository.delete(level);
         orderLevelNum();
+        allMemberLevelChange();
     }
 
     /**
@@ -86,6 +93,9 @@ public class LevelService {
         Level level = verifiedLevel(levelId);
         if(levelEditDto.getExp() != 0) verifiedExp(level.getLevelNum(), levelEditDto.getExp());
         level.changeLevel(level.getLevelNum(), levelEditDto.getName(), levelEditDto.getBadge(), levelEditDto.getExp());
+
+        // 모든 멤버에 레벨 반영
+        allMemberLevelChange();
 
         // level -> responseDto
         LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
@@ -161,5 +171,12 @@ public class LevelService {
                 .expPercent(expPercent).build();
     }
 
+    private void allMemberLevelChange(){
+        List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            Level level = memberService.getMemberLevel(member.getExp());
+            member.changeMember(null, null, null, 0, level);
+        }
+    }
 
 }

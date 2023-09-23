@@ -67,7 +67,7 @@ public class LevelBackofficeController {
      */
     @PostMapping("/create")
     public String levelCreate(LevelRequestDto levelRequestDto,
-                              @RequestParam("file") MultipartFile file) {
+                              @RequestPart("file") MultipartFile file) {
         // 이미지 업로드
         if (file != null) {
             levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
