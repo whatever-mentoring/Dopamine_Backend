@@ -228,7 +228,7 @@ public class FeedService {
         LocalDateTime startDate = date.withDayOfMonth(1).atStartOfDay();
         LocalDateTime finishDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
 
-        List<Feed> findListByMemberAndDate = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate);
+        List<Feed> findListByMemberAndDate = feedRepository.findFeedByMemberAndDelYnAndCreatedDateBetweenOrderByCreatedDate(member, false, startDate, finishDate);
 
         return getFeedResponseDTOS(member, findListByMemberAndDate);
     }
@@ -255,7 +255,7 @@ public class FeedService {
                 date = LocalDate.parse(yearMonth + "-01");
                 startDate = date.withDayOfMonth(1).atStartOfDay();
                 finishDate = date.withDayOfMonth(date.lengthOfMonth()).atTime(LocalTime.MAX);
-                feedYn = feedRepository.findFeedByMemberAndCreatedDateBetweenOrderByCreatedDate(member, startDate, finishDate).size() != 0;
+                feedYn = feedRepository.findFeedByMemberAndDelYnAndCreatedDateBetweenOrderByCreatedDate(member, false, startDate, finishDate).size() != 0;
                 feedYearResponseDtoList.add(FeedYearResponseDto.builder().yearMonth(yearMonth).feedYn(feedYn).build());
             }
         }

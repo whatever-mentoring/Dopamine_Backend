@@ -2,16 +2,20 @@ package dopamine.backend.backoffice.controller;
 
 import dopamine.backend.domain.level.entity.Level;
 import dopamine.backend.domain.level.repository.LevelRepository;
+import dopamine.backend.domain.level.request.LevelEditDto;
 import dopamine.backend.domain.level.request.LevelRequestDto;
+import dopamine.backend.domain.level.response.LevelResponseDto;
 import dopamine.backend.domain.level.service.LevelService;
 import dopamine.backend.global.s3.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Controller
@@ -26,6 +30,7 @@ public class LevelBackofficeController {
 
     /**
      * READ : 레벨 확인
+     *
      * @param model
      * @return
      */
@@ -38,6 +43,7 @@ public class LevelBackofficeController {
 
     /**
      * DELETE : 레벨 삭제
+     *
      * @param levelId
      * @return
      */
@@ -47,8 +53,42 @@ public class LevelBackofficeController {
         return "redirect:/backoffice/level";
     }
 
+    @GetMapping("/{levelId}/update")
+    public String levelCreate(@PathVariable("levelId") Long levelId,
+                              Model model) {
+        Level level = levelService.verifiedLevel(levelId);
+        model.addAttribute("levelNum", level.getLevelNum());
+        model.addAttribute("levelId", level.getLevelId());
+        model.addAttribute("form", LevelEditDto.builder()
+                .name(level.getName())
+                .badge(level.getBadge())
+                .exp(level.getExp()).build()
+        );
+        return "level/levelUpdate";
+    }
+
+    /**
+     * UPDATE : 레벨 수정
+     *
+     * @param levelId
+     * @return
+     */
+    @PostMapping("/{levelId}/update")
+    public String editLevel(@PathVariable("levelId") Long levelId,
+                            LevelEditDto levelEditDto,
+                            @RequestPart("file") MultipartFile file) {
+        // 이미지 업로드
+        if (!file.isEmpty()) {
+            levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
+        }
+        // 레벨 수정
+        levelService.editLevel(levelId, levelEditDto);
+        return "redirect:/backoffice/level";
+    }
+
     /**
      * GET : 레벨 생성 화면
+     *
      * @param model
      * @return
      */
@@ -61,15 +101,16 @@ public class LevelBackofficeController {
 
     /**
      * CREATE : 레벨 생성
+     *
      * @param levelRequestDto
      * @param file
      * @return
      */
     @PostMapping("/create")
     public String levelCreate(LevelRequestDto levelRequestDto,
-                              @RequestParam("file") MultipartFile file) {
+                              @RequestPart("file") MultipartFile file) {
         // 이미지 업로드
-        if (file != null) {
+        if (!file.isEmpty()) {
             levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
         }
 
