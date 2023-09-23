@@ -1,5 +1,7 @@
 package dopamine.backend.domain.level.service;
 
+import dopamine.backend.domain.member.repository.MemberRepository;
+import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.level.repository.LevelRepository;
@@ -26,6 +28,8 @@ public class LevelService {
 
     private final LevelRepository levelRepository;
     private final LevelMapper levelMapper;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     public static int INF = 1000000000;
 
@@ -47,6 +51,8 @@ public class LevelService {
                 .exp(levelRequestDto.getExp()).build();
 
         levelRepository.save(level);
+        allMemberLevelChange();
+
         return level;
     }
 
@@ -57,8 +63,13 @@ public class LevelService {
      */
     public void deleteLevel(Long levelId) {
         Level level = verifiedLevel(levelId);
+        List<Member> members = memberRepository.findAllByLevel(level);
+        for(Member member : members) {
+            member.changeMember(null, null, null, 0, findLevelByLevelNum(1));
+        }
         levelRepository.delete(level);
         orderLevelNum();
+        allMemberLevelChange();
     }
 
     /**
@@ -87,6 +98,9 @@ public class LevelService {
         if(levelEditDto.getExp() != 0) verifiedExp(level.getLevelNum(), levelEditDto.getExp());
         level.changeLevel(level.getLevelNum(), levelEditDto.getName(), levelEditDto.getBadge(), levelEditDto.getExp());
 
+        // 모든 멤버에 레벨 반영
+        allMemberLevelChange();
+
         // level -> responseDto
         LevelResponseDto levelResponseDto = levelMapper.levelToLevelResponseDto(level);
         return levelResponseDto;
@@ -102,7 +116,7 @@ public class LevelService {
         return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
     }
 
-    public Level findMemberByLevelNum(int levelNum) {
+    public Level findLevelByLevelNum(int levelNum) {
         Optional<Level> level = levelRepository.findLevelByLevelNum(levelNum);
         return level.orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEVEL_NOT_FOUND));
     }
@@ -160,5 +174,13 @@ public class LevelService {
                 .expPercent(expPercent).build();
     }
 
+    // Level 변경시 모든 멤버의 레벨에 반영
+    private void allMemberLevelChange(){
+        List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            Level level = memberService.getMemberLevel(member.getExp());
+            member.changeMember(null, null, null, 0, level);
+        }
+    }
 
 }
