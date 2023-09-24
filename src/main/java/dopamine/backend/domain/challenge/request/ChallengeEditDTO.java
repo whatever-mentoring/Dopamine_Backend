@@ -2,12 +2,15 @@ package dopamine.backend.domain.challenge.request;
 
 import dopamine.backend.domain.challenge.entity.ChallengeLevel;
 import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@Builder
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChallengeEditDTO {

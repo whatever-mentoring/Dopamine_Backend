@@ -72,6 +72,7 @@ public class FeedService {
         Feed feed = verifiedFeed(feedId);
 
         if (!feed.getFulfillYn()) throw new BusinessLogicException(ExceptionCode.FEED_FULFILL_NOT_VALID);
+        if (feed.getDelYn()) throw new BusinessLogicException(ExceptionCode.DELETE_FEED_NOT_FOUND);
 
         Challenge challenge = feed.getChallenge();
         MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(feed.getMember());
