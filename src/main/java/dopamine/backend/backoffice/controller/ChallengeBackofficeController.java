@@ -93,21 +93,22 @@ public class ChallengeBackofficeController {
     }
 
     /**
-     * UPDATE : 레벨 수정
-     *
-     * @param levelId
+     * 챌린지 수정
+     * @param challengeId
+     * @param challengeEditDTO
+     * @param file
      * @return
      */
-//    @PostMapping("/{levelId}/update")
-//    public String editLevel(@PathVariable("levelId") Long levelId,
-//                            LevelEditDto levelEditDto,
-//                            @RequestPart("file") MultipartFile file) {
-//        // 이미지 업로드
-//        if (!file.isEmpty()) {
-//            levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
-//        }
-//        // 레벨 수정
-//        levelService.editLevel(levelId, levelEditDto);
-//        return "redirect:/backoffice/level";
-//    }
+    @PostMapping("/{challengeId}/update")
+    public String editLevel(@PathVariable("challengeId") Long challengeId,
+                            ChallengeEditDTO challengeEditDTO,
+                            @RequestPart("file") MultipartFile file) {
+        // 이미지 업로드
+        if (!file.isEmpty()) {
+            challengeEditDTO.setImage(imageService.updateImage(file, "level", "badge"));
+        }
+        // 레벨 수정
+        challengeService.editChallenge(challengeId, challengeEditDTO);
+        return "redirect:/backoffice/challenge";
+    }
 }
