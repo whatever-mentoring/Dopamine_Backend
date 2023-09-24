@@ -44,11 +44,6 @@ public class ChallengeController {
      */
     @DeleteMapping("/challenges/{challengeId}/hard")
     public void deleteChallengeHard(@PathVariable Long challengeId){
-        Challenge challenge = challengeService.verifiedChallenge(challengeId);
-        System.out.println("여기");
-        System.out.println(challenge.getChallengeMembers().get(0));
-        System.out.println(challenge.getChallengeMembers());
-        System.out.println("여기2");
         challengeService.deleteChallengeHard(challengeId);
     }
 

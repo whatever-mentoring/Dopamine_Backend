@@ -55,6 +55,10 @@ public class ChallengeBackofficeController {
     @PostMapping(value = "/create")
     public String createChallenge(ChallengeRequestDTO challengeRequestDTO,
                                 @RequestPart(value = "file", required = false) MultipartFile file){
+
+        System.out.println("challengeRequestDto 되는지 확인");
+        System.out.println(challengeRequestDTO.getTitle());
+        System.out.println("challengeRequestDto 되는지 확인x");
         if(!file.isEmpty()){
             challengeRequestDTO.setImage(imageService.updateImage(file, "challenge", "image"));
         }
