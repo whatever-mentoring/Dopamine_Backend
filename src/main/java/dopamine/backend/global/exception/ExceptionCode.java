@@ -27,6 +27,7 @@ public enum ExceptionCode {
     CHALLENGE_NOT_FOUND(404, "존재하지 않는 챌린지입니다."),
     CHALLENGE_MEMBER_NOT_FOUND(404, "참여 신청하지 않은 챌린지입니다."),
     FEED_NOT_FOUND(404, "존재하지 않는 인증글입니다."),
+    DELETE_FEED_NOT_FOUND(404, "삭제된 게시글입니다."),
     FEEDLIKE_NOT_FOUND(404, "유효하지 않은 좋아요입니다."),
     FEEDLIKE_ALREADY_FOUND(404, "이미 존재하는 좋아요입니다."),
 

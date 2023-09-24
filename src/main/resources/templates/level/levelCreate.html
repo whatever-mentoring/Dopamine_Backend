@@ -16,7 +16,7 @@
 <div layout:fragment="content">
   <div style="text-align: center; margin: auto; width: 30%">
     <p th:text="${levelNum} + '레벨을 생성합니다.'" >레벨 생성</p>
-    <form th:action="@{/backoffice/level/create}" th:object="${form}" method="post">
+    <form th:action="@{/backoffice/level/create}" th:object="${form}" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label th:for="name">레벨명</label>
         <input type="text" th:field="*{name}" class="form-control" placeholder="레벨명을 입력하세요">
