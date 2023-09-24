@@ -2,8 +2,11 @@ package dopamine.backend.backoffice.controller;
 
 import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.challenge.repository.ChallengeRepository;
+import dopamine.backend.domain.challenge.request.ChallengeEditDTO;
 import dopamine.backend.domain.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.domain.challenge.service.ChallengeService;
+import dopamine.backend.domain.level.entity.Level;
+import dopamine.backend.domain.level.request.LevelEditDto;
 import dopamine.backend.global.s3.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,4 +66,48 @@ public class ChallengeBackofficeController {
         challengeService.createChallenge(challengeRequestDTO);
         return "redirect:/backoffice/challenge";
     }
+
+    /**
+     * 챌린지 수정
+     * @param challengeId
+     * @param model
+     * @return
+     */
+    @GetMapping("/{challengeId}/update")
+    public String challengeUpdate(@PathVariable("challengeId") Long challengeId,
+                              Model model) {
+        Challenge challenge = challengeService.verifiedChallenge(challengeId);
+        model.addAttribute("title", challenge.getTitle());
+        model.addAttribute("subtitle", challenge.getSubtitle());
+        model.addAttribute("challengeGuide", challenge.getChallengeGuide());
+        model.addAttribute("challengeLevel", challenge.getChallengeLevel());
+
+        model.addAttribute("form", ChallengeEditDTO.builder()
+                .title(challenge.getTitle())
+                .subtitle(challenge.getSubtitle())
+                .challengeGuide(challenge.getChallengeGuide())
+                .challengeLevel(challenge.getChallengeLevel())
+                .build()
+        );
+        return "challenge/challengeUpdate";
+    }
+
+    /**
+     * UPDATE : 레벨 수정
+     *
+     * @param levelId
+     * @return
+     */
+//    @PostMapping("/{levelId}/update")
+//    public String editLevel(@PathVariable("levelId") Long levelId,
+//                            LevelEditDto levelEditDto,
+//                            @RequestPart("file") MultipartFile file) {
+//        // 이미지 업로드
+//        if (!file.isEmpty()) {
+//            levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
+//        }
+//        // 레벨 수정
+//        levelService.editLevel(levelId, levelEditDto);
+//        return "redirect:/backoffice/level";
+//    }
 }

@@ -27,6 +27,7 @@
         <th>챌린지 가이드</th>
         <th>챌린지 레벨</th>
         <th>삭제</th>
+        <th>수정</th>
         <th></th>
       </tr>
       </thead>
@@ -40,6 +41,9 @@
         <td th:text="${challenge.challengeLevel}"></td>
         <td>
           <a href="#" th:href="@{/backoffice/challenge/{id}/delete (id=${challenge.challengeId})}">삭제</a>
+        </td>
+        <td>
+          <a href="#" th:href="@{/backoffice/challenge/{id}/update (id=${challenge.challengeId})}">수정</a>
         </td>
       </tr>
       </tbody>

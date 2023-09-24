@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+
+<!--    css 추가     -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!--    script 추가     -->
+<th:block layout:fragment="script">
+</th:block>
+
+<!-- Content -->
+<div layout:fragment="content">
+  <div style="text-align: center; margin: auto; width: 30%">
+    <h2>🔥 챌린지 수정 🔥</h2>
+    <form th:action="@{/backoffice/challenge/create}" th:object="${form}" method="post" enctype="multipart/form-data">
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="title">챌린지 제목</label>
+        <input type="text" th:value="*{title}" th:field="*{title}" class="form-control" placeholder="챌린지 제목을 입력하세요">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="subtitle">챌린지 부제</label>
+        <input type="text" th:value="*{subtitle}" th:field="*{subtitle}" class="form-control" placeholder="챌린지 부제를 입력하세요">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="challengeGuide">챌린지 가이드</label>
+        <input type="text" th:value="*{challengeGuide}" th:field="*{challengeGuide}" class="form-control" placeholder="챌린지 가이드를 입력하세요">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="challengeLevel">챌린지 난이도</label>
+        <input type="text" th:value="*{challengeLevel}" th:field="*{challengeLevel}" class="form-control" placeholder="HIGH, MID, LOW">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label>챌린지 이미지</label>
+        <input type="file" name="file" class="form-control" placeholder="이미지를 선택해주세요.">
+      </div>
+      <button style="margin-top: 2rem" type="submit" class="btn btn-success">Submit</button>
+    </form>
+  </div>
+</div>
+</html>
