@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ChallengeLevel {
-    HIGH(30), MID(10), LOW(5);
+    HIGH(20), MID(10), LOW(5);
 
     private int exp;
 

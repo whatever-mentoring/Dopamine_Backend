@@ -17,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,7 +129,7 @@ public class ChallengeService {
             String todayInfo = getFormatDate(today);
             String existInfo = getFormatDate(existRefreshDate);
 
-            List<ChallengeMember> challengeMembers = member.getChallengeMembers();
+            List<ChallengeMember> challengeMembers = challengeMemberRepository.findChallengeMembersByMemberAndCreatedDateBetween(member, LocalDate.now().atStartOfDay(), LocalDate.now().atTime(LocalTime.MAX));
             List<Challenge> exitChallenge = challengeMembers.stream().map(challengeMember -> challengeMember.getChallenge()).collect(Collectors.toList());
             List<Boolean> certificationYnList = challengeMembers.stream().map(ChallengeMember::getCertificationYn).collect(Collectors.toList());
 

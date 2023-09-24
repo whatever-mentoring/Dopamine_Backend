@@ -3,10 +3,12 @@ package dopamine.backend.domain.challenge.request;
 import dopamine.backend.domain.challenge.entity.ChallengeLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class ChallengeEditDTO {
     @NotBlank(message = "챌린지 제목은 공백이 될 수 없습니다.")
