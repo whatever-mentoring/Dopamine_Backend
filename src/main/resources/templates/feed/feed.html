@@ -35,9 +35,9 @@
       <tr th:each="feed : ${feeds}">
         <td th:text="${feed.feedId}"></td>
         <td th:text="${feed.content}"></td>
-        <td><a href="#" th:href="${feed.image1Url}">대표이미지</a></td>
-        <td><a href="#" th:href="${feed.image2Url}">서브이미지1</a></td>
-        <td><a href="#" th:href="${feed.image3Url}">서브이미지2</a></td>
+        <td><a href="#" th:href="${feed.image1Url}"><img th:src="${feed.image1Url}" style="height: 70px"/></a></td>
+        <td><a href="#" th:href="${feed.image2Url}"><img th:src="${feed.image2Url}" style="height: 70px"/></a></td>
+        <td><a href="#" th:href="${feed.image3Url}"><img th:src="${feed.image3Url}" style="height: 70px"/></a></td>
         <td th:text="${feed.member.getNickname()} + '(' + ${feed.member.getMemberId()} +')'"></td>
         <td th:text="${feed.challenge.getTitle()} + '(' + ${feed.challenge.getChallengeId()} +')'"></td>
         <td th:if="${feed.fulfillYn}">
