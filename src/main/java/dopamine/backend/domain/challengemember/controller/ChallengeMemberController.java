@@ -21,8 +21,8 @@ public class ChallengeMemberController {
 
     // CREATE : 생성
     @PostMapping
-    public ChallengeMemberResponseDto createChallengeMember(@Valid @RequestBody ChallengeMemberRequestDto challengeMemberRequestDto) {
-        return challengeMemberService.createChallengeMember(challengeMemberRequestDto);
+    public void createChallengeMember(@Valid @RequestBody ChallengeMemberRequestDto challengeMemberRequestDto) {
+        challengeMemberService.createChallengeMember(challengeMemberRequestDto);
     }
 
     // DELETE : 삭제

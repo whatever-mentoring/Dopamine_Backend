@@ -3,10 +3,7 @@ package dopamine.backend.domain.challengemember.entity;
 import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.common.entity.BaseEntity;
 import dopamine.backend.domain.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -14,7 +11,7 @@ import java.util.Optional;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class ChallengeMember extends BaseEntity {
 
     @Id
@@ -23,7 +20,7 @@ public class ChallengeMember extends BaseEntity {
     private Long challengeMemberId;
 
     @ColumnDefault("false")
-    private Boolean certificationYn;
+    private Boolean certificationYn = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -33,17 +30,6 @@ public class ChallengeMember extends BaseEntity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-
-    /**
-     * 생성자
-     * @param member
-     * @param challenge
-     */
-    @Builder
-    public ChallengeMember(Member member, Challenge challenge) {
-        setMember(member);
-        setChallenge(challenge);
-    }
 
     /**
      * UPDATE : 수정
@@ -65,7 +51,7 @@ public class ChallengeMember extends BaseEntity {
     }
 
     // == 연관관계 편의 메소드 == //
-    private void setMember(Member member) {
+    public void setMember(Member member) {
         deleteMember();
         this.member = Optional.ofNullable(member).orElse(this.member);
         this.member.getChallengeMembers().add(this);
@@ -79,7 +65,7 @@ public class ChallengeMember extends BaseEntity {
         }
     }
 
-    private void setChallenge(Challenge challenge) {
+    public void setChallenge(Challenge challenge) {
         deleteChallenge();
         this.challenge = Optional.ofNullable(challenge).orElse(this.challenge);
         this.challenge.getChallengeMembers().add(this);

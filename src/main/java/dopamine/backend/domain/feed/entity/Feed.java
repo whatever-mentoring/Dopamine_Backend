@@ -53,12 +53,6 @@ public class Feed extends BaseEntity {
     @OneToMany(mappedBy = "feed", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<FeedLike> feedLikeList = new ArrayList<>();
 
-    public void setChallenge(Challenge challenge) {
-        this.challenge = challenge;
-        if(!this.challenge.getFeeds().contains(this))
-            challenge.getFeeds().add(this);
-    }
-
     public void setFulfillYn(Boolean fulfillYn) {
         this.fulfillYn = fulfillYn;
     }
@@ -101,6 +95,19 @@ public class Feed extends BaseEntity {
         if (this.member != null) {
             if (this.member.getFeeds().contains(this)) {
                 this.member.getFeeds().remove(this);
+            }
+        }
+    }
+    public void setChallenge(Challenge challenge) {
+        deleteChallenge();
+        this.challenge = Optional.ofNullable(challenge).orElse(this.challenge);
+        this.challenge.getFeeds().add(this);
+    }
+
+    private void deleteChallenge() {
+        if (this.challenge != null) {
+            if (this.challenge.getFeeds().contains(this)) {
+                this.challenge.getFeeds().remove(this);
             }
         }
     }

@@ -15,16 +15,31 @@
 <!-- Content -->
 <div layout:fragment="content">
   <div style="text-align: center; margin: auto; width: 30%">
-    <p>챌린지 생성</p>
-    <form th:action="@{/backoffice/challenge/create}" th:object="${challengeRequestDTO}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label th:for="title">챌린지 제목</label>
-            <input type="text" th:field="*{title}" class="form-control" placeholder="챌린지 제목을 입력하세요">
-        </div>
-        <div class="form-group">
-            <label th:for="challengeLevel">챌린지 난이도</label>
-            <input type="text" th:field="*{challengeLevel}" class="form-control" placeholder="HIGH, MID, LOW">
-        </div>
+    <h2>🔥 챌린지 생성 🔥</h2>
+    <form th:action="@{/backoffice/challenge/create}" th:object="${form}" method="post" enctype="multipart/form-data">
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="title">챌린지 제목</label>
+        <input type="text" th:field="*{title}" class="form-control" placeholder="챌린지 제목을 입력하세요">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="subtitle">챌린지 부제</label>
+        <input type="text" th:field="*{subtitle}" class="form-control" placeholder="챌린지 부제를 입력하세요">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="challengeGuide">챌린지 가이드</label>
+        <input type="text" th:field="*{challengeGuide}" class="form-control" placeholder="챌린지 가이드를 입력하세요">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label th:for="challengeLevel">챌린지 난이도</label>
+        <br>
+        <input type='radio' th:field="*{challengeLevel}" value='HIGH' />상
+        <input type='radio' th:field="*{challengeLevel}" value='MID' />중
+        <input type='radio' th:field="*{challengeLevel}" value='LOW' />하
+      </div>
+      <div class="form-group" style="margin-bottom: 20px">
+        <label>챌린지 이미지</label>
+        <input type="file" name="file" class="form-control" placeholder="이미지를 선택해주세요.">
+      </div>
       <button style="margin-top: 2rem" type="submit" class="btn btn-success">Submit</button>
     </form>
   </div>

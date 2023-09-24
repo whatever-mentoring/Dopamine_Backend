@@ -54,7 +54,7 @@ public class LevelBackofficeController {
     }
 
     @GetMapping("/{levelId}/update")
-    public String levelCreate(@PathVariable("levelId") Long levelId,
+    public String levelUpdate(@PathVariable("levelId") Long levelId,
                               Model model) {
         Level level = levelService.verifiedLevel(levelId);
         model.addAttribute("levelNum", level.getLevelNum());
