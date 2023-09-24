@@ -35,7 +35,7 @@ public class ChallengeMemberService {
     public ChallengeMember createChallengeMember(ChallengeMemberRequestDto challengeMemberRequestDto) {
         // create
         Member member = memberService.verifiedMember(challengeMemberRequestDto.getMemberId());
-        Challenge challenge = challengeRepository.findById(challengeMemberRequestDto.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다.")); // todo : 나중에 메서드로 바꾸기
+        Challenge challenge = challengeRepository.findById(challengeMemberRequestDto.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지멤버 입니다.")); // todo : 나중에 메서드로 바꾸기
         ChallengeMember challengeMember = new ChallengeMember();
         challengeMember.setMember(member);
         challengeMember.setChallenge(challenge);
@@ -75,7 +75,7 @@ public class ChallengeMemberService {
         // edit
         ChallengeMember challengeMember = verifiedChallengeMember(challengeMemberId);
         Member member = memberService.verifiedMember(challengeMemberEditDto.getMemberId());
-        Challenge challenge = challengeRepository.findById(challengeMemberEditDto.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다.")); // todo : 나중에 메서드로 바꾸기
+        Challenge challenge = challengeRepository.findById(challengeMemberEditDto.getChallengeId()).orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지멤버 입니다.")); // todo : 나중에 메서드로 바꾸기
 
         challengeMember.changeChallengeMember(member, challenge);
 
