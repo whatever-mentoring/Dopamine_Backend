@@ -60,7 +60,7 @@ public class MemberController {
 
         LevelDetailResponseDto levelDetailResponseDto = levelService.memberDetailLevel(member);
 
-        int successCnt = feedRepository.findFeedByMember(member).size(); // todo : fullfillyn default값 추가되면 수정해야함
+        int successCnt = feedRepository.findFeedByMemberAndDelYn(member, false).size(); // todo : fullfillyn default값 추가되면 수정해야함
 
         MemberDetailResponseDto response = MemberDetailResponseDto.builder()
                 .memberId(member.getMemberId())
