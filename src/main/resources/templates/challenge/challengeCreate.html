@@ -31,7 +31,10 @@
       </div>
       <div class="form-group" style="margin-bottom: 20px">
         <label th:for="challengeLevel">챌린지 난이도</label>
-        <input type="text" th:field="*{challengeLevel}" class="form-control" placeholder="HIGH, MID, LOW">
+        <br>
+        <input type='radio' th:field="*{challengeLevel}" value='HIGH' />상
+        <input type='radio' th:field="*{challengeLevel}" value='MID' />중
+        <input type='radio' th:field="*{challengeLevel}" value='LOW' />하
       </div>
       <div class="form-group" style="margin-bottom: 20px">
         <label>챌린지 이미지</label>
