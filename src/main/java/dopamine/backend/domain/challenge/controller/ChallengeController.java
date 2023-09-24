@@ -1,5 +1,6 @@
 package dopamine.backend.domain.challenge.controller;
 
+import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.challenge.request.ChallengeEditDTO;
 import dopamine.backend.domain.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
