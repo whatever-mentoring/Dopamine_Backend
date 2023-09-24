@@ -6,6 +6,7 @@ import dopamine.backend.domain.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.domain.challenge.service.ChallengeService;
 import dopamine.backend.global.s3.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import java.util.List;
 @EnableWebMvc
 @RequestMapping("/backoffice/challenge")
 @RequiredArgsConstructor
+@Slf4j
 public class ChallengeBackofficeController {
 
     private final ChallengeRepository challengeRepository;
@@ -36,7 +38,7 @@ public class ChallengeBackofficeController {
 
     @GetMapping("/{challengeId}/delete")
     public String challengeDelete(@PathVariable("challengeId") Long challengeId) {
-        challengeService.deleteChallenge(challengeId);
+        challengeService.deleteChallengeHard(challengeId);
         return "redirect:/backoffice/challenge";
     }
 

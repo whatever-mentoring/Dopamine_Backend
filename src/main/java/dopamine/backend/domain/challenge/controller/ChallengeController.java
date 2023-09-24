@@ -1,5 +1,6 @@
 package dopamine.backend.domain.challenge.controller;
 
+import dopamine.backend.domain.challenge.entity.Challenge;
 import dopamine.backend.domain.challenge.request.ChallengeEditDTO;
 import dopamine.backend.domain.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
@@ -43,6 +44,11 @@ public class ChallengeController {
      */
     @DeleteMapping("/challenges/{challengeId}/hard")
     public void deleteChallengeHard(@PathVariable Long challengeId){
+        Challenge challenge = challengeService.verifiedChallenge(challengeId);
+        System.out.println("여기");
+        System.out.println(challenge.getChallengeMembers().get(0));
+        System.out.println(challenge.getChallengeMembers());
+        System.out.println("여기2");
         challengeService.deleteChallengeHard(challengeId);
     }
 
