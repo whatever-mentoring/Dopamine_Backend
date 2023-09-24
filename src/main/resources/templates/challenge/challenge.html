@@ -16,31 +16,34 @@
 <div layout:fragment="content">
 
   <!--  레벨 목록  -->
-  <div style="text-align: center; margin: auto; width: 40%">
+  <div style="text-align: center; margin: auto; width: 80%">
     <table class="table table-striped">
       <thead>
       <tr>
         <th>챌린지</th>
-<!--        <th>챌린지 이미지 url</th>-->
-<!--        <th>챌린지 가이드</th>-->
+        <th>챌린지 이름</th>
+        <th>챌린지 설명</th>
+        <th>챌린지 이미지</th>
+        <th>챌린지 가이드</th>
         <th>챌린지 레벨</th>
-        <th>수정</th>
         <th>삭제</th>
+        <th>수정</th>
         <th></th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="challenge : ${challenges}">
+        <td th:text="${challenge.challengeId}"></td>
         <td th:text="${challenge.title}"></td>
-<!--        <td th:text="${challenge.subtitle}"></td>-->
-<!--        <td><a href="#" th:href="${challenge.image}">이미지</a></td>-->
-<!--        <td th:text="${challenge.challengeGuide}"></td>-->
+        <td th:text="${challenge.subtitle}"></td>
+        <td><a href="#" th:href="${challenge.image}"><img th:src="${challenge.image}" style="height: 70px"/></a></td>
+        <td th:text="${challenge.challengeGuide}"></td>
         <td th:text="${challenge.challengeLevel}"></td>
         <td>
-          <a href="#" th:href="@{/backoffice/challenge/{id}/update (id=${challenge.challengeId})}">수정</a>
+          <a href="#" th:href="@{/backoffice/challenge/{id}/delete (id=${challenge.challengeId})}">삭제</a>
         </td>
         <td>
-          <a href="#" th:href="@{/backoffice/challenge/{id}/delete (id=${challenge.challengeId})}">삭제</a>
+          <a href="#" th:href="@{/backoffice/challenge/{id}/update (id=${challenge.challengeId})}">수정</a>
         </td>
       </tr>
       </tbody>

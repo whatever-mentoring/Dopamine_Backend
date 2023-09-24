@@ -37,7 +37,7 @@ public class Challenge extends BaseEntity {
     @OneToMany(mappedBy = "challenge", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Feed> feeds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "challenge", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ChallengeMember> challengeMembers = new ArrayList<>();
 
     @Builder
