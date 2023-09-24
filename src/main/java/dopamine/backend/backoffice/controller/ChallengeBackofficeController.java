@@ -44,7 +44,7 @@ public class ChallengeBackofficeController {
 
     @GetMapping("/create")
     public String createForm(Model model){
-        model.addAttribute("request", new ChallengeRequestDTO());
+        model.addAttribute("form", new ChallengeRequestDTO());
         return "challenge/challengeCreate";
     }
 
@@ -52,10 +52,10 @@ public class ChallengeBackofficeController {
      * 챌린지 생성
      * @param challengeRequestDTO
      */
-    @PostMapping(value = "/create", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String createChallenge(@Valid @RequestPart(value = "request") ChallengeRequestDTO challengeRequestDTO,
-                                @RequestPart(value = "image", required = false) MultipartFile file){
-        if(file != null){
+    @PostMapping(value = "/create")
+    public String createChallenge(ChallengeRequestDTO challengeRequestDTO,
+                                @RequestPart(value = "file", required = false) MultipartFile file){
+        if(!file.isEmpty()){
             challengeRequestDTO.setImage(imageService.updateImage(file, "challenge", "image"));
         }
 
