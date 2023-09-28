@@ -39,13 +39,14 @@ spring:
     database: mysql
     show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: false
         show_sql: false
         globally_quoted_identifiers: false
     generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
   thymeleaf:
     prefix: classpath:templates/
