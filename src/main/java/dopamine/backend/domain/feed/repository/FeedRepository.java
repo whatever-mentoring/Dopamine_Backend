@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
-    List<Feed> findFeedByMemberAndDelYn(Member member, Boolean delYn);
+    List<Feed> findFeedByMemberAndDelYnAndFulfillYn(Member member, Boolean delYn, Boolean fulfillYn);
 
     public List<Feed> findFeedByMemberAndDelYnAndCreatedDateBetweenOrderByCreatedDate(Member member, Boolean delYn, LocalDateTime startDate, LocalDateTime finishDate);
 }

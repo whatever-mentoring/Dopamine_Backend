@@ -75,6 +75,25 @@ public class Member extends BaseEntity {
         this.refreshToken = Optional.ofNullable(refreshToken).orElse(this.refreshToken);
     }
 
+    // == 비즈니스 로직 == //
+    /**
+     * exp와 level 변경
+     * @param exp
+     * @param level
+     */
+    public void setExpAndLevel(int exp, Level level) {
+        this.exp = exp;
+        setLevel(level);
+    }
+
+    /**
+     * RefreshDate 변경
+     * @param localDateTime
+     */
+    public void setChallengeRefreshDate(LocalDateTime localDateTime){
+        challengeRefreshDate = localDateTime;
+    }
+
     // == 연관관계 편의 메소드 == //
     public void setLevel(Level level) {
         if (this.level != null) {
@@ -84,14 +103,5 @@ public class Member extends BaseEntity {
         }
         this.level = Optional.ofNullable(level).orElse(this.level);
         this.level.getMembers().add(this);
-    }
-
-    public void setChallengeRefreshDate(LocalDateTime localDateTime){
-        challengeRefreshDate = localDateTime;
-    }
-
-    public void setExpAndLevel(int exp, Level level) {
-        this.exp = exp;
-        setLevel(level);
     }
 }
