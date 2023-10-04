@@ -58,7 +58,7 @@ public class MemberController {
 
         Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
 
-        LevelDetailResponseDto levelDetailResponseDto = levelService.memberDetailLevel(member);
+        LevelDetailResponseDto levelDetailResponseDto = levelService.getMemberDetailLevel(member);
 
         int successCnt = feedRepository.findFeedByMemberAndDelYn(member, false).size(); // todo : fullfillyn default값 추가되면 수정해야함
 

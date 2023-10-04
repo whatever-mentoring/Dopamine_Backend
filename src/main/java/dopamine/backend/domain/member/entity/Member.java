@@ -85,7 +85,7 @@ public class Member extends BaseEntity {
     }
 
     // == 연관관계 편의 메소드 == //
-    private void setLevel(Level level) {
+    public void setLevel(Level level) {
         if (this.level != null) {
             if (this.level.getMembers().contains(this)) {
                 this.level.getMembers().remove(this);
