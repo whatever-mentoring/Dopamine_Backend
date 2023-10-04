@@ -9,6 +9,8 @@ import dopamine.backend.domain.challenge.request.ChallengeRequestDTO;
 import dopamine.backend.domain.challenge.response.ChallengeResponseDTO;
 import dopamine.backend.domain.challengemember.entity.ChallengeMember;
 import dopamine.backend.domain.challengemember.repository.ChallengeMemberRepository;
+import dopamine.backend.domain.challengemember.request.ChallengeMemberRequestDto;
+import dopamine.backend.domain.challengemember.service.ChallengeMemberService;
 import dopamine.backend.domain.member.entity.Member;
 import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
@@ -32,6 +34,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeCustomRepository challengeCustomRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
+    private final ChallengeMemberService challengeMemberService;
 
     private final ChallengeMapper challengeMapper;
 
@@ -68,7 +71,6 @@ public class ChallengeService {
      */
     public void deleteChallengeHard(Long challengeId) {
         Challenge challenge = verifiedChallenge(challengeId);
-
         challengeRepository.delete(challenge);
     }
 
@@ -119,7 +121,10 @@ public class ChallengeService {
                 challengeResponseList.get(i).setCertificationYn(false);
             }
 
-            todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
+            todayChallenges.stream().forEach((challenge) -> challengeMemberService.createChallengeMember(ChallengeMemberRequestDto.builder()
+                    .memberId(member.getMemberId())
+                    .challengeId(challenge.getChallengeId())
+                    .build()));
         }
 
         // 기존에 챌린지 받은 적 있음
@@ -137,11 +142,11 @@ public class ChallengeService {
             if (!todayInfo.equals(existInfo)) {
                 List<Challenge> todayChallenges = challengeCustomRepository.getTodayChallenges(exitChallenge);
 
-                // 기존 연관관계 삭제
-                for (int i = 0; i < challengeMembers.size(); i++) {
-                    challengeMembers.get(i).deleteChallengeMember();
-                }
-                challengeMemberRepository.deleteAllInBatch(challengeMembers);
+//                // 기존 연관관계 삭제
+//                for (int i = 0; i < challengeMembers.size(); i++) {
+//                    challengeMembers.get(i).deleteChallengeMember();
+//                }
+//                challengeMemberRepository.deleteAllInBatch(challengeMembers);
 
                 // 오늘의 챌린지 생성
                 challengeResponseList = getChallengeResponseList(todayChallenges);
@@ -151,7 +156,10 @@ public class ChallengeService {
                     challengeResponseList.get(i).setCertificationYn(false);
                 }
 
-                todayChallenges.stream().forEach((challenge) -> new ChallengeMember(member, challenge));
+                todayChallenges.stream().forEach((challenge) -> challengeMemberService.createChallengeMember(ChallengeMemberRequestDto.builder()
+                        .memberId(member.getMemberId())
+                        .challengeId(challenge.getChallengeId())
+                        .build()));
             }
             // 조회
             else {
