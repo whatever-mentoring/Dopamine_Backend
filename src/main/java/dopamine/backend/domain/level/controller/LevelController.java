@@ -31,9 +31,7 @@ public class LevelController {
             @RequestPart(value = "badge", required = false) MultipartFile file) {
 
         // 이미지 업로드
-        if (file != null) {
-            levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
-        }
+        levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
 
         // 레벨 생성
         Level level = levelService.createLevel(levelRequestDto);
@@ -64,9 +62,7 @@ public class LevelController {
             @RequestPart(value = "badge", required = false) MultipartFile file) {
 
         // 이미지 업로드
-        if (file != null) {
-            levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
-        }
+        levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
 
         return levelService.editLevel(levelId, levelEditDto);
     }

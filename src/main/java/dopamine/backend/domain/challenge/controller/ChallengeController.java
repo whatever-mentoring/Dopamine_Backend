@@ -31,9 +31,7 @@ public class ChallengeController {
     @PostMapping(value = "/challenges", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void createChallenge(@Valid @RequestPart(value = "request") ChallengeRequestDTO challengeRequestDTO,
                                 @RequestPart(value = "image", required = false) MultipartFile file){
-        if(file != null){
-            challengeRequestDTO.setImage(imageService.updateImage(file, "challenge", "image"));
-        }
+        challengeRequestDTO.setImage(imageService.updateImage(file, "challenge", "image"));
 
         challengeService.createChallenge(challengeRequestDTO);
     }
@@ -74,9 +72,8 @@ public class ChallengeController {
     @PutMapping(value = "/challenges/{challengeId}", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void editChallenge(@PathVariable Long challengeId, @RequestPart(value = "request") ChallengeEditDTO challengeEditDTO,
                               @RequestPart(value = "image", required = false) MultipartFile file){
-        if(file != null){
-            challengeEditDTO.setImage(imageService.updateImage(file, "challenge", "image"));
-        }
+
+        challengeEditDTO.setImage(imageService.updateImage(file, "challenge", "image"));
 
         challengeService.editChallenge(challengeId, challengeEditDTO);
     }

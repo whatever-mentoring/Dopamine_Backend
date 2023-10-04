@@ -29,6 +29,8 @@ public class ImageService {
 
     public String updateImage(MultipartFile file, String entityName, String columnName) {
 
+        if (file.isEmpty()) return null;
+
         // File Path 설정
         String uploadFilePath = entityName + "/" + columnName; // 엔티티명.컬럼명 폴더가 만들어짐
 

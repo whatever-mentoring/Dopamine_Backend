@@ -78,9 +78,8 @@ public class LevelBackofficeController {
                             LevelEditDto levelEditDto,
                             @RequestPart("file") MultipartFile file) {
         // 이미지 업로드
-        if (!file.isEmpty()) {
-            levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
-        }
+        levelEditDto.setBadge(imageService.updateImage(file, "level", "badge"));
+
         // 레벨 수정
         levelService.editLevel(levelId, levelEditDto);
         return "redirect:/backoffice/level";
@@ -110,9 +109,7 @@ public class LevelBackofficeController {
     public String levelCreate(LevelRequestDto levelRequestDto,
                               @RequestPart("file") MultipartFile file) {
         // 이미지 업로드
-        if (!file.isEmpty()) {
-            levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
-        }
+        levelRequestDto.setBadge(imageService.updateImage(file, "level", "badge"));
 
         // 레벨 생성
         Level level = levelService.createLevel(levelRequestDto);
