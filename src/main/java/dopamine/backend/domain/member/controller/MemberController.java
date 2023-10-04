@@ -25,7 +25,6 @@ import javax.validation.Valid;
 @RequestMapping("/api/members")
 @Api(tags = "멤버 API")
 @RequiredArgsConstructor
-@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
@@ -33,15 +32,11 @@ public class MemberController {
     private final LevelService levelService;
     private final FeedRepository feedRepository;
 
-
-
     // CREATE : 생성
     @PostMapping
     public ResponseEntity createMember(@Valid @RequestBody MemberRequestDto memberRequestDto) {
         Member member = memberService.createMember(memberRequestDto);
         MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
-        log.info("임시 accessToken");
-        log.info(jwtService.getAccessToken(member));
         return new ResponseEntity<>(memberResponseDto, HttpStatus.CREATED);
     }
 

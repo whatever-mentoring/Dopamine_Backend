@@ -5,10 +5,7 @@ import dopamine.backend.domain.common.entity.BaseEntity;
 import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feedLike.entity.FeedLike;
 import dopamine.backend.domain.level.entity.Level;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -60,12 +57,8 @@ public class Member extends BaseEntity {
      */
 
     @Builder
-    public Member(String kakaoId, String nickname, String refreshToken, int exp, Level level) {
+    public Member(String kakaoId) {
         this.kakaoId = kakaoId;
-        this.nickname = nickname;
-        this.refreshToken = refreshToken;
-        this.exp = exp;
-        setLevel(level);
     }
 
     /**
@@ -76,12 +69,10 @@ public class Member extends BaseEntity {
      * @param exp
      * @param level
      */
-    public void changeMember(String kakaoId, String nickname, String refreshToken, int exp, Level level) {
+    public void changeMember(String kakaoId, String nickname, String refreshToken) {
         this.kakaoId = Optional.ofNullable(kakaoId).orElse(this.kakaoId);
         this.nickname = Optional.ofNullable(nickname).orElse(this.nickname);
         this.refreshToken = Optional.ofNullable(refreshToken).orElse(this.refreshToken);
-        this.exp = (exp != 0) ? exp : this.exp;
-        setLevel(level);
     }
 
     // == 연관관계 편의 메소드 == //
@@ -97,5 +88,10 @@ public class Member extends BaseEntity {
 
     public void setChallengeRefreshDate(LocalDateTime localDateTime){
         challengeRefreshDate = localDateTime;
+    }
+
+    public void setExpAndLevel(int exp, Level level) {
+        this.exp = exp;
+        setLevel(level);
     }
 }
