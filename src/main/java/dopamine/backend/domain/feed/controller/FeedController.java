@@ -1,11 +1,13 @@
 package dopamine.backend.domain.feed.controller;
 
+import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.domain.feed.request.FeedEditDTO;
 import dopamine.backend.domain.feed.request.FeedRequestDTO;
 import dopamine.backend.domain.feed.response.FeedResponseDTO;
 import dopamine.backend.domain.feed.response.FeedYearResponseDto;
 import dopamine.backend.domain.feed.service.FeedService;
 import dopamine.backend.domain.member.entity.Member;
+import dopamine.backend.domain.member.service.MemberService;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.global.jwt.service.JwtService;
@@ -30,6 +32,7 @@ public class FeedController {
     private final FeedService feedService;
     private final ImageService imageService;
     private final JwtService jwtService;
+    private final MemberService memberService;
 
     /**
      * 피드 조회
@@ -217,6 +220,8 @@ public class FeedController {
      */
     @DeleteMapping("/feeds/{feedId}/hard")
     public void deleteFeedHard(@PathVariable Long feedId) {
-        feedService.deleteFeedHard(feedId);
+        Feed feed = feedService.verifiedFeed(feedId);
+        feedService.deleteFeedHard(feed);
+        memberService.setMemberExpAndLevel(feed.getMember());
     }
 }

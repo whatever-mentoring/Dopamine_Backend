@@ -34,7 +34,7 @@ public class FeedBackofficeController {
     @GetMapping("/{feedId}/delete")
     public String feedDelete(@PathVariable("feedId") Long feedId) {
         Feed feed = feedService.verifiedFeed(feedId);
-        feedService.deleteFeedHard(feedId);
+        feedService.deleteFeedHard(feed);
         memberService.setMemberExpAndLevel(feed.getMember());
         return "redirect:/backoffice/feed";
     }
