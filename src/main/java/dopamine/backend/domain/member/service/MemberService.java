@@ -20,7 +20,6 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
     private final LevelRepository levelRepository;
@@ -78,18 +77,6 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    /**
-     * 검증 -> memberId 입력하면 관련 Member Entity가 있는지 확인
-     *
-     * @param memberId
-     * @return member
-     */
-
-    public Member verifiedMember(Long memberId) {
-        Optional<Member> member = memberRepository.findById(memberId);
-        return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-    }
-
 
     /**
      * 닉네임 중복 검사
@@ -97,6 +84,7 @@ public class MemberService {
      * @param member
      * @param nickname
      */
+    @Transactional(readOnly = true)
     public void checkNicknameDuplication(Member member, String nickname) {
         // 기존 사용자 정보이면 중복 검사 진행x
         if (member != null && member.getNickname() != null) {
@@ -144,5 +132,17 @@ public class MemberService {
     public void minusMemberExp(Member member, int exp) {
         exp = member.getExp() - exp;
         setMemberExpAndLevel(member, exp);
+    }
+
+    /**
+     * 검증 -> memberId 입력하면 관련 Member Entity가 있는지 확인
+     *
+     * @param memberId
+     * @return member
+     */
+    @Transactional(readOnly = true)
+    public Member verifiedMember(Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 }
