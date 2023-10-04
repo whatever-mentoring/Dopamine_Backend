@@ -59,9 +59,7 @@ public class ChallengeBackofficeController {
     public String createChallenge(ChallengeRequestDTO challengeRequestDTO,
                                 @RequestPart(value = "file", required = false) MultipartFile file){
 
-        if(!file.isEmpty()){
-            challengeRequestDTO.setImage(imageService.updateImage(file, "challenge", "image"));
-        }
+        challengeRequestDTO.setImage(imageService.updateImage(file, "challenge", "image"));
 
         challengeService.createChallenge(challengeRequestDTO);
         return "redirect:/backoffice/challenge";
@@ -104,9 +102,8 @@ public class ChallengeBackofficeController {
                             ChallengeEditDTO challengeEditDTO,
                             @RequestPart("file") MultipartFile file) {
         // 이미지 업로드
-        if (!file.isEmpty()) {
-            challengeEditDTO.setImage(imageService.updateImage(file, "level", "badge"));
-        }
+        challengeEditDTO.setImage(imageService.updateImage(file, "level", "badge"));
+
         // 레벨 수정
         challengeService.editChallenge(challengeId, challengeEditDTO);
         return "redirect:/backoffice/challenge";

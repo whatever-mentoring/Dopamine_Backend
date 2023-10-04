@@ -97,8 +97,7 @@ public class FeedService {
         feed.setChallenge(challenge);
         feed.setMember(member);
         setCertification(member, challenge);
-        int exp = feed.getChallenge().getChallengeLevel().getExp();
-        memberService.plusMemberExp(member, exp);
+        memberService.setMemberExpAndLevel(member);
         feedRepository.save(feed);
     }
 
@@ -141,14 +140,10 @@ public class FeedService {
 
     /**
      * 피드 완전 삭제 (DB)
-     *
-     * @param feedId
+     * @param feed
      */
-    public void deleteFeedHard(Long feedId) {
-        Feed feed = verifiedFeed(feedId);
-
+    public void deleteFeedHard(Feed feed) {
         feed.deleteFromChallenge();
-
         feedRepository.delete(feed);
     }
 
@@ -272,7 +267,7 @@ public class FeedService {
      */
     public void patchFeedFulfill(Long feedId, Boolean value) {
         Feed feed = verifiedFeed(feedId);
-
         feed.setFulfillYn(value);
+        memberService.setMemberExpAndLevel(feed.getMember());
     }
 }

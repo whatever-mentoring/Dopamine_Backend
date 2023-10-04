@@ -49,4 +49,8 @@ public class Level extends BaseEntity {
         this.exp = (exp != 0) ? exp : this.exp;
     }
 
+    public void changeLevelNum(int levelNum) {
+        this.levelNum = (levelNum != 0) ? levelNum : this.levelNum;
+    }
+
 }

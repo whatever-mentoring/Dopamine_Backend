@@ -34,10 +34,8 @@ public class FeedBackofficeController {
     @GetMapping("/{feedId}/delete")
     public String feedDelete(@PathVariable("feedId") Long feedId) {
         Feed feed = feedService.verifiedFeed(feedId);
-        feedService.deleteFeedHard(feedId);
-        if (feed.getFulfillYn()) {
-            memberService.minusMemberExp(feed.getMember(), feed.getChallenge().getChallengeLevel().getExp());
-        }
+        feedService.deleteFeedHard(feed);
+        memberService.setMemberExpAndLevel(feed.getMember());
         return "redirect:/backoffice/feed";
     }
 
@@ -47,11 +45,10 @@ public class FeedBackofficeController {
 
         if (feedService.verifiedFeed(feedId).getFulfillYn()) {
             feedService.patchFeedFulfill(feedId, false);
-            memberService.minusMemberExp(feed.getMember(), feed.getChallenge().getChallengeLevel().getExp());
         } else {
             feedService.patchFeedFulfill(feedId, true);
-            memberService.plusMemberExp(feed.getMember(), feed.getChallenge().getChallengeLevel().getExp());
         }
+        memberService.setMemberExpAndLevel(feed.getMember());
         return "redirect:/backoffice/feed";
     }
 

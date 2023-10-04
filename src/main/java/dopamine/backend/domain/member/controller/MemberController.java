@@ -25,7 +25,6 @@ import javax.validation.Valid;
 @RequestMapping("/api/members")
 @Api(tags = "멤버 API")
 @RequiredArgsConstructor
-@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
@@ -33,15 +32,11 @@ public class MemberController {
     private final LevelService levelService;
     private final FeedRepository feedRepository;
 
-
-
     // CREATE : 생성
     @PostMapping
     public ResponseEntity createMember(@Valid @RequestBody MemberRequestDto memberRequestDto) {
         Member member = memberService.createMember(memberRequestDto);
         MemberResponseDto memberResponseDto = memberMapper.memberToMemberResponseDto(member);
-        log.info("임시 accessToken");
-        log.info(jwtService.getAccessToken(member));
         return new ResponseEntity<>(memberResponseDto, HttpStatus.CREATED);
     }
 
@@ -56,19 +51,17 @@ public class MemberController {
     @GetMapping
     public ResponseEntity getMember(@RequestHeader("Authorization") String accessToken) {
 
-        Member member = jwtService.getMemberFromAccessToken(accessToken); // member 찾기
+        // member 찾기
+        Member member = jwtService.getMemberFromAccessToken(accessToken);
 
-        LevelDetailResponseDto levelDetailResponseDto = levelService.memberDetailLevel(member);
-
-        int successCnt = feedRepository.findFeedByMemberAndDelYn(member, false).size(); // todo : fullfillyn default값 추가되면 수정해야함
-
+        // Response
         MemberDetailResponseDto response = MemberDetailResponseDto.builder()
                 .memberId(member.getMemberId())
                 .kakaoId(member.getKakaoId())
                 .nickname(member.getNickname())
-                .successCnt(successCnt)
+                .successCnt(feedRepository.findFeedByMemberAndDelYnAndFulfillYn(member, false, true).size())
                 .exp(member.getExp())
-                .level(levelDetailResponseDto)
+                .level(levelService.getMemberDetailLevel(member))
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -83,13 +76,6 @@ public class MemberController {
         memberService.editMember(member, memberEditDto); // 수정
         MemberResponseDto response = memberMapper.memberToMemberResponseDto(member); // response
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/mypage")
-    public ResponseEntity returnMemberDetail(@RequestHeader("Authorization") String accessToken) {
-        Member member = jwtService.getMemberFromAccessToken(accessToken);
-        MemberResponseDto response = memberMapper.memberToMemberResponseDto(member);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
