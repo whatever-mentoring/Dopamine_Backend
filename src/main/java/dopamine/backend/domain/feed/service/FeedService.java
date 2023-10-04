@@ -97,8 +97,7 @@ public class FeedService {
         feed.setChallenge(challenge);
         feed.setMember(member);
         setCertification(member, challenge);
-        int exp = feed.getChallenge().getChallengeLevel().getExp();
-        memberService.plusMemberExp(member, exp);
+        memberService.setMemberExpAndLevel(member);
         feedRepository.save(feed);
     }
 

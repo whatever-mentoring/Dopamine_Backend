@@ -1,5 +1,6 @@
 package dopamine.backend.domain.member.service;
 
+import dopamine.backend.domain.feed.entity.Feed;
 import dopamine.backend.global.exception.BusinessLogicException;
 import dopamine.backend.global.exception.ExceptionCode;
 import dopamine.backend.domain.level.repository.LevelRepository;
@@ -44,7 +45,7 @@ public class MemberService {
     public Member createMember(MemberRequestDto memberRequestDto) {
 
         Member member = Member.builder().kakaoId(memberRequestDto.getKakaoId()).build();    // member 생성
-        setMemberExpAndLevel(member, 0);                                                // 경험치 설정
+        setMemberExpAndLevel(member);                                                // 경험치 설정
 
         return memberRepository.save(member);
     }
@@ -63,7 +64,7 @@ public class MemberService {
 
         // member 수정
         member.changeMember(memberEditDto.getKakaoId(), memberEditDto.getNickname(), memberEditDto.getRefreshToken());
-        setMemberExpAndLevel(member, memberEditDto.getExp());
+        setMemberExpAndLevel(member);
 
         return member;
     }
@@ -101,38 +102,22 @@ public class MemberService {
     }
 
     /**
-     * exp에 따라 level 변함
-     *
+     * member의 Feed에 따라 exp와 Level변경
      * @param member
-     * @param exp
      */
-    public void setMemberExpAndLevel(Member member, int exp) {
-        if (exp <= 0 && member.getLevel() != null) return;
-        Level level = levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp);
-        member.setExpAndLevel(exp, level);
+    public void setMemberExpAndLevel(Member member) {
+        int exp = 0;
+
+        // 사용자의 Feed를 기준으로 exp 계산
+        for (Feed f : member.getFeeds()) {
+            if (!f.getFulfillYn()) continue;
+            exp += f.getChallenge().getChallengeLevel().getExp();
+        }
+
+        // exp와 level 변경
+        member.setExpAndLevel(exp, levelRepository.findTopByExpLessThanEqualOrderByExpDesc(exp));
     }
 
-    /**
-     * Member의 exp 증가
-     *
-     * @param member
-     * @param exp
-     */
-    public void plusMemberExp(Member member, int exp) {
-        exp = member.getExp() + exp;
-        setMemberExpAndLevel(member, exp);
-    }
-
-    /**
-     * Member의 exp 감소
-     *
-     * @param member
-     * @param exp
-     */
-    public void minusMemberExp(Member member, int exp) {
-        exp = member.getExp() - exp;
-        setMemberExpAndLevel(member, exp);
-    }
 
     /**
      * 검증 -> memberId 입력하면 관련 Member Entity가 있는지 확인
